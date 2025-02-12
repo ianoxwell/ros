@@ -1,7 +1,14 @@
 {
+  "compilerOptions": {
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "esnext",
+    "baseUrl": "./",
+    "paths": {
+      "@features/*": ["./src/features/*"],
+      "@pages/*": ["./src/pages/*"]
+    }
+  },
   "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

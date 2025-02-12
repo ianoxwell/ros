@@ -1,15 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import '@mantine/core/styles.css';
+import { Route, Routes } from 'react-router-dom';
+import './App.scss';
+import { GlobalNavigation } from './features/global-navigation/global-navigation.component';
+import { Ingredients } from './pages/ingredients';
+import { Orders } from './pages/orders';
+import { Recipes } from './pages/recipes';
+import { Schedules } from './pages/schedules';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
+      <GlobalNavigation />
+      <Routes>
+        <Route path="/" element={<Recipes />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/schedule" element={<Schedules />} />
+        <Route path="/ingredients" element={<Ingredients />} />
+      </Routes>
+      {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -23,14 +31,14 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR bit
+          Edit <code>src/App.tsx</code> and save to test HMR bit and stuffer
         </p>
       </div>
       <p className="read-the-docs">
-        Recipes, orders, schedule, ingredients, 
-      </p>
+        Recipes, orders, schedule, ingredients,
+      </p> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
