@@ -1,0 +1,40 @@
+.recipe-card {
+	min-width: 180px;
+	margin: 0.75em;
+	padding: 0;
+}
+.recipe-card {
+	img {
+		height: 20em;
+		width: 100%;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+		object-fit: cover;
+	}
+	mat-card-content {
+		margin: 1em;
+	}
+  }
+
+.line-height-icon-adjust {
+	text-align: middle;
+}
+.recipe-title {
+	margin: 0;
+}
+.rating-favourite-position {
+	position: absolute;
+	bottom: 1em;
+	left: 0;
+	right: 0;
+	padding: 0.5em;
+	background-color: rgba(0,0,0,0.2);
+}
+.relative-position {
+	position: relative;
+	height: 20em;
+}
+
+.show-pointer {
+	cursor: pointer;
+}

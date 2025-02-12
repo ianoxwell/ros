@@ -1,0 +1,126 @@
+
+// Theme Config
+$primary: #c6a072;
+$primary-lighter: #eee3d5;
+$primary-darker: #b18455;
+
+$accent: #417b97;
+$accent-lighter: #c6d7e0;
+$accent-darker: #2a5e7a;
+
+$warn: #ce352e;
+$warn-lighter: #f0c2c0;
+$warn-darker: #bc221d;
+
+$success: #28a745;
+$colour-text-on-success: #F5F5F5;
+
+$alert: #ffd740;
+
+$dark-background: #1f1f1f;
+$default-background: #3F3F3F;
+
+
+$light-text: #FFF;
+$dark-text: #000000;
+
+$overlay: rgba(0, 0, 0, 0.15);
+$light-grey: #2c2c2c;
+
+$muted: rgba(255, 255, 255, 0.7);
+
+
+
+// Text sizes
+$title: 1.6rem;
+$subheading-2: 1.4rem;
+$subheading-1:1.2rem;
+$body-2: 1rem;
+$body-1: 0.95rem;
+$button: 0.9rem;
+$caption: 0.85rem;
+$input: inherit;
+
+
+
+$widthsEm: (
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	10,
+	11,
+	12,
+	13,
+	14,
+	15,
+	16,
+	17,
+	18,
+	19,
+	20
+);
+
+$widthsPercent: (
+	5,
+	10,
+	15,
+	20,
+	24,
+	25,
+	30,
+	33,
+	35,
+	40,
+	45,
+	50,
+	55,
+	60,
+	65,
+	70,
+	75,
+	80,
+	81,
+	82,
+	85,
+	90,
+	91,
+	92,
+	93,
+	94,
+	95,
+	100
+);
+
+$heightsEm: (
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	10,
+	11,
+	12,
+	13,
+	14,
+	15,
+	16,
+	17,
+	18,
+	19,
+	20
+);
+
+$spaces: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+$sides: (top, right, bottom, left);

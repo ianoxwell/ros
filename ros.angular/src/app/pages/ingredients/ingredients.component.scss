@@ -1,0 +1,9 @@
+@import '../../styles/variables.scss';
+
+mat-tab-header{
+	display: none;
+}
+
+.mat-flat-button.mat-accent {
+	color: $light-text;
+}

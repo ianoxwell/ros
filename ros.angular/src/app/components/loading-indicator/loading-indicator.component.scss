@@ -1,0 +1,41 @@
+@import '../../styles/flex-mixins.scss', '../../styles/variables.scss';
+
+.spinner {
+	background-color: $overlay;
+	transition: opacity 1s ease-in;
+	@include flex-box;
+}
+
+.full-spinner {
+	position: absolute;
+	top: 64px;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
+	@include align-items(center);
+	@include justify-content(center);
+	@include  flex-direction(column);
+	opacity: 1;
+
+	z-index: 1;
+	min-height: 100px;
+	span {
+		padding-top: 1em;
+	}
+}
+
+.inline-spinner {
+	min-height: 4em;
+	display: inline-block;
+}
+// must be contained within a position relative
+.top-absolute-spinner {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 101;
+	font-size: 6em;
+	@include justify-content(center);
+	padding-top: 2em;
+}

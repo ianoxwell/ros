@@ -1,0 +1,15 @@
+<div #container [ngClass]="{'ui-toast ui-widget': true, 
+	'ui-toast-top-right': position === 'top-right',
+	'ui-toast-top-left': position === 'top-left',
+	'ui-toast-bottom-right': position === 'bottom-right',
+	'ui-toast-bottom-left': position === 'bottom-left',
+	'ui-toast-top-center': position === 'top-center',
+	'ui-toast-bottom-center': position === 'bottom-center',
+	'ui-toast-center': position === 'center'}" 
+	[class]="styleClass">
+		<app-toast-item *ngFor="let msg of messages; let i=index" [message]="msg" [index]="i" (closeToast)="onMessageClose($event)"
+			@toastAnimation (@toastAnimation.start)="onAnimationStart($event)"
+			[showTransitionOptions]="showTransitionOptions"
+			[hideTransitionOptions]="hideTransitionOptions">
+		</app-toast-item>
+</div>

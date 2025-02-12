@@ -1,0 +1,33 @@
+@import "../../../styles/variables.scss";
+
+.max-width4 {
+	max-width: 4em;
+}
+.max-width7 {
+	max-width: 7em;
+}
+
+.toolbar-second-title {
+	font-size: $subheading-1;
+	font-weight: 400;
+}
+
+.toolbar-second-subheading {
+	font-size: $body-2;
+	font-weight: 300;
+}
+
+.recipe-wrapper {
+	padding: 1em;
+	.recipe-link:visited,
+	.recipe-link {
+		color: white;
+		font-size: 1.2em;
+	}
+}
+
+.bottom-fixed {
+	position: fixed;
+	bottom: 0;
+	z-index: 1;
+}

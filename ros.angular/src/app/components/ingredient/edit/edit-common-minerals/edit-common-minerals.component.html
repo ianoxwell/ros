@@ -1,0 +1,81 @@
+<div [formGroup]="form" class="flex-box flex-row-column ml-2">
+	<div class="flex-box flex-row flex-grow-1">
+		<div class="flex-box flex-column column-one">
+			<mat-form-field class="pr-2">
+				<mat-label>Calcium (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="calcium"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Iron, Fe (mg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="ironFe"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Potassium, K (mg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="potassiumK"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Magnesium (mg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="magnesium"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Sodium (mg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="sodium"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+
+		</div>
+
+		<div class="flex-box flex-column column-two">
+			<mat-form-field class="pr-2">
+				<mat-label>Zinc, Zn (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="zincZn"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Copper, Cu (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="copperCu"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Manganese (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="manganese"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Selenium, Se (μg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="seleniumSe"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>FluorideF (μg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="fluorideF"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+		</div>
+	</div>
+</div>

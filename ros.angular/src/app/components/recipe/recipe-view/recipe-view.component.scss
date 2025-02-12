@@ -1,0 +1,35 @@
+article {
+	width: 80em;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.mat-list-item {
+    height: auto !important;   
+}
+
+.w- {
+	&50 {
+		width: 49%;
+	}
+	&full {
+		width: 100%;
+	}
+	&7 {
+		min-width: 5em;
+	}
+	&40 {
+		width: 39%;
+	}
+
+}
+
+.recipe-descriptions > * {
+	padding-right: 1em;
+}
+
+img.w-full {
+	border-radius: 4px;
+	padding: 4px;
+	border: 1px solid #333;
+}

@@ -1,0 +1,37 @@
+<form [formGroup]="convert">
+	<div class="flex-box flex-row flex-justify-space-between flex-align-center">
+		<div class="flex-box flex-align-center">
+			<mat-icon cdkDragHandle class="mr-2 color-on-primary">drag_handle</mat-icon>
+			<mat-form-field class="pr-2 max-width4">
+				<input matInput type="number" placeholder="Base Quantity" Title="Base Quantity" formControlName="baseQuantity" class="numerical-input">
+			</mat-form-field>
+			<mat-form-field class="pr-2 max-width7">
+				<mat-select placeholder="Base Measurement Unit" Title="Base Measurement Unit" formControlName="baseMeasurementUnit">
+					<mat-option *ngFor="let measure of measurements" [value]="measure.id">{{measure.title}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field class="pr-2 max-width7">
+				<mat-select placeholder="Base State" Title="Base State" formControlName="baseState">
+					<mat-option *ngFor="let state of ingredientState" [value]="state.id">{{state.title}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<span>Convert to:</span>
+		<div>
+			<mat-form-field class="pr-2 max-width">
+				<input matInput type="number" placeholder="Convert Quantity" Title="Convert Quantity" formControlName="convertToQuantity" class="numerical-input">
+			</mat-form-field>
+			<mat-form-field class="pr-2 max-width">
+				<mat-select placeholder="Convert Measurement Unit" Title="Convert Measurement Unit" formControlName="convertToMeasurementUnit">
+					<mat-option *ngFor="let measure of measurements" [value]="measure.id">{{measure.title}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field class="pr-2 max-width">
+				<mat-select placeholder="Conversion State" Title="Conversion State" formControlName="convertToState">
+					<mat-option *ngFor="let state of ingredientState" [value]="state.id">{{state.title}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<button mat-icon-button color="warn"  type="button" title="delete" (click)="deleteItem.emit()"><mat-icon>delete</mat-icon></button>
+	</div>
+</form>

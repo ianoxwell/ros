@@ -1,0 +1,26 @@
+@import '../../styles/variables.scss';
+
+.mat-button {
+	border-radius: 0;
+	height: 4.4em;
+	mat-icon {
+		padding-right: 0.2em;
+	}
+
+	&.active-link {
+		border-bottom-style: solid;
+		border-bottom-width: 3px;
+		border-bottom-color: $accent;
+	}
+}
+.accent-button {
+	margin-top: -0.5em;
+}
+
+.picture-in-icon {
+	width:100%;
+	height:100%;
+	border-radius: 50%;
+	margin-top: -2px;
+}
+

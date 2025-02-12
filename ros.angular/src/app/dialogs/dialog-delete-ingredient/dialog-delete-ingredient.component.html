@@ -1,0 +1,12 @@
+<div>
+  <h2 mat-dialog-title="">Delete - {{data.data.name}}</h2>
+  <mat-dialog-content>
+    <div>Do you wish to delete the ingredient - {{data.data.name}}</div>
+    <div>It is used in the following recipes</div>
+  </mat-dialog-content>
+  <div style="flex-grow: 1"></div>
+  <mat-dialog-actions fxLayoutAlign="end end">
+    <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
+    <button type="button" mat-flat-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
+  </mat-dialog-actions>
+</div>

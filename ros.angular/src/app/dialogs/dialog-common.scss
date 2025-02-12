@@ -1,0 +1,49 @@
+@import '../styles/variables.scss';
+
+h1 {
+    padding: 13px 10px;
+    padding-left: 20px;
+    margin: 0;
+    margin-bottom: 10px;
+    line-height: 40px;
+}
+
+mat-icon {
+    font-size: 32px;
+    vertical-align: top;
+    height: auto;
+    width: auto;
+}
+
+mat-dialog-content {
+    padding: 20px;
+	margin: 0px;
+	
+	p {
+		margin: 0px 0px 20px 0px;
+	}
+}
+
+mat-dialog-actions {
+	margin-bottom: 0px;
+	
+	div {
+		text-align: right;
+		width: 100%;
+	}
+}
+
+mat-form-field {
+    width: 100%;
+    margin: 10px 0px;
+}
+
+.mat-flat-button.warning {
+	background-color: $warn;
+	color: $colour-text-on-success;
+}
+
+.mat-flat-button.success {
+	background-color: $success;
+	color: $colour-text-on-success;
+}

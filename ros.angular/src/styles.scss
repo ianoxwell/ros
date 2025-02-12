@@ -1,0 +1,25 @@
+
+@import './app/styles/variables.scss';
+@import './app/styles/flex-mixins.scss';
+@import './app/styles/angular-theme.scss';
+@import './app/styles/responsive.scss';
+@import './app/styles/common.scss';
+
+html, body {
+	height: 100%;
+}
+body { 
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.outer-wrapper p {
+  	margin: 1em 0 1em 0 !important;
+}
+.full-background, .outer-wrapper {
+	min-height: 100%;
+	min-width: 100%;
+}
+.absolute-position {
+	position: absolute;
+}

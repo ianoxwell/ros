@@ -1,0 +1,50 @@
+<app-page-title></app-page-title>
+<div class="flex-box flex-justify-space-between mt-2 mb-2">
+	<span class="ml-12">
+		<ng-container *ngIf="cookBookUserProfile$ | async as cookBookUserProfile">
+			<span *ngIf="cookBookUserProfile.lastName==='Oxwell' && selectedTab === 0" class="ml-12">
+				<!-- <span class="mr-1 ml-1">
+					<button mat-flat-button color="primary" (click)="cleanRecipeIngredients()"><mat-icon>add</mat-icon> Clean Ingredients</button>
+				</span> -->
+				<span class="ml-12">
+					<button mat-flat-button color="accent" (click)="getRecipeList()">
+						<mat-icon class="mr-1 color-on-primary">add</mat-icon> Search Spoonacular
+					</button>
+				</span>
+			</span>
+
+		</ng-container>
+	</span>
+	<span class="mr-2" [ngSwitch]="selectedTab">
+		<button mat-flat-button type="button" color="accent" title="Back to Ingredient List" *ngSwitchCase="1"
+			(click)="changeTab(0)">
+			<mat-icon class="mr-1 color-on-primary">keyboard_return</mat-icon>
+			<span>Back to Ingredient List</span>
+		</button>
+		<button mat-flat-button type="button" color="accent" title="New Ingredient" *ngSwitchDefault
+			(click)="createOrEdit('new')">
+			<mat-icon class="mr-1 color-on-primary">add</mat-icon>
+			<span>New Ingredient</span>
+		</button>
+	</span>
+</div>
+<ng-template #loading>
+	<app-loading-indicator></app-loading-indicator>
+</ng-template>
+<ng-container *ngIf="refData">
+	<mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs"
+		*ngIf="data$ | async as data; else loading">
+		<mat-tab>
+			<app-ingredient-filter [refData]="refData"></app-ingredient-filter>
+			<app-ingredient-table [data]="data" [sortPageObj]="sortPageObj" (sortingPageChange)="sortPageChange($event)"
+				(editRow)="createOrEdit('edit', $event)">
+			</app-ingredient-table>
+		</mat-tab>
+		<mat-tab>
+			<ng-container *ngIf="selectedIngredient$ | async as selectedIngredient">
+				<app-ingredient-edit *ngIf="selectedTab === 1" [singleIngredient]="selectedIngredient" [isNew]="isNew"
+					(back)="changeTab(0)" [refData]="refData" [measurements]="measurements"></app-ingredient-edit>
+			</ng-container>
+		</mat-tab>
+	</mat-tab-group>
+</ng-container>

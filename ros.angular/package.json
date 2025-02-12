@@ -1,0 +1,83 @@
+{
+  "name": "cook-book",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "node server.js",
+    "test": "ng test",
+    "build": "ng build --configuration production",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "generate-icons": "svg-to-ts"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^13.2.4",
+    "@angular/cdk": "^13.2.4",
+    "@angular/common": "^13.2.4",
+    "@angular/compiler": "^13.2.4",
+    "@angular/core": "^13.2.4",
+    "@angular/forms": "^13.2.4",
+    "@angular/material": "^13.2.4",
+    "@angular/platform-browser": "^13.2.4",
+    "@angular/platform-browser-dynamic": "^13.2.4",
+    "@angular/router": "^13.2.4",
+    "@auth0/angular-jwt": "^5.0.2",
+    "@ngneat/svg-icon": "^4.0.2",
+    "@uiowa/digit-only": "^2.2.1",
+    "angularx-social-login": "^4.0.1",
+    "ngx-material-timepicker": "^5.5.3",
+    "rxjs": "^7.5.2",
+    "tslib": "^2.1.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^13.2.5",
+    "@angular-eslint/builder": "^13.1.0",
+    "@angular-eslint/eslint-plugin": "^13.1.0",
+    "@angular-eslint/eslint-plugin-template": "^13.1.0",
+    "@angular-eslint/schematics": "^13.1.0",
+    "@angular-eslint/template-parser": "^13.1.0",
+    "@angular/cli": "^13.2.5",
+    "@angular/compiler-cli": "^13.2.4",
+    "@angular/language-service": "^13.2.4",
+    "@types/jasmine": "^3.6.2",
+    "@types/jasminewd2": "^2.0.8",
+    "@types/node": "^12.19.13",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-rxjs": "^5.0.2",
+    "jasmine-core": "~3.6.0",
+    "karma": "^6.3.16",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "^2.2.0",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "ng-mocks": "^13.0.3",
+    "prettier": "^2.5.1",
+    "prettier-eslint": "^13.0.0",
+    "svg-to-ts": "^5.7.1",
+    "ts-node": "^8.10.2",
+    "typescript": "4.5.5"
+  },
+  "svg-to-ts": {
+    "conversionType": "object",
+    "srcFiles": [
+      "./src/assets/svg/*.svg"
+    ],
+    "outputDirectory": "./src/assets/svg",
+    "fileName": "svg-icons",
+    "svgoConfig": {
+      "plugins": [
+        {
+          "removeDimensions": true,
+          "cleanupAttrs": true
+        }
+      ]
+    }
+  }
+}

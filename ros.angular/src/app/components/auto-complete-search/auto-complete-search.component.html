@@ -1,0 +1,15 @@
+<mat-form-field>
+	<input type="search" matInput
+		[errorStateMatcher]="errorStateMatcher"
+		[placeholder]="placeholder" [formControl]="filterControl" [matAutocomplete]="auto"
+		(blur)="onBlur()" (click)="onInputClick()">
+	<mat-hint *ngIf="matHint">{{matHint}}</mat-hint>
+	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
+		<mat-option *ngFor="let value of (values$ | async)" [value]="value">
+			{{ value }}
+		</mat-option>
+	</mat-autocomplete>
+	<!-- <mat-error *ngFor="let errorKey of control.errors | errorkeys" >
+		{{ errorKey | formErrorPipe: control.getError(errorKey) }}
+	</mat-error> -->
+</mat-form-field>

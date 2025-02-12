@@ -1,0 +1,13 @@
+@import '../../../../styles/flex-mixins.scss';
+
+.column-one, .column-two {
+	width: 50%;
+	margin-right: 2rem;
+}
+.column-three {
+	width: 100%;
+	@include breakpoint(md)
+	{
+		width: 50%;
+	}
+}

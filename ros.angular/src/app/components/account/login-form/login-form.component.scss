@@ -1,0 +1,30 @@
+@import '../../../styles/flex-mixins.scss';
+@import '../../../styles/variables.scss';
+
+.mat-card-footer {
+	height: 3em;
+	@include flex-box;
+}
+.pcb-divider {
+	overflow: hidden;
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.pcb-divider:before, .pcb-divider:after {
+	content: "";
+	display: inline-block;
+	background-color: $primary-lighter;
+	height: 1px;
+	position: relative;
+	vertical-align: middle;
+	width: 50%;
+}
+.pcb-divider:before {
+	right: 0.5em;
+	margin-left: -50%;
+}
+.pcb-divider:after {
+	left: 0.5em;
+	margin-right: -50%;
+}

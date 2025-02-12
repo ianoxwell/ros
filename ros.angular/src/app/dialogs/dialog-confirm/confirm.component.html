@@ -1,0 +1,14 @@
+<h1 mat-dialog-title [ngClass]="data.status"> {{data.title}} </h1>
+
+<mat-dialog-content>
+	<p [innerHtml]="data.message"></p>
+</mat-dialog-content>
+<mat-dialog-actions class="flex-box flex-justify-end">
+	<button mat-flat-button type="button" *ngIf="!data.isAlert" mat-dialog-close>Cancel</button>
+	<button mat-flat-button type="button" [ngClass]="data.status" *ngIf="data.isAlert" (click)="onOkClick()" cdkFocusInitial>Ok</button>
+
+	<!-- Can optionally provide a result for the closing dialog. -->
+	<button mat-flat-button *ngIf="!data.isAlert" [ngClass]="data.status" (click)="onOkClick()" cdkFocusInitial>
+		{{ data.buttonText }}
+	</button>
+</mat-dialog-actions>

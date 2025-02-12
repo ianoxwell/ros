@@ -1,0 +1,89 @@
+@media print {
+	@page {
+		size: A4;
+		margin: 11mm 17mm 17mm 17mm;
+	  }
+	html, body {
+		width: 210mm !important;
+		height: 297mm;
+	  }
+	body { 
+		line-height: 1.4;
+		word-spacing:1.1pt;
+		letter-spacing:0.2pt;
+		color: #000;
+		background: none;
+		font-size: 12pt;
+	 }
+
+	h1{font-size:19pt;}
+	h2{font-size:17pt;}
+	h3{font-size:15pt;}
+	h4,h5,h6{font-size:12pt;}
+
+    header.site-header {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        border-bottom-color: #000000 !important;
+        max-width: 48rem !important;
+        h1 {
+            text-align: left !important;
+            font-size: 1.4rem !important;
+        }
+    }
+    #toggle-menu,
+    nav.nav-site {
+        display: none !important;
+    }
+    section.breadcrumbs {
+        display: none !important;
+    }
+
+	footer {
+		#fat-footer,
+		.scrollToTop {
+			display: none !important;
+		}
+		.footer-content,
+		.footer-left,
+		.footer-bottom,
+		p {
+			background: white !important;
+			color: #000 !important;
+			font-size: 10px;
+		}
+	}
+	.print-only {
+		display: inline-block !important;
+		visibility: visible !important;
+	}
+	.print-hide {
+		display: none !important;
+	}
+	.footer-right > ul{
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		flex-direction: column !important;
+		&>li::after {
+			content: none !important;
+		}
+		&>li>a {
+			text-align: left !important;
+		}
+	}
+	.note-card-inner {
+		color: #000 !important;
+		font-size: 10px;;
+	}
+	.last-updated {
+		display: inline-block !important;
+		color: #000 !important;
+		font-size: 10px;
+		position: relative !important;
+		margin: 0;
+	}
+	mat-card {
+		box-shadow: none !important;
+		padding: 0.1rem !important;
+	}
+}

@@ -1,0 +1,85 @@
+<form [formGroup]="searchForm" *ngIf="filterQuery" >
+	<div>
+		<mat-form-field class="ml-2 w-14em">
+			<mat-label>Sort By</mat-label>
+			<mat-select formControlName="orderby" >
+				<mat-option *ngFor="let item of orderRecipesBy" [value]="item.value">
+				{{item.key}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-toolbar class="flex-justify-space-between">
+			<span class="refine-text">Refine</span>
+			<button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
+				<span class="clear-all-text">Clear all</span>
+			</button>
+		</mat-toolbar>
+		<mat-form-field class="ml-2 mt-1 w-14em">
+			<!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
+			<input matInput type="text" placeholder="Name" Title="Name" formControlName="name" >
+		</mat-form-field>
+		<!-- <mat-form-field class="ml-2">
+		<mat-icon matPrefix class="pr-1">beach_access</mat-icon>
+		<input matInput type="text" placeholder="Ingredient" Title="Ingredient" formControlName="ingredient" >
+		</mat-form-field>
+		<mat-form-field class="ml-2">
+		<mat-icon matPrefix class="pr-1">person</mat-icon>
+		<input matInput type="text" placeholder="Author" Title="Author" formControlName="author" >
+		</mat-form-field> -->
+	</div>
+	<div class="ml-2">
+		<div>
+			<label>Cooking Time </label>
+			<mat-slider max="60" step="5" min="0" [value]="totalTime.value"></mat-slider>
+		</div>
+		<div>
+			<label>Serving Price </label>
+			<mat-slider max="60" step="5" min="0" [value]="servingPrice.value" ></mat-slider>
+		</div>
+		<mat-form-field class=" w-14em">
+			<mat-label>Allergies</mat-label>
+			<mat-select formControlName="allergyWarning" multiple>
+				<mat-option *ngFor="let item of allergyArray$ | async" [value]="item.title">
+					{{item.title}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<!-- <mat-form-field>
+			<mat-label>Recipe Type</mat-label>
+			<mat-select formControlName="recipeType" multiple>
+			<mat-option *ngFor="let item of allergyArray" [value]="item.name">
+				{{item.name}}
+			</mat-option>
+			</mat-select>
+		</mat-form-field> -->
+		<app-paginator class="bottom-sticky"
+			class="recipe-filter-paginator"
+			[length]="dataLength"
+			[horizontalLayout]="false"
+			[pageSize]="filterQuery.perPage"
+			[pageIndex]="filterQuery.page"
+			[showFirstLastButtons]="true"
+			[pageSizeOptions]="[5, 10, 25, 100]"
+			(page)="pageChange($event)">
+		</app-paginator>
+		<div>&nbsp;</div>
+	</div>
+</form>
+<!-- 
+d nameControl: text input,
+d ingredientControl: text input,
+d authorControl: text input,
+d totalTimeControl: Slider,
+d servingPriceControl: Slider, // search priceServing {$le: servingTime}
+recipeCreatedControl: MatSelect, // date number greater than the number set ie today - 7 days 
+
+Multi Mat-select
+equipmentControl: [], // {favouriteFoods: {"$in": ["sushi", "hotdog"]}}
+d recipeTypeControl: [],
+healthLabelsControl: [],
+cuisineTypeControl: [],
+d allergyWarningControl: [], // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }  
+
+orderbyControl: MatSelect,
+perPageControl: 0,
+pageControl: 0 -->

@@ -1,0 +1,113 @@
+
+.doughnut {
+	--doughnut-spacing-color: 255, 255, 255;
+	--doughnut-spacing-deg: calc(1deg * var(--doughnut-spacing));
+	border-radius: 50%;
+	height: var(--doughnut-size);
+	margin: 40px;
+	position: relative;
+	width: var(--doughnut-size);
+  }
+
+  .doughnut-label {
+	left: 50%;
+	line-height: 1.5;
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%;
+  }
+
+  .doughnut-label-header  {
+	font-size: 24px;
+	font-weight: 600;
+  }
+
+  .doughnut-label-sub {
+	color: #666666;
+	font-size: 14px;
+	letter-spacing: 0.05em;
+  }
+
+  .doughnut-slice {
+	height: 100%;
+	position: absolute;
+	width: 100%;
+  }
+
+  .doughnut-slice::before,
+  .doughnut-slice::after {
+	border: var(--doughnut-border-width) solid rgba(0,0,0,0);
+	border-radius: 50%;
+	content: '';
+	left:0;
+	position: absolute;
+	top: 0;
+	transform: rotate(45deg);
+
+  }
+
+  .doughnut-slice::before {
+	border-width: calc(var(--doughnut-border-width) + 1px);
+	box-shadow: 0 0 1px 0 #{'rgba(var(--doughnut-spacing-color), calc(100 * var(--doughnut-spacing)))'};
+	height: calc(100% - (2 * var(--doughnut-border-width)) - 2px);
+	width: calc(100% - (2 * var(--doughnut-border-width)) - 2px);
+  }
+  .doughnut-slice::after {
+	height: calc(100% - (2 * var(--doughnut-border-width)));
+	width: calc(100% - (2 * var(--doughnut-border-width)));
+  }
+
+  $slides-concat: '';
+
+ $doughnut-slices: (
+  first: var(--doughnut-color-slice-first),
+  second: #FFC820,
+  third: #97C95C,
+  fourth: #1CB2F6,
+  fifth: null,
+  sixth: null,
+  seventh: null,
+  eighth: null,
+  ninth: null
+);
+
+
+@each $slice in $doughnut-slices {
+	$name: nth($slice, 1);
+	$i: index($doughnut-slices, $slice);
+
+	@if $i > 1 {
+		.doughnut-slice-#{$name} {
+		--#{$name}-start: calc(#{$slides-concat});
+		--#{$name}-check: max(calc(var(--#{$name}-start) - .5), 0);
+		clip-path: inset(0 calc(50% * (var(--#{$name}-check) / var(--#{$name}-check))) 0 0);
+		}
+	}
+	@else {
+		.doughnut-slice-#{$name} {
+		--#{$name}-start: 0;
+		}
+	}
+
+	.doughnut-slice-#{$name}::before {
+		border-top-color: #{'rgba(var(--doughnut-spacing-color), calc(100 * var(--doughnut-spacing)))'};
+		transform: rotate(calc(360deg * var(--#{$name}-start) + 45deg));
+	}
+
+	.doughnut-slice-#{$name}::after {
+		border-top-color: rgba(var(--doughnut-color-slice-#{$name}), 1);
+		border-right-color: rgba(var(--doughnut-color-slice-#{$name}), calc(100 * (var(--#{$name}) - .25)));
+		border-bottom-color: rgba(var(--doughnut-color-slice-#{$name}), calc(100 * (var(--#{$name}) - .5)));
+		border-left-color: rgba(var(--doughnut-color-slice-#{$name}), calc(100 * (var(--#{$name}) - .75)));
+		transform: rotate(calc(360deg * var(--#{$name}-start) + 45deg + var(--doughnut-spacing-deg)));
+	}
+
+	@if $i == 1 {
+		$slides-concat: var(--#{$name});
+	}
+	@else {
+		$slides-concat: $slides-concat + ' + ' + var(--#{$name});
+	}
+}

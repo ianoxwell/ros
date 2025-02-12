@@ -1,0 +1,11 @@
+<div *ngIf="labels?.header">{{labels.header}}</div>
+<div style="box-sizing: border-box;">
+	<div class="doughnut" [style]="sliceStyle">
+		<div *ngFor="let slice of data; let i = index"
+			class="doughnut-slice" ngClass="doughnut-slice-{{numberArray[i]}}" title="{{slice.value}} - {{slice.label}}"></div>
+		<div class="doughnut-label">
+			<div class="doughnut-label-header">{{labels.internalLabel}}</div>
+			<div class="doughnut-label-sub">{{labels.internalSubLabel}}</div>
+		</div>
+	</div>
+</div>

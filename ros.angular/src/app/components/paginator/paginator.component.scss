@@ -1,0 +1,20 @@
+@import '../../styles/variables.scss';
+
+.narrow-select {
+	width: 4rem;
+}
+
+button:disabled, .mat-icon-button.mat-button-disabled {
+	background-color: $default-background;
+    font-size: 16px;
+	cursor: not-allowed;
+	.color-on-primary {
+		filter: invert(1);
+	}
+}
+
+.page-buttons {
+	.mat-icon-button:not(:last-child) {
+		margin-right: 2px;
+	}
+}

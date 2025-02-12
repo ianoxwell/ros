@@ -1,0 +1,13 @@
+@import '../../../styles/variables.scss';
+
+table {
+  width: 100%;
+}
+.highlight {
+  background-color: $accent-darker !important;
+}
+.responsive-table {
+	margin: 0.5rem;
+	height: calc(100vh - 14rem);
+	overflow: auto;
+}

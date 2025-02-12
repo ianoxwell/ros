@@ -1,0 +1,111 @@
+<article *ngIf="!!selectedRecipe">
+  <main class="mt-1" >
+	<div class="print-only"><h2>{{selectedRecipe.name}}</h2></div>
+	<!-- Additional details -->
+	<section class="flex-box flex-column mt-2">
+		<mat-chip-list aria-label="Recipe Types" horizontal>
+			<mat-chip *ngFor="let tag of selectedRecipe.recipeDishTypes">{{tag.title}}</mat-chip>
+		</mat-chip-list>
+	</section>
+	<section class="mt-2">
+		<h4>Author and link</h4>
+	</section>
+	<section class="flex-box flex-row">
+		<section class="w-50 flex-column flex-box mr-2">
+			<div *ngIf="selectedRecipe.teaser && selectedRecipe.teaser.length > 0">
+				<h4>Description</h4>
+				<blockquote >
+					<p [innerHTML]="selectedRecipe.teaser | safeHtml"></p>
+					<footer>
+						<cite><a [href]="selectedRecipe.sourceOfRecipeLink" [title]="selectedRecipe.creditsText">{{selectedRecipe.creditsText}}</a></cite>
+					</footer>
+				</blockquote>
+			</div>
+			<div class="w-full mt-4">
+				<h4>Ingredients</h4>
+				<mat-list>
+					<mat-list-item *ngFor="let item of selectedRecipe.recipeIngredientLists" class="pb-1">
+						<span class="mr-1">{{englishIngredientItem(item)}}</span>
+						<!-- <span class="mr-1">{{item.unit}} -</span> -->
+						<span><a [routerLink]="[routerLinkURL(item)]">{{item.ingredientId}}</a></span>
+						<span *ngIf="item.allergies?.length">          
+							<mat-icon class="text-warning">warning</mat-icon>
+						</span>
+					</mat-list-item>
+				</mat-list>
+			</div>
+		</section>
+		<!-- Image and favourites  -->
+		<div class="w-50">
+			<img *ngIf="!!selectedRecipe.recipePictures" [src]="selectedRecipe.recipePictures[0].fileLink" [alt]="selectedRecipe.recipePictures[0].title" class="w-full"/>
+			<div class="flex-box flex-row flex-justify-center">
+				<app-icon-text icon="star" [text]="selectedRecipe.numberStars + ' - (' + selectedRecipe.numberReviews + ') Rate it'" titleText="Number Servings"></app-icon-text>
+				<app-icon-text icon="favorite" [text]="selectedRecipe.numberFavourites + ' Favourites'" titleText="Favourites"></app-icon-text>
+				<app-icon-text icon="restaurant" color="accent" [text]="selectedRecipe.numberOfTimesCooked + '  times Cooked'" titleText="Times cooked"></app-icon-text>
+			</div> 
+			<div class="flex-box flex-row flex-justify-center">
+				<app-icon-text icon="people_outline" [text]="selectedRecipe.numberOfServings + ' serving(s)'" titleText="Number Servings"></app-icon-text>
+				<span class="flex-box flex-align-center flex-row">
+					<mat-icon class="mr-1">timer</mat-icon>
+					<span class="pr-1">{{selectedRecipe.prepTime || 0}} Prep</span>
+					<span class="pr-1">{{selectedRecipe.cookTime || 0}} Cook</span>
+					<span>{{selectedRecipe.readyInMinutes || 0}} Ready in</span>
+				</span>
+				<ng-template *ngIf="selectedRecipe.allergyWarnings?.length">
+					<span *ngFor="let allergy of selectedRecipe.allergyWarnings">
+						{{allergy}}
+					</span>
+				</ng-template>
+				<!-- Todo - add print functionality -->
+				<!-- <div>
+					<button mat-icon-button type="button" aria-label="Print" (click)="printView()"><mat-icon>print</mat-icon></button>
+				</div> -->
+			</div>
+		</div>
+	</section>
+
+	<!-- Allergy Alerts -->
+	<div *ngIf="selectedRecipe.allergyWarnings?.length">
+		<h4>Allergy Warnings</h4>
+		<span *ngFor="let warning of selectedRecipe.allergyWarnings">{{warning}}</span>
+	</div>
+	<!-- Equipment Required -->
+	<div class="mt-2">
+		<h4>Equipment Required</h4>
+		<mat-chip-list aria-label="Equipment Required">
+			<mat-chip *ngFor="let item of selectedRecipe.equipmentRequired">{{item}}</mat-chip>
+		</mat-chip-list>
+	</div>
+    <main class="flex-box flex-column">
+
+      <div>
+        <h4 class="mt-4">How to Make</h4>
+        <ng-container *ngIf="selectedRecipe.steppedInstructions; else blockInstructionsTemplate">
+          <mat-list>
+            <mat-list-item *ngFor="let item of selectedRecipe.steppedInstructions">
+              <div class="flex-box flex-row p-1">
+                <span class="text-small text-muted mr-2 w-7 align-self-center">Step {{item.stepNumber}}</span>
+                <span [innerHTML]="item.stepDescription | safeHtml"></span>
+              </div>
+              <mat-divider></mat-divider>
+          </mat-list-item>
+          </mat-list>
+        </ng-container>
+        <ng-template #blockInstructionsTemplate>
+          <div [innerHTML]="selectedRecipe.rawInstructions"></div>
+        </ng-template>    
+      </div>
+    </main>
+    <section class="mt-2">
+      <h4>Nutrition</h4>
+    </section>
+
+    <section class="mt-2">
+        <h4>Comments and Ratings</h4>
+    </section>
+    <section class="mt-2">
+      <h4>Related Recipes</h4>
+    </section>
+  </main>
+</article>
+    

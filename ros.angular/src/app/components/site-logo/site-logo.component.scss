@@ -1,0 +1,91 @@
+@import '../../styles/variables.scss';
+
+.color- {
+	height: 1em;
+	&1 {
+	  background-color: $accent;
+	}
+	  &2 {
+	  background-color: $primary-lighter;
+	}
+	  &3 {
+	  background-color: $primary-darker;
+	}
+  }
+  .text-pro {
+	color: $primary-lighter;
+	transform: rotate(-90deg);
+	font-size: 1.7em;
+  }
+  .text-vision {
+	color: $accent;
+	font-size: 3em;
+	font-weight: bold;
+  }
+  .text-color-1 {
+	color: $accent;
+  }
+  .text-cook {
+	color: $primary-lighter;
+	font-size: 2.4em;
+	margin-left: 0.2em;
+	margin-top: 0.75em;
+  }
+  
+  .logo-container {
+	display: flex;
+  }
+  .sub-tag-line {
+	margin-top: 0.5rem;
+  }
+  
+  .row {
+	display: flex;
+	flex-direction: row;
+  }
+  
+  .column {
+	display: flex;
+	flex-direction: column;
+  }
+  
+  .logo {
+	width: 6em;
+	height: 6em;
+  }
+  
+  .logo > div {
+	height: 1.4em;
+	width: 100%;
+	display: flex;
+	margin-bottom: 0.2em;
+	> span {
+	  margin-right: 0.2em;
+	}
+  }
+  
+  .width-20 {
+	width: 30%;
+  }
+  
+  .width-50 {
+	width: 50%;
+  }
+  .flex-grow {
+	flex-grow: 1;
+  }
+  
+  ul {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+	
+	li {
+	  margin-right: 1.8em;
+	}
+  }
+  li:first-child {
+	  list-style: none;
+	}

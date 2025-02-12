@@ -1,0 +1,109 @@
+<div [formGroup]="form" class="flex-box flex-row-column ml-2">
+	<div class="flex-box flex-row flex-grow-1">
+		<div class="flex-box flex-column column-one">
+			<mat-form-field class="pr-1">
+				<mat-label>Total Fat (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="totalFat"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Saturated Fat (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="saturatedFat"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Trans Fat (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="transFat"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Poly Unsaturated Fat (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="polyUnsaturatedFat"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Mono Unsaturated Fat (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="monoUnsaturatedFat"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Omega 3s (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="omega3s"/>
+				<span matSuffix>(mg)</span>					
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Omega 6s (mg)</mat-label>
+				<input type="text" matInput 
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="omega6s"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+			<div class="m-2">
+				<mat-label>Omega 3 to 6 Ratio (higher is desirable)</mat-label>
+				<span class="ml-2">{{O3ToO6Ratio}}</span>
+			</div>
+			<mat-form-field>
+				<mat-label>Cholesterol (mg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="cholesterol"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+		</div>
+		<div class="flex-box flex-column column-two">
+			<mat-form-field class="pr-1">
+				<mat-label>Calories (kcal)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="calories"/>
+				<span matSuffix>(kcal)</span>
+			</mat-form-field>
+			<mat-form-field>
+				<mat-label>Total Carbohydrate (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="totalCarbohydrate"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Dietary Fibre (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="dietaryFiber"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field class="ml-2">
+				<mat-label>Total Sugars (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="totalSugars"/>
+				<span matSuffix>(g)</span>					
+			</mat-form-field>
+			<mat-form-field>
+				<mat-label>Protein (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="protein"/>
+				<span matSuffix>(g)</span>
+			</mat-form-field>
+			<mat-form-field>
+				<mat-label>Water (g)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="water"/>
+				<span matSuffix>(g)</span>					
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="column-three">
+		<app-graph-doughnut [data]="doughnutData" [labels]="doughnutLabels"></app-graph-doughnut>
+	</div>
+</div>

@@ -1,0 +1,101 @@
+<div class="flex-box flex-column" *ngIf="selected">
+	<form [formGroup]="ingredientForm" fxLayout="column" class="p-3" style="overflow-y: auto;" *ngIf="!!ingredientForm">
+		<section>
+			<div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<h3>Basic Details</h3>
+			</div>
+			<app-edit-ingredient-basic [refData]="refData" [ingredientForm]="ingredientForm"
+				[selectedIngredient]="singleIngredient" (updatedIngredient)="updateIngredient($event)">
+			</app-edit-ingredient-basic>
+		</section>
+		<section class="mt-2 mb-2">
+			<div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<h3>Nutrition Facts</h3>
+				<span class="ml-2 text-muted mb-2">Serving Size - 100grams (100g)</span>
+			</div>
+			<app-edit-ingredient-nutrition [form]="nutritionFacts" (markAsDirty)="nutritionFacts.markAsDirty()">
+			</app-edit-ingredient-nutrition>
+		</section>
+
+		<section class="mt-2 mb-2">
+			<div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<h3>Price</h3>
+			</div>
+			<ng-container *ngFor="let group of price.controls; index as i">
+				<app-ingredient-prices-form [price]="getFormGroupOfArray(price, i)" [measurements]="measurements"
+					(markAsDirty)="price.markAsDirty()">
+				</app-ingredient-prices-form>
+			</ng-container>
+
+		</section>
+
+		<section class="mt-2 mb-2">
+			<div class="flex-box flex-justify-space-between  background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<div class="flex-box flex-row flex-align-center">
+					<h3>Conversions</h3>
+					<span class="ml-2 text-muted mb-2">{{selected.ingredientConversions?.length}}</span>
+				</div>
+				<button mat-icon-button color="accent" (click)="addSubDocument('conversions')" type="button"
+					title="Add Conversion" class="mb-2 mr-2">
+					<mat-icon>add</mat-icon>
+				</button>
+			</div>
+			<div cdkDropList (cdkDropListDropped)="dragNDrop($event)" [cdkDropListData]="selected.ingredientConversions"
+				class="p-2">
+				<div cdkDrag *ngFor="let convert of ingredientConversions.controls; index as i">
+					<app-ingredient-conversion-form [convert]="getFormGroupOfArray(ingredientConversions, i)"
+						[measurements]="measurements" *ngIf="refData.IngredientState"
+						[ingredientState]="refData.IngredientState" (markAsDirty)="ingredientConversions.markAsDirty()"
+						(deleteItem)="deleteSubDocument('conversions', convert.value._id, i)">
+					</app-ingredient-conversion-form>
+				</div>
+			</div>
+		</section>
+		<section class="mt-2 mb-2">
+			<div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<h3>Common Vitamins</h3>
+				<span class="ml-2 text-muted mb-2">Serving Size - 100grams (100g)</span>
+			</div>
+			<app-edit-common-vitamins [form]="commonVitamins" (markAsDirty)="commonVitamins.markAsDirty()">
+			</app-edit-common-vitamins>
+		</section>
+		<section class="mt-2 mb-2">
+			<div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
+				<h3>Common Minerals</h3>
+				<span class="ml-2 text-muted mb-2">Serving Size - 100grams (100g)</span>
+			</div>
+			<app-edit-common-minerals [form]="commonMinerals" (markAsDirty)="commonMinerals.markAsDirty()">
+			</app-edit-common-minerals>
+		</section>
+		<!-- Recipes with this ingredient -->
+		<section *ngIf="!isNew" class="mt-2 mb-2">
+			<h3>Recipes this ingredient is used in: {{singleIngredient.recipes?.length}}</h3>
+			<div *ngFor="let recipe of singleIngredient.recipes" class="recipe-wrapper">
+				<span>
+					<a class="recipe-link" [routerLink]="'/savoury/recipes/item/' + recipe.id">{{recipe.name}}</a>
+				</span>
+				<!-- <span class="ml-2" *ngFor="let recipeType of recipe.recipeType">
+					{{recipeType | sentenceCase}}
+				</span> -->
+			</div>
+		</section>
+		<div *ngIf="!isNew" class="text-really-small text-muted">
+			<span>Created: {{selected.createdAt | date}}</span>
+			<span class="ml-2">Last Modified: {{selected.updatedAt | date}}</span>
+		</div>
+	</form>
+	<div class="bottom-fixed w-100">
+		<span class="flex-box flex-justify-space-between background-bar-light-grey pb-2 pt-2">
+			<span class="ml-4">
+				<app-save-button color="warn" *ngIf="!isNew" [isSaving]="isSavingResults" (save)="deleteIngredient()"
+					label="Delete Ingredient" iconName="delete" iconPosition="left"></app-save-button>
+			</span>
+			<span class="flex-box flex-align-center mr-4">
+				<button type="button" mat-flat-button title="Cancel" (click)="back.emit()" class="mr-2">Cancel</button>
+
+				<app-save-button color="accent" [isSaving]="isSavingResults" [dirty]="ingredientForm.dirty"
+					[valid]="ingredientForm.valid" (save)="onSaveItem()"></app-save-button>
+			</span>
+		</span>
+	</div>
+</div>

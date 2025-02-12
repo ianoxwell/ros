@@ -1,0 +1,46 @@
+<div class="responsive-table flex-box flex-column mat-elevation-z8"> 
+	<table mat-table [dataSource]="dataSource" matSort [matSortActive]="sortPageObj.orderby"
+			matSortDisableClear [matSortDirection]="sortPageObj.order" aria-label="Ingredients" (matSortChange)="onSortChange($event)" >
+		<!-- name Column -->
+		<ng-container matColumnDef="name">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+			<td mat-cell *matCellDef="let row">{{row.name}}</td>
+		</ng-container>
+
+		<!-- Parent / type Column -->
+		<ng-container matColumnDef="foodGroup">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Food Group</th>
+			<td mat-cell *matCellDef="let row">{{row.foodGroup.title}}</td>
+		</ng-container>
+
+		<!-- Allergies Column -->
+		<ng-container matColumnDef="allergies">
+			<th mat-header-cell *matHeaderCellDef>Allergies</th>
+			<td mat-cell *matCellDef="let row">
+				<span *ngFor="let allergy of row.allergies">{{allergy.title}}; </span></td>
+		</ng-container>
+
+		<!-- Purchased By Column hide on smaller size-->
+	<!--    todo change weight, volume, each to symbols-->
+		<ng-container matColumnDef="purchasedBy">
+			<th mat-header-cell *matHeaderCellDef>Purchased By</th>
+			<td mat-cell *matCellDef="let row">{{purchasedBy[row.purchasedBy]}}</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"
+			[ngClass]="{'highlight': row.mouseRow}"
+			(click)="goto(row)"
+			(mouseover)="mouseRow(row, 'over')"
+			(mouseout)="mouseRow(row, 'out')"></tr>
+	</table>
+
+	<app-paginator class="bottom-sticky"
+		(page)="onPageChange($event)"
+		[length]="dataLength"
+		[count]="dataCount"
+		[pageSize]="sortPageObj.perPage"
+		[showFirstLastButtons]="true"
+		[pageIndex]="sortPageObj.page">
+	</app-paginator>
+</div>

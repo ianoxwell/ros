@@ -1,0 +1,20 @@
+<div #container class="ui-toast-message ui-shadow" 
+	[@messageState]="{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}"
+	[ngClass]="{'ui-toast-message-info': message.severity === messageStatus.Information ,'ui-toast-message-warn': message.severity === messageStatus.Warning,
+	'ui-toast-message-error': message.severity === messageStatus.Error,'ui-toast-message-success': message.severity === messageStatus.Success}"
+	(mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+	<div class="ui-toast-message-content flex-box flex-align-center">
+		<mat-icon class="ui-toast-icon mr-1">
+				{{getIconName(message.severity)}}
+		</mat-icon>
+		<div class="ui-toast-message-text-content flex-grow-1 flex-box flex-column">
+			<div class="ui-toast-summary">{{message.summary}}</div>
+			<div class="ui-toast-detail" [innerHtml]="message.detail"></div>
+		</div>
+		<button mat-icon-button tabindex="0" class="ui-toast-close-icon" 
+			(click)="onCloseIconClick($event)"
+			(keydown.enter)="onCloseIconClick($event)" title="close"
+			*ngIf="message.closable !== false"><mat-icon>close</mat-icon>
+		</button>
+	</div>
+</div>

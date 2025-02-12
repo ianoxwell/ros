@@ -1,0 +1,134 @@
+<div [formGroup]="form" class="flex-box flex-row-column ml-2">
+	<div class="flex-box flex-row flex-grow-1">
+		<div class="flex-box flex-column column-one">
+			<mat-form-field class="pr-2">
+				<mat-label>VitaminA, RAE (μg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="vitaminARae"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin C (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="vitaminC"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Thiamin B1 (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="thiaminB1"/>
+				<span matSuffix>(mg)</span>					
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Riboflavin B2 (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="riboflavinB2"/>
+				<span matSuffix>(mg)</span>						
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Niacin B3 (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="niacinB3"/>
+				<span matSuffix>(mg)</span>						
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>PantothenicAcid B5 (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="pantothenicAcidB5"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin B6 (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalThreePlaces"
+					formControlName="vitaminB6"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+		
+		</div>
+		<!-- Column Two -->
+		<div class="flex-box flex-column column-two">
+
+			<mat-form-field class="pr-2">
+				<mat-label>Folate B9 (μg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="folateB9"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Folic Acid (μg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="folicAcid"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Food Folate (μg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="foodFolate"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Folate Dfe (μg)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="folateDfe"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin B12 (μg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="vitaminB12"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+		</div>
+
+		<!-- Column Three -->
+		<div class="flex-box flex-column column-three">
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin A IU (IU)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="vitaminAIu"/>
+				<span matSuffix>(IU)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin E (mg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="vitaminE"/>
+				<span matSuffix>(mg)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin D (IU)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="vitaminD"/>
+				<span matSuffix>(IU)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin D IU (IU)</mat-label>
+				<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="vitaminDIu"/>
+				<span matSuffix>(IU)</span>
+			</mat-form-field>
+
+			<mat-form-field class="pr-2">
+				<mat-label>Vitamin K (μg)</mat-label>
+				<input type="text" matInput
+					digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
+					formControlName="vitaminK"/>
+				<span matSuffix>(μg)</span>
+			</mat-form-field>
+		</div>
+	</div>
+</div>

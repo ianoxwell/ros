@@ -1,0 +1,220 @@
+@use "sass:math";
+@import './variables.scss';
+
+// Bootstrap utility classes:
+// p-0: [padding: 0rem]
+// ml-0: [margin-left: 0rem]
+
+// pl-1 : [ padding-left: 0.5em ]
+// mr-2 : [ margin-right: 1em ]
+// pt-3 : [ padding-top: 1.5em ]
+// mb-4 : [ margin-bottom: 2em ]
+
+// pl-5 : [ padding-left: 2.5em ]
+// mr-6 : [ margin-right: 3em ]
+
+@each $space in $spaces {
+	.m-#{$space} {
+		margin: #{math.div($space, 2)}rem;
+	}
+
+	.p-#{$space} {
+		padding: #{math.div($space, 2)}rem;
+	}
+
+	@each $side in $sides {
+		.m#{str-slice($side, 0, 1)}-#{$space} {
+			margin-#{$side}: #{math.div($space, 2)}rem !important;
+		}
+
+		.p#{str-slice($side, 0, 1)}-#{$space} {
+			padding-#{$side}: #{math.div($space, 2)}rem !important;
+		}
+	}
+}
+@each $width in $widthsEm {
+	.w-#{$width}em {
+		width: #{$width}em;
+	}
+}
+
+@each $width in $widthsPercent {
+	.w-#{$width} {
+		width: percentage(math.div($width, 100));
+	}
+}
+
+.text- {
+	&small {
+		font-size: 0.8em;
+	}
+	&really-small {
+		font-size: 0.65em;
+	}
+	&extra-small {
+		font-size: 0.55em;
+	}
+	&muted {
+		color: $muted;
+	}
+	&success {
+		color: $success;
+	}
+	&red {
+		color: $warn;
+	}
+	&warning {
+		color: $alert;
+	}
+}
+b {
+	font-weight: 500;
+}
+
+@mixin margin-padding-dialog-box-header() {
+	margin: -1.5rem -1.5rem 1rem -1.5rem;
+	padding: 0.5rem 1.5rem;
+}
+
+.mat-dialog-title.warning {
+	background: $warn;
+	@include margin-padding-dialog-box-header();
+}
+.mat-dialog-title.success {
+	background: $success;
+	@include margin-padding-dialog-box-header();
+}
+
+.selected {
+	background: $accent;
+	padding: 1rem;
+}
+.hover {
+	background: $light-grey;
+}
+
+.ingredients-list-tabs {
+	mat-tab-header {
+		display: none;
+	}
+}
+
+.flex-row-column {
+	@include breakpoint(xs) {
+		@include flex-direction(column);
+	}
+
+	@include breakpoint(sm) {
+		@include flex-direction(column);
+	}
+
+	@include breakpoint($min: md) {
+		@include flex-direction(row);
+
+		.max-width-45-large-screens {
+			padding-bottom: 0;
+		}
+	}
+}
+.max-width-45-large-screens {
+	@include breakpoint($min: md) {
+		max-width: 45%;
+		width: 45%;
+	}
+	padding-bottom: 2rem;
+}
+
+.print-only {
+	display: none;
+	visibility: hidden;
+}
+
+// https://www.w3.org/WAI/tutorials/forms/labels/#note-on-hiding-elements
+.visually-hidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.background-bar-light-grey {
+	background-color: $light-grey;
+}
+.accent-left {
+	border-left: 2px $accent solid;
+}
+
+.svg-icon {
+	width: $title;
+}
+
+.recipe-filter-paginator {
+	.mat-paginator-outer-container {
+		.mat-paginator-container {
+			@include justify-content(center);
+			.mat-paginator-range-actions {
+				@include flex-wrap(wrap);
+				@include justify-content(center);
+				.mat-paginator-range-label {
+					width: 100%;
+					text-align: center;
+				}
+			}
+		}
+	}
+}
+
+.bottom-sticky {
+	position: sticky;
+	bottom: 0;
+	z-index: 1;
+}
+.table-footer {
+	margin-bottom: 4em;
+}
+
+body .ui-toast .ui-toast-message {
+	-webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+	-moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+	margin: 0 0 1em 0;
+	padding: 1em;
+	.ui-toast-close-icon {
+		margin-top: -2em;
+		margin-right: -0.7em;
+	}
+}
+body .ui-toast .ui-toast-message.ui-toast-message-info {
+	background-color: $accent-lighter;
+	border: 0 none;
+	color: #212121;
+}
+body .ui-toast .ui-toast-message.ui-toast-message-info .ui-toast-close-icon {
+	color: #212121;
+}
+body .ui-toast .ui-toast-message.ui-toast-message-success {
+	background-color: $success;
+	border: 0 none;
+	color: $colour-text-on-success;
+}
+
+body .ui-toast .ui-toast-message.ui-toast-message-warn {
+	background-color: $alert;
+	border: 0 none;
+	color: $colour-text-on-success;
+}
+
+body .ui-toast .ui-toast-message.ui-toast-message-error {
+	background-color: $warn;
+	border: 0 none;
+	color: $colour-text-on-success;
+}
+
+.footer {
+	background-color: $primary;
+	color: $dark-text;
+}

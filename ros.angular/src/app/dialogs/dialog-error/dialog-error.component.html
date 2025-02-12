@@ -1,0 +1,11 @@
+<div>
+  <h2 mat-dialog-title="">Error - {{data.error.title}}</h2>
+  <mat-dialog-content>
+    <span>{{data.error.content}}</span>
+  </mat-dialog-content>
+  <div style="flex-grow: 1"></div>
+  <mat-dialog-actions fxLayoutAlign="end end">
+    <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
+    <button type="button" mat-flat-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Okay</button>
+  </mat-dialog-actions>
+</div>

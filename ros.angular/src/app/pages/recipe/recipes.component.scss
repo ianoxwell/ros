@@ -1,0 +1,26 @@
+@import '../../styles/flex-mixins.scss';
+
+.container{
+    margin: 20px;
+    padding: 0 ;
+  }
+
+  .filter-side-bar {
+    max-width: 250px;
+  }
+  .grid-parent {
+	@include display-grid;
+	@include flex-grow(1);
+	@include breakpoint(xs) {
+		@include grid-template-columns(repeat(1,100%));
+	}
+	@include breakpoint(sm) {
+		@include grid-template-columns(repeat(2,49%));
+	}
+	@include breakpoint(md) {
+		@include grid-template-columns(repeat(3,32%));
+	}
+	@include breakpoint(lg) {
+		@include grid-template-columns(repeat(4,24%));
+	}
+  }
