@@ -41,6 +41,8 @@ Using Dbeaver as local postGres to connect to the fly proxy
 
 ### Installation
 
+If a new machine without global nest install `npm install -g @nestjs/cli`
+
 `nest new api-ros`
 `cd .\api-ros\src`
 `nest generate module ingredient`
