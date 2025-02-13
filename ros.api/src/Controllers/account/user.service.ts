@@ -1,4 +1,6 @@
 import { CMessage } from '@base/message.class';
+import { IResetPasswordRequest, IUserBasicAuth } from '@models/reset-password-request.dto';
+import { IUserProfile, IUserSummary } from '@models/user.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,8 +9,6 @@ import { randomBytes } from 'crypto';
 import { IAccessToken } from 'src/Services/auth/access-token.dto';
 import { MailService } from 'src/Services/mail/mail.service';
 import { Repository } from 'typeorm';
-import { IResetPasswordRequest, IUserBasicAuth } from '../../../../Models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from '../../../../Models/user.dto';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { User } from './user.entity';

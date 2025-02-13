@@ -25,7 +25,7 @@ export interface IIngredient extends IIngredientShort {
   conversions?: IConversion[];
 
   /** Linked many to many table */
-  recipes?: IRecipe[];
+  recipeIngredientList?: IRecipe[];
 
   nutrition?: {
     nutrients: INutrients;

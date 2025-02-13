@@ -1,6 +1,14 @@
 import { EOrder, PageMetaDto, PaginatedDto } from '@base//paginated.entity';
 import { IConversion } from '@models/conversion.dto';
-import { EPurchasedBy, ICaloricBreakdown, IIngredient, INutrients, INutritionProperties, IReferenceShort } from '@models/ingredient.dto';
+import {
+  EPurchasedBy,
+  ICaloricBreakdown,
+  IIngredient,
+  IIngredientShort,
+  INutrients,
+  INutritionProperties,
+  IReferenceShort
+} from '@models/ingredient.dto';
 import { IMeasurement } from '@models/measurement.dto';
 import { CMessage } from '@base/message.class';
 import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
@@ -25,10 +33,26 @@ export class IngredientService {
     @InjectRepository(Conversion) private readonly conversionRepository: Repository<Conversion>
   ) {}
 
+  /**
+   * Very quick delete ingredient by id - temp
+   */
+  async deleteIngredientById(id: number): Promise<CMessage> {
+    const ingredient: Ingredient = await this.repository.findOne({
+      where: { id, isActive: true },
+      loadRelationIds: false
+    });
+    ingredient.isActive = false;
+
+    const updateResult = await this.repository.update(ingredient.id, ingredient);
+    return updateResult
+      ? new CMessage('Success', HttpStatus.ACCEPTED)
+      : new CMessage('Unable to find that ingredient', HttpStatus.NOT_FOUND);
+  }
+
   /** Quick and dirty get ingredient by id */
   async getIngredientByIdForRecipe(id: number): Promise<Ingredient> {
     const ingredient: Ingredient = await this.repository.findOne({
-      where: { id },
+      where: { id, isActive: true },
       loadRelationIds: true
     });
 
@@ -42,19 +66,10 @@ export class IngredientService {
 
     return ingredient;
   }
-
-  /**
-   * Very quick delete ingredient by id - temp
-   * TODO - update to turn ingredient isActive false - etc.
-   */
-  async deleteIngredientById(id: number): Promise<any> {
-    return await this.repository.delete({ id });
-  }
-
   /** Filter ingredients and paginate the results. */
   async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<Ingredient>> {
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Like(`%${pageOptionsDto.keyword}%`) },
+      where: { name: Like(`%${pageOptionsDto.keyword}%`), isActive: true },
       order: { name: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
       skip: pageOptionsDto.skip
@@ -74,6 +89,7 @@ export class IngredientService {
   /** Quick and dirty find all - at least it maps it to a pagination object to show number of results. */
   async findAll(): Promise<PaginatedDto<Ingredient>> {
     const [result, itemCount] = await this.repository.findAndCount({
+      where: { isActive: true },
       relations: {
         possibleUnits: true,
         conversions: true
@@ -85,8 +101,9 @@ export class IngredientService {
   }
 
   /** Update ingredient */
-  async updateIngredient(id: number, ing: Ingredient): Promise<UpdateResult> {
-    return this.repository.update(id, ing);
+  async updateIngredient(id: number, ingredient: IIngredient): Promise<UpdateResult> {
+    const ing: Ingredient = this.mapIIngredientDtoIngredient(ingredient);
+    return await this.repository.update(id, ing);
   }
 
   /** checks if the name exists and then attempts to create */
@@ -126,6 +143,38 @@ export class IngredientService {
     const result = await this.repository.save(spoon);
 
     return result !== null ? result : new CMessage('something went pear shaped', HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  /** get a short list of ingredient suggestions */
+  async getSuggestedIngredients(filter: string, limit = 10): Promise<PaginatedDto<IIngredientShort>> {
+    const pageOptionsDto: IFilterBase = {
+      keyword: filter,
+      page: 1,
+      take: limit,
+      skip: 0
+    };
+    const [result, itemCount] = await this.repository.findAndCount({
+      where: { name: Like(`%${filter}%`), isActive: true },
+      order: { name: EOrder.ASC },
+      take: limit,
+      skip: 0
+    });
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PaginatedDto(
+      result.map((ing) => this.mapIngredientToIIngredientShort(ing)),
+      pageMetaDto
+    );
+  }
+
+  mapIngredientToIIngredientShort(i: Ingredient): IIngredientShort {
+    return {
+      id: i.id,
+      name: i.name,
+      originalName: i.originalName,
+      image: i.image,
+      aisle: i.aisle
+    };
   }
 
   mapIngredientToIIngredientDTO(i: Ingredient, isNutritionIncluded = true, measures: Measurement[]): IIngredient {
@@ -337,7 +386,8 @@ export class IngredientService {
       folate: i.nutrition.nutrients.folate,
       folicAcid: i.nutrition.nutrients.folicAcid,
       iodine: i.nutrition.nutrients.iodine,
-      selenium: i.nutrition.nutrients.selenium
+      selenium: i.nutrition.nutrients.selenium,
+      isActive: true
     };
 
     return ing;

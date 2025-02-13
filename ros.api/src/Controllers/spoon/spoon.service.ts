@@ -319,7 +319,8 @@ export class SpoonService {
       percentProtein: spoon.nutrition.caloricBreakdown.percentProtein,
       percentFat: spoon.nutrition.caloricBreakdown.percentFat,
       percentCarbs: spoon.nutrition.caloricBreakdown.percentCarbs,
-      ...nutritionProperties
+      ...nutritionProperties,
+      isActive: true
     };
 
     return ing;

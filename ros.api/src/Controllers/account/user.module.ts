@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from 'src/Services/auth/jwt.strategy';
 import { MailModule } from 'src/Services/mail/mail.module';
-import { UserController } from './account.controller';
+import { AccountController } from './account.controller';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -23,7 +23,7 @@ import { UserService } from './user.service';
       inject: [ConfigService]
     })
   ],
-  controllers: [UserController],
+  controllers: [AccountController],
   providers: [UserService, JwtStrategy],
   exports: [UserService]
 })

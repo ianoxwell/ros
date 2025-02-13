@@ -1,4 +1,6 @@
 import { CMessage } from '@base/message.class';
+import { IResetPasswordRequest, IUserBasicAuth } from '@models/reset-password-request.dto';
+import { IUserProfile, IUserSummary } from '@models/user.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { Body, Get, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,8 +14,6 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { IAccessToken } from 'src/Services/auth/access-token.dto';
-import { IResetPasswordRequest, IUserBasicAuth } from '../../../../Models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from '../../../../Models/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
@@ -21,10 +21,21 @@ import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
-@ApiTags('Account')
-@Controller('api/v1/account')
-export class UserController {
+@ApiTags('Accounts')
+@Controller({ path: 'account' })
+export class AccountController {
   constructor(private userService: UserService) {}
+
+  @Get()
+  @ApiOkResponse({
+    description: 'Quick and dirty get all current users',
+    type: [IUserProfile]
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('JWT-auth')
+  async findAll(): Promise<IUserProfile[]> {
+    return this.userService.findAll();
+  }
 
   @Post('register')
   @ApiBody({ type: IRegisterUser })
@@ -44,26 +55,6 @@ export class UserController {
         email: user.email
       };
     });
-  }
-
-  @Get()
-  @ApiOkResponse({
-    description: 'Quick and dirty get all current users',
-    type: [IUserProfile]
-  })
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('JWT-auth')
-  async findAll(): Promise<IUserProfile[]> {
-    return this.userService.findAll();
-  }
-
-  @Get('email-available')
-  async checkEmailAvailable(@Query('email') email: string): Promise<boolean> {
-    if (!email || email.length < 4 || !email.includes('@')) {
-      throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
-    }
-
-    return this.userService.emailAvailable(email);
   }
 
   @Post('verify-email')
@@ -153,6 +144,15 @@ export class UserController {
     }
 
     return await this.userService.resetPassword(reset);
+  }
+
+  @Get('email-available')
+  async checkEmailAvailable(@Query('email') email: string): Promise<boolean> {
+    if (!email || email.length < 4 || !email.includes('@')) {
+      throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
+    }
+
+    return this.userService.emailAvailable(email);
   }
 
   @Post('login')
