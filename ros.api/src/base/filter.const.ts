@@ -1,4 +1,4 @@
-import { IFilterBase } from './filter.dto';
+import { IFilterBase } from './filter.entity';
 
 /** Blank empty filter options */
 export const CPageOptionsDto: IFilterBase = {

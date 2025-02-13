@@ -10,6 +10,12 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@models/*": ["../Models/*"],
+      "@controllers/*": ["./src/Controllers/*"],
+      "@base/*": ["./src/Base/*"],
+      "@services/*": ["./src/Services/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

@@ -1,23 +1,23 @@
+import { User } from '@controllers//account/user.entity';
+import { Conversion } from '@controllers//ingredient/conversion/conversion.entity';
+import { Ingredient } from '@controllers//ingredient/ingredient.entity';
+import { Measurement } from '@controllers//measurement/measurement.entity';
+import { MeasurementModule } from '@controllers//measurement/measurement.module';
+import { CuisineType } from '@controllers//recipe/cuisine-type/cuisine-type.entity';
+import { DishType } from '@controllers//recipe/dish-type/dish-type.entity';
+import { Equipment } from '@controllers//recipe/equipment/equipment.entity';
+import { HealthLabel } from '@controllers//recipe/health-label/health-label.entity';
+import { RecipeIngredient } from '@controllers//recipe/recipe-ingredient/recipe-ingredient.entity';
+import { EquipmentSteppedInstruction } from '@controllers//recipe/recipe-stepped-instructions/equipment-stepped-instruction.entity';
+import { RecipeSteppedInstruction } from '@controllers//recipe/recipe-stepped-instructions/recipe-stepped-instructions.entity';
+import { Recipe } from '@controllers//recipe/recipe.entity';
+import { RecipeModule } from '@controllers//recipe/recipe.module';
+import { Reference } from '@controllers//reference/reference.entity';
+import { ReferenceModule } from '@controllers//reference/reference.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Conversion } from 'src/ingredient/conversion/conversion.entity';
-import { Ingredient } from 'src/ingredient/ingredient.entity';
-import { Measurement } from 'src/measurement/measurement.entity';
-import { MeasurementModule } from 'src/measurement/measurement.module';
-import { CuisineType } from 'src/recipe/cuisine-type/cuisine-type.entity';
-import { DishType } from 'src/recipe/dish-type/dish-type.entity';
-import { Equipment } from 'src/recipe/equipment/equipment.entity';
-import { HealthLabel } from 'src/recipe/health-label/health-label.entity';
-import { RecipeIngredient } from 'src/recipe/recipe-ingredient/recipe-ingredient.entity';
-import { RecipeSteppedInstruction } from 'src/recipe/recipe-stepped-instructions/recipe-stepped-instructions.entity';
-import { Recipe } from 'src/recipe/recipe.enitity';
-import { RecipeModule } from 'src/recipe/recipe.module';
-import { Reference } from 'src/reference/reference.entity';
-import { ReferenceModule } from 'src/reference/reference.module';
-import { User } from 'src/user/user.entity';
 import { Seeder } from './seeder';
-import { EquipmentSteppedInstruction } from 'src/recipe/recipe-stepped-instructions/equipment-stepped-instruction.entity';
 
 /**
  * Modified from the medium article on seeding https://medium.com/the-crowdlinker-chronicle/seeding-databases-using-nestjs-cd6634e8efc5

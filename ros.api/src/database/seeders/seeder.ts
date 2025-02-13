@@ -1,8 +1,8 @@
+import { Measurement } from '@controllers//measurement/measurement.entity';
+import { MeasurementService } from '@controllers//measurement/measurement.service';
+import { HealthLabelService } from '@controllers//recipe/health-label/health-label.service';
+import { ReferenceService } from '@controllers//reference/reference.service';
 import { Injectable } from '@nestjs/common';
-import { Measurement } from 'src/measurement/measurement.entity';
-import { MeasurementService } from 'src/measurement/measurement.service';
-import { HealthLabelService } from 'src/recipe/health-label/health-label.service';
-import { ReferenceService } from 'src/reference/reference.service';
 
 @Injectable()
 export class Seeder {
