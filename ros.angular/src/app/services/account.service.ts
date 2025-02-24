@@ -17,20 +17,20 @@ export class AccountService {
     return this.http.post<MessageResult>(`${this.baseUrl}/register`, account);
   }
 
-  verifyEmail(token: string): Observable<MessageResult> {
-    return this.http.post<MessageResult>(`${this.baseUrl}/verify-email`, { token });
+  verifyEmail(email: string, token: string): Observable<MessageResult> {
+    return this.http.post<MessageResult>(`${this.baseUrl}/verify-email`, { token, email });
   }
 
   forgotPassword(email: string): Observable<MessageResult> {
     return this.http.post<MessageResult>(`${this.baseUrl}/forgot-password`, { email });
   }
 
-  validateResetToken(token: string): Observable<MessageResult> {
-    return this.http.post<MessageResult>(`${this.baseUrl}/validate-reset-token`, { token });
+  validateResetToken(token: string, email: string): Observable<MessageResult> {
+    return this.http.post<MessageResult>(`${this.baseUrl}/validate-reset-token`, { token, email });
   }
 
-  resetPassword(token: string, password: string, confirmPassword: string): Observable<MessageResult> {
-    return this.http.post<MessageResult>(`${this.baseUrl}/reset-password`, { token, password, confirmPassword });
+  resetPassword(token: string, email: string, password: string, confirmPassword: string): Observable<MessageResult> {
+    return this.http.post<MessageResult>(`${this.baseUrl}/reset-password`, { token, email, password, confirmPassword });
   }
 
   checkEmailAvailable(email: string): Observable<boolean> {
