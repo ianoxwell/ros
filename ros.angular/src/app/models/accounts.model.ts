@@ -1,4 +1,4 @@
-import { SocialUser } from 'angularx-social-login';
+import { SocialUser } from "@abacritt/angularx-social-login";
 
 export interface INewUser {
   givenNames: string;

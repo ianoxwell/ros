@@ -6,13 +6,13 @@ import { IResponseToken } from '@models/security.models';
 import { IUser } from '@models/user';
 import { JwtHelperService } from '@services/jwt/jwt-helper.service';
 import { ILocalUserJwt } from '@services/jwt/local-user-jwt.model';
-import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, first, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CStorageKeys } from '../storage/storage-keys.const';
 import { StorageService } from '../storage/storage.service';
 import { UserProfileService } from '../user-profile.service';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'

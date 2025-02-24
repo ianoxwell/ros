@@ -1,3 +1,4 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,8 +10,6 @@ import { LoginService } from '@services/login/login.service';
 import { MessageService } from '@services/message.service';
 import { CStorageKeys } from '@services/storage/storage-keys.const';
 import { StorageService } from '@services/storage/storage.service';
-// import { AuthenticationService } from '../../services/authentication.service';
-import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { of } from 'rxjs';
 import { catchError, takeUntil, tap } from 'rxjs/operators';
 

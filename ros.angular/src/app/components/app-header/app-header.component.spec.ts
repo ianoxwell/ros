@@ -1,3 +1,4 @@
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +10,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginService } from '@services/login/login.service';
 import { StorageService } from '@services/storage/storage.service';
-import { SocialAuthService } from 'angularx-social-login';
 import { autoSpy, Spy } from 'autospy';
 import { of } from 'rxjs';
 import { UserProfileService } from '../../services/user-profile.service';

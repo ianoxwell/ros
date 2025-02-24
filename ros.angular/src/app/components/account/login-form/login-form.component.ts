@@ -10,10 +10,10 @@ import { HttpStatusCode } from '@models/security.models';
 import { ValidationMessages } from '@models/static-variables';
 import { LoginService } from '@services/login/login.service';
 import { MessageService } from '@services/message.service';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { Observable, of } from 'rxjs';
 import { catchError, takeUntil, tap } from 'rxjs/operators';
 import { ILoginForm } from './login-form.model';
+import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login-form',

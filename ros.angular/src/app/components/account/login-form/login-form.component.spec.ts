@@ -1,3 +1,4 @@
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +16,6 @@ import { LoginService } from '@services/login/login.service';
 import { MessageService } from '@services/message.service';
 import { StorageService } from '@services/storage/storage.service';
 import { autoSpy, Spy } from '@tests/auto-spy';
-import { SocialAuthService } from 'angularx-social-login';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
 import { LoginFormComponent } from './login-form.component';
@@ -29,7 +29,7 @@ describe('LoginFormComponent', () => {
   const socialAuthServiceSpy: Spy<SocialAuthService> = autoSpy(SocialAuthService);
   const messageServiceSpy: Spy<MessageService> = autoSpy(MessageService);
   loginServiceSpy.isAuthenticated.and.returnValue(false);
-  storageServiceSpy.observeItem.and.returnValue(of('test'));
+  storageServiceSpy.observeStorageEventItem.and.returnValue(of('test'));
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

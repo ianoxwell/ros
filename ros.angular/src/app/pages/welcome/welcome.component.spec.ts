@@ -9,11 +9,11 @@ import { SiteLogoComponent } from '@components/site-logo/site-logo.component';
 import { ToastComponent } from '@components/toast/toast.component';
 import { LoginService } from '@services/login/login.service';
 import { StorageService } from '@services/storage/storage.service';
-import { SocialAuthService } from 'angularx-social-login';
 import { autoSpy, Spy } from 'autospy';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
 import { WelcomeComponent } from './welcome.component';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 describe('WelcomeComponent', () => {
   let component: WelcomeComponent;
@@ -23,7 +23,7 @@ describe('WelcomeComponent', () => {
   const storageServiceSpy: Spy<StorageService> = autoSpy(StorageService);
   const socialAuthServiceSpy: Spy<SocialAuthService> = autoSpy(SocialAuthService);
   loginServiceSpy.isAuthenticated.and.returnValue(false);
-  storageServiceSpy.observeItem.and.returnValue(of('test'));
+  storageServiceSpy.observeStorageEventItem.and.returnValue(of('test'));
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

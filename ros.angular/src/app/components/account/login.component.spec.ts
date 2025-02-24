@@ -1,3 +1,4 @@
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
@@ -10,7 +11,6 @@ import { LoginService } from '@services/login/login.service';
 import { MessageService } from '@services/message.service';
 import { StorageService } from '@services/storage/storage.service';
 import { autoSpy, Spy } from '@tests/auto-spy';
-import { SocialAuthService } from 'angularx-social-login';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { LoginComponent } from './login.component';

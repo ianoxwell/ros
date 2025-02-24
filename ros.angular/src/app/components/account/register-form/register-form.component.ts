@@ -1,3 +1,4 @@
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -11,7 +12,6 @@ import { AccountService } from '@services/account.service';
 import { LoginService } from '@services/login/login.service';
 import { MessageService } from '@services/message.service';
 import { StorageService } from '@services/storage/storage.service';
-import { SocialUser } from 'angularx-social-login';
 import { of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
