@@ -4,7 +4,6 @@ import { IIngredient } from '@models/ingredient/ingredient.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IRawFoodIngredient, ISpoonConversion, ISpoonFoodRaw } from '@models/raw-food-ingredient.model';
 import { IReferenceItemFull } from '@models/reference.model';
-// import { IngredientModel, ConversionModel, PriceModel } from './ingredient-model';
 
 @Injectable({
   providedIn: 'root'

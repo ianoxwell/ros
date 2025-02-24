@@ -3,14 +3,6 @@
 <div class="mt-2 mb-2">
 	<div class="flex-box flex-justify-space-between mt-2 mb-2 pl-2 pr-2">
 		<span class="ml-12"></span>
-		<!-- Hide section if not admin && cookBookUserProfile.lastName==='Oxwell' -->
-		<span *ngIf="!!cookBookUserProfile && selectedTab === 0">
-			<span class="mr-1">Index: {{selectedIndex}}</span>
-			<button mat-flat-button (click)="getSpoonAcularRecipe(1)" type="button" class="mr-1">Get 1 random
-				recipes</button>
-			<button mat-flat-button (click)="getSpoonAcularRecipe(3)" type="button" class="mr-1">Get 3 random
-				recipes</button>
-		</span>
 		<span *ngIf="selectedTab === 1 && !!selectedRecipe">
 			<button type="button" mat-flat-button title="Previous"
 				(click)="changeRecipe({direction: 'prev', id: selectedRecipe.id})">

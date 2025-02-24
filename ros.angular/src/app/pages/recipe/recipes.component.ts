@@ -3,12 +3,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
+import { IRecipe } from '@DomainModels/recipe.dto';
 import { CBlankPagedMeta, PagedResult } from '@models/common.model';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceAll } from '@models/reference.model';
 import { IUser } from '@models/user';
-import { ConstructRecipeService } from '@services/construct-recipe.service';
 import { DialogService } from '@services/dialog.service';
 import { RefDataService } from '@services/ref-data.service';
 import { RestIngredientService } from '@services/rest-ingredient.service';
@@ -17,7 +17,6 @@ import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { IRecipe } from '@DomainModels/recipe.dto';
 
 @Component({
   selector: 'app-recipes',
@@ -47,8 +46,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     private userProfileService: UserProfileService,
     private dialogService: DialogService,
     private stateService: StateService,
-    private refDataService: RefDataService,
-    private constructRecipeService: ConstructRecipeService
+    private refDataService: RefDataService
   ) {
     super();
     this.getAllReferences();
