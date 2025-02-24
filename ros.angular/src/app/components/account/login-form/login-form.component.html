@@ -13,24 +13,32 @@
 			<mat-icon matPrefix class="pr-1">email</mat-icon>
 			<input matInput type="email" autocomplete="email" required Title="Email"
 				formControlName="username">
-			<mat-error *ngFor="let validation of validationMessages.email">
-				<mat-error class="error-message"
-					*ngIf="f.username.hasError(validation.type) && (f.username.dirty || f.username.touched)">
+			@for (validation of validationMessages.email; track validation) {
+<mat-error>
+				@if (f.username.hasError(validation.type) && (f.username.dirty || f.username.touched)) {
+<mat-error class="error-message"
+				>
 					<span [innerHTML]="validation.message"></span>
 				</mat-error>
+}
 			</mat-error>
+}
 		</mat-form-field>
 		<mat-form-field class="mt-1" appearance="outline">
 			<mat-label>Password</mat-label>
 			<mat-icon matPrefix class="pr-1">lock</mat-icon>
 			<input matInput type="password" autocomplete="current-password" #passwordInput
 				Title="Password" required formControlName="password">
-			<mat-error *ngFor="let validation of validationMessages.password">
-				<mat-error class="error-message"
-					*ngIf="f.password.hasError(validation.type) && (f.password.dirty || f.password.touched)">
+			@for (validation of validationMessages.password; track validation) {
+<mat-error>
+				@if (f.password.hasError(validation.type) && (f.password.dirty || f.password.touched)) {
+<mat-error class="error-message"
+				>
 					<span [innerHTML]="validation.message"></span>
 				</mat-error>
+}
 			</mat-error>
+}
 		</mat-form-field>
 	</div>
 	<div class="flex-box flex-justify-space-between flex-align-center mt-2">

@@ -1,11 +1,14 @@
-<form [formGroup]="searchForm" *ngIf="filterQuery" >
+@if (filterQuery) {
+<form [formGroup]="searchForm" >
 	<div>
 		<mat-form-field class="ml-2 w-14em">
 			<mat-label>Sort By</mat-label>
 			<mat-select formControlName="orderby" >
-				<mat-option *ngFor="let item of orderRecipesBy" [value]="item.value">
+				@for (item of orderRecipesBy; track item) {
+<mat-option [value]="item.value">
 				{{item.key}}
 				</mat-option>
+}
 			</mat-select>
 		</mat-form-field>
 		<mat-toolbar class="flex-justify-space-between">
@@ -43,9 +46,11 @@
 		<mat-form-field class=" w-14em">
 			<mat-label>Allergies</mat-label>
 			<mat-select formControlName="allergyWarning" multiple>
-				<mat-option *ngFor="let item of allergyArray$ | async" [value]="item.title">
+				@for (item of allergyArray$ | async; track item) {
+<mat-option [value]="item.title">
 					{{item.title}}
 				</mat-option>
+}
 			</mat-select>
 		</mat-form-field>
 		<!-- <mat-form-field>
@@ -69,6 +74,7 @@
 		<div>&nbsp;</div>
 	</div>
 </form>
+}
 <!-- 
 d nameControl: text input,
 d ingredientControl: text input,

@@ -1,4 +1,5 @@
-<form [formGroup]="searchForm" *ngIf="isFormReady$ | async">
+@if (isFormReady$ | async) {
+<form [formGroup]="searchForm">
 	<div class="flex-box flex-row flex-align-center">
 		<mat-form-field class="ml-2 mr-2 w-14em">			
 			<input matInput type="text" placeholder="Name" Title="Name" formControlName="name" >
@@ -25,4 +26,5 @@
 		</button>
 	</div>
 </form>
+}
 

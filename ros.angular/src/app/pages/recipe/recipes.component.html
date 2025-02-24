@@ -3,7 +3,8 @@
 <div class="mt-2 mb-2">
   <div class="flex-box flex-justify-space-between mt-2 mb-2 pl-2 pr-2">
     <span class="ml-12"></span>
-    <span *ngIf="selectedTab === 1 && !!selectedRecipe">
+    @if (selectedTab === 1 && !!selectedRecipe) {
+<span>
       <button
         type="button"
         mat-flat-button
@@ -22,16 +23,23 @@
         Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
       </button>
     </span>
-    <span *ngIf="!!selectedRecipe">
+}
+    @if (!!selectedRecipe) {
+<span>
       <h1>{{ selectedRecipe.name }}</h1>
     </span>
+}
     <span>
-      <button mat-flat-button type="button" color="accent" *ngIf="selectedTab === 1" (click)="changeTab(0)">
+      @if (selectedTab === 1) {
+<button mat-flat-button type="button" color="accent" (click)="changeTab(0)">
         <mat-icon class="mr-1">keyboard_return</mat-icon> Back
       </button>
-      <button mat-flat-button type="button" color="accent" *ngIf="selectedTab === 0" (click)="createOrEdit('new')">
+}
+      @if (selectedTab === 0) {
+<button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
         <mat-icon class="mr-1">add</mat-icon> New
       </button>
+}
     </span>
   </div>
   <mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs">
@@ -40,19 +48,27 @@
         <div class="filter-side-bar">
           <app-search-bar [filterQuery]="filterQuery" [dataLength]="dataLength"></app-search-bar>
         </div>
-        <ng-container *ngIf="!isLoading; else showLoading">
+        @if (!isLoading) {
+
           <div class="container mt-1 grid-parent">
-            <div *ngFor="let recipe of recipes; let i = index" class="recipeCard">
+            @for (recipe of recipes; track recipe; let i = $index) {
+<div class="recipeCard">
               <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event, i)"> </app-recipe-card>
             </div>
-            <ng-container *ngIf="recipes.length === 0">
+}
+            @if (recipes.length === 0) {
+
               <div>Sorry I can't find any recipes that match the filters</div>
-            </ng-container>
+            
+}
           </div>
-        </ng-container>
-        <ng-template #showLoading>
+        
+} @else {
+
           <app-loading-indicator></app-loading-indicator>
-        </ng-template>
+        
+}
+        
       </div>
     </mat-tab>
     <mat-tab>
@@ -62,7 +78,8 @@
       }
     </mat-tab>
   </mat-tab-group>
-  <div *ngIf="selectedRecipe">
+  @if (selectedRecipe) {
+<div>
     <mat-toolbar>
       <h1>{{ 'Recipe ' + selectedRecipe.name }}</h1>
       <button mat-flat-button aria-label="Search Recipes" (click)="selectedRecipe = undefined">
@@ -71,4 +88,5 @@
       </button>
     </mat-toolbar>
   </div>
+}
 </div>

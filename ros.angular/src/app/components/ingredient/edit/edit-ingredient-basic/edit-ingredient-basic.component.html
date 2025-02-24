@@ -2,11 +2,15 @@
 	<div class="flex-box flex-row-column">
 		<mat-form-field class="mr-2 w-50">
 			<input matInput type="text" placeholder="Name *" Title="Name" formControlName="name">
-			<mat-error *ngFor="let validation of validationMessages.reasonControl">
-				<mat-error class="error-message" *ngIf="nameControl.hasError(validation.type) && (nameControl.dirty || nameControl.touched)">
+			@for (validation of validationMessages.reasonControl; track validation) {
+<mat-error>
+				@if (nameControl.hasError(validation.type) && (nameControl.dirty || nameControl.touched)) {
+<mat-error class="error-message">
 						<span [innerHTML]="validation.message"></span>
 				</mat-error>
+}
 			</mat-error>
+}
 		</mat-form-field>
 		<div class="flex-box flex-column flex-grow-1">
 			<div class="flex-box ">
@@ -14,7 +18,9 @@
 					<mat-label id="parent-label">Food Group</mat-label>
 					<mat-select placeholder="Food Group" role="" formControlName="foodGroup" >
 						<div role="listbox" aria-labelledby="parent-label">
-							<mat-option role="option" *ngFor="let parent of refData.IngredientFoodGroup" [value]="parent.id" >{{parent.title}}</mat-option>
+							@for (parent of refData.IngredientFoodGroup; track parent) {
+<mat-option role="option" [value]="parent.id" >{{parent.title}}</mat-option>
+}
 						</div>
 					</mat-select>
 				</mat-form-field>
@@ -22,7 +28,9 @@
 					<mat-label id="ex1-label" for="ex1-listbox">Consistency / state</mat-label>
 					<mat-select id="constanceId" role="" placeholder="Consistency" formControlName="ingredientStateId" [attr.aria-owns]="'ex1-listbox'" aria-haspopup="listbox" >				
 						<div role="listbox" aria-labelledby="ex1-label">
-							<mat-option role="option" *ngFor="let consistency of refData.IngredientState" [value]="consistency.id" >{{consistency.title}}</mat-option>
+							@for (consistency of refData.IngredientState; track consistency) {
+<mat-option role="option" [value]="consistency.id" >{{consistency.title}}</mat-option>
+}
 						</div>
 					</mat-select>
 				</mat-form-field>
@@ -30,7 +38,9 @@
 					<mat-label id="purchased-by-label">Generally Purchased By</mat-label>
 					<mat-select placeholder="Purchased By" role="" formControlName="purchasedBy">
 						<div role="listbox" aria-labelledby="purchased-by-label">
-							<mat-option role="option" *ngFor="let type of purchasedByList" [value]="type.id" >{{type.item | toTitleCase}}</mat-option>
+							@for (type of purchasedByList; track type) {
+<mat-option role="option" [value]="type.id" >{{type.item | toTitleCase}}</mat-option>
+}
 						</div>
 					</mat-select>
 				</mat-form-field>
@@ -40,7 +50,9 @@
 					<mat-label id="allergy-label">Food Allergies</mat-label>
 					<mat-select placeholder="Allergies" role="" formControlName="allergies" multiple>
 						<div role="listbox" aria-labelledby="allergy-label">
-							<mat-option role="option" *ngFor="let allergy of refData.AllergyWarning" [value]="allergy.id">{{allergy.title}}</mat-option>
+							@for (allergy of refData.AllergyWarning; track allergy) {
+<mat-option role="option" [value]="allergy.id">{{allergy.title}}</mat-option>
+}
 						</div>
 					</mat-select>
 				</mat-form-field>
@@ -63,6 +75,8 @@
 			<mat-label>Usda Food Id</mat-label>
 			<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="usdaFoodId"/>
 		</mat-form-field>
-		<button mat-flat-button aria-label="Attempt to match with Usda Food Id" (click)="matchUsda()" *ngIf="usdaFoodId.value === null">Match Usda Food Id</button>
+		@if (usdaFoodId.value === null) {
+<button mat-flat-button aria-label="Attempt to match with Usda Food Id" (click)="matchUsda()">Match Usda Food Id</button>
+}
 	</div>
 </form>

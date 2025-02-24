@@ -4,12 +4,16 @@
 	</mat-card-title>
 </mat-card-header>
 <div mat-card-content>
-	<div *ngIf="emailStatus === EmailStatus.Verifying; else showFailed">
+	@if (emailStatus === EmailStatus.Verifying) {
+<div>
 		Verifying...
 	</div>
-	<ng-template #showFailed>
+} @else {
+
 		<p>Unfortunately, the verify email token failed, you can get a new token at </p>
 		<button mat-flat-button class="mt-2 mb-2" color="accent" aria-label="Navigate to register" type="button" routerLink="/account/register">Forgot Password</button>
 
-	</ng-template>
+	
+}
+	
 </div>

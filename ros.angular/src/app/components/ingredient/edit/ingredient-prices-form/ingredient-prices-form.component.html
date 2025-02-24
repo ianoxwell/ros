@@ -15,7 +15,9 @@
 	</mat-form-field>
 	<mat-form-field class="mr-2 max-width7">
 		<mat-select role="" placeholder="Measurement" Title="Measurement" formControlName="measurement">
-			<mat-option role="option" *ngFor="let measure of measurements" [value]="measure.title">{{measure.title}}</mat-option>
+			@for (measure of measurements; track measure) {
+<mat-option role="option" [value]="measure.title">{{measure.title}}</mat-option>
+}
 		</mat-select>
 	</mat-form-field>
 	<mat-form-field class="mr-2 w-25">

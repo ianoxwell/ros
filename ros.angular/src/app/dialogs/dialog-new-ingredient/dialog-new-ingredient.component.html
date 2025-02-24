@@ -6,18 +6,24 @@
 			<mat-form-field class="mr-2 w-50">
 				<input matInput type="text" placeholder="Ingredient Name *" Title="Name" formControlName="name">
 				<!-- <mat-spinner matSuffix *ngIf="isCheckingFoodName" diameter="1.2rem"></mat-spinner> -->
-				<mat-icon matSuffix *ngIf="isFoodNameAvailable !== null" class="color-on-primary" [ngClass]="{'text-success': isFoodNameAvailable, 'text-warning': !isFoodNameAvailable}">{{(isFoodNameAvailable) ? 'done' : 'close'}}</mat-icon>
+				@if (isFoodNameAvailable !== null) {
+<mat-icon matSuffix class="color-on-primary" [ngClass]="{'text-success': isFoodNameAvailable, 'text-warning': !isFoodNameAvailable}">{{(isFoodNameAvailable) ? 'done' : 'close'}}</mat-icon>
+}
 			</mat-form-field>
-			<div *ngIf="!!usdaFoodMatched">
+			@if (!!usdaFoodMatched) {
+<div>
 				{{usdaFoodMatched.name}} - {{usdaFoodMatched.nutritionFacts.calories}}
 			</div>
+}
 		</div>
 
 		<mat-form-field class="mr-2 w-30">
 			<mat-label id="parent-label">Food Group</mat-label>
 			<mat-select placeholder="Food Group" role="" formControlName="foodGroup" >
 				<div role="listbox" aria-labelledby="parent-label">
-					<mat-option role="option" *ngFor="let parent of data.foodGroup" [value]="parent.id" >{{parent.title}}</mat-option>
+					@for (parent of data.foodGroup; track parent) {
+<mat-option role="option" [value]="parent.id" >{{parent.title}}</mat-option>
+}
 				</div>
 			</mat-select>
 
@@ -25,35 +31,49 @@
 		<section>
 			<h2 id="usdaTitleLabel">Match Nutrient Data with USDA database</h2>
 			<mat-list class="list-height" aria-labelledby="usdaTitleLabel">
-				<ng-container *ngIf="(filterRawSuggestions$ | async) as filterRaw">
-					<ng-container *ngIf="filterRaw.length > 0; else showNoResult">
-						<mat-list-item *ngFor="let suggestion of filterRaw">
+				@if ((filterRawSuggestions$ | async); as filterRaw) {
+
+					@if (filterRaw.length > 0) {
+
+						@for (suggestion of filterRaw; track suggestion) {
+<mat-list-item>
 							<div class="flex-box flex-justify-space-between w-100" [ngClass]="{'selected': usdaFoodMatched?.id === suggestion.id}" (click)="selectItem(suggestion)">
 								<span>{{suggestion.name}}</span>
 								<span>{{suggestion.foodGroup}}</span>
 							</div>
 						</mat-list-item>
-					</ng-container>
-					<ng-template #showNoResult>
+}
+					
+} @else {
+
 						<mat-list-item>No result</mat-list-item>
-					</ng-template>
-				</ng-container>
+					
+}
+					
+				
+}
 			</mat-list>
 		</section>
 		<section>
 			<h2>Other online data</h2>
 			<button mat-flat-button (click)="findSpoonSuggestionsOnline()" [disabled]="!usdaFoodMatched" type="button">Find remaining data</button>
 			<mat-list class="list-height">
-					<ng-container *ngIf="!!spoonFoodSuggestions && spoonFoodSuggestions.length > 0; else showNoSpoonResult">
-						<mat-list-item *ngFor="let suggestion of spoonFoodSuggestions">
+					@if (!!spoonFoodSuggestions && spoonFoodSuggestions.length > 0) {
+
+						@for (suggestion of spoonFoodSuggestions; track suggestion) {
+<mat-list-item>
 							<div class="flex-box flex-justify-space-between w-100" [ngClass]="{'selected': spoonFoodMatched?.id === suggestion.id}" (click)="selectSpoonItem(suggestion)">
 								<span>{{suggestion.name}}</span>
 							</div>
 						</mat-list-item>
-					</ng-container>
-					<ng-template #showNoSpoonResult>
+}
+					
+} @else {
+
 						<mat-list-item>No result</mat-list-item>
-					</ng-template>
+					
+}
+					
 			</mat-list>
 		</section>
 

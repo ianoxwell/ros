@@ -7,12 +7,16 @@
 			</mat-form-field>
 			<mat-form-field class="pr-2 max-width7">
 				<mat-select placeholder="Base Measurement Unit" Title="Base Measurement Unit" formControlName="baseMeasurementUnit">
-					<mat-option *ngFor="let measure of measurements" [value]="measure.id">{{measure.title}}</mat-option>
+					@for (measure of measurements; track measure) {
+<mat-option [value]="measure.id">{{measure.title}}</mat-option>
+}
 				</mat-select>
 			</mat-form-field>
 			<mat-form-field class="pr-2 max-width7">
 				<mat-select placeholder="Base State" Title="Base State" formControlName="baseState">
-					<mat-option *ngFor="let state of ingredientState" [value]="state.id">{{state.title}}</mat-option>
+					@for (state of ingredientState; track state) {
+<mat-option [value]="state.id">{{state.title}}</mat-option>
+}
 				</mat-select>
 			</mat-form-field>
 		</div>
@@ -23,12 +27,16 @@
 			</mat-form-field>
 			<mat-form-field class="pr-2 max-width">
 				<mat-select placeholder="Convert Measurement Unit" Title="Convert Measurement Unit" formControlName="convertToMeasurementUnit">
-					<mat-option *ngFor="let measure of measurements" [value]="measure.id">{{measure.title}}</mat-option>
+					@for (measure of measurements; track measure) {
+<mat-option [value]="measure.id">{{measure.title}}</mat-option>
+}
 				</mat-select>
 			</mat-form-field>
 			<mat-form-field class="pr-2 max-width">
 				<mat-select placeholder="Conversion State" Title="Conversion State" formControlName="convertToState">
-					<mat-option *ngFor="let state of ingredientState" [value]="state.id">{{state.title}}</mat-option>
+					@for (state of ingredientState; track state) {
+<mat-option [value]="state.id">{{state.title}}</mat-option>
+}
 				</mat-select>
 			</mat-form-field>
 		</div>

@@ -7,9 +7,11 @@
 	'ui-toast-bottom-center': position === 'bottom-center',
 	'ui-toast-center': position === 'center'}" 
 	[class]="styleClass">
-		<app-toast-item *ngFor="let msg of messages; let i=index" [message]="msg" [index]="i" (closeToast)="onMessageClose($event)"
+		@for (msg of messages; track msg; let i = $index) {
+<app-toast-item [message]="msg" [index]="i" (closeToast)="onMessageClose($event)"
 			@toastAnimation (@toastAnimation.start)="onAnimationStart($event)"
 			[showTransitionOptions]="showTransitionOptions"
 			[hideTransitionOptions]="hideTransitionOptions">
 		</app-toast-item>
+}
 </div>

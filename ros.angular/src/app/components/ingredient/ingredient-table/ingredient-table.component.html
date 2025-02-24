@@ -17,7 +17,9 @@
 		<ng-container matColumnDef="allergies">
 			<th mat-header-cell *matHeaderCellDef>Allergies</th>
 			<td mat-cell *matCellDef="let row">
-				<span *ngFor="let allergy of row.allergies">{{allergy.title}}; </span></td>
+				@for (allergy of row.allergies; track allergy) {
+<span>{{allergy.title}}; </span>
+}</td>
 		</ng-container>
 
 		<!-- Purchased By Column hide on smaller size-->

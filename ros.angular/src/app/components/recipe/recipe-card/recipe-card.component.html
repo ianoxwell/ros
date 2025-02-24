@@ -1,8 +1,11 @@
-<mat-card class="recipe-card" *ngIf="recipeInput">
+@if (recipeInput) {
+<mat-card class="recipe-card">
 	<!-- <div class="image" [style.backgroundImage]="'url('+recipeInput.picture[0].fileLink+')'" (click)="clickedRecipe.emit(recipeInput)" [title]="recipeInput.picture[0].title">
 	</div> -->
 	<div class="relative-position show-pointer" (click)="clickedRecipe.emit(recipeInput)">
-		<img *ngIf="!!recipeInput.images && recipeInput.images.length > 0" [src]="recipeInput.images[0]" [alt]="recipeInput.name" />
+		@if (!!recipeInput.images && recipeInput.images.length > 0) {
+<img [src]="recipeInput.images[0]" [alt]="recipeInput.name" />
+}
 		<div class="rating-favourite-position flex-box flex-justify-end">
 			<!-- <span class="flex-box flex-align-center mr-1" title="ratings">
 				<mat-icon class="mr-1">star</mat-icon>
@@ -20,9 +23,11 @@
 			<h3 class="recipe-title">{{recipeInput.name}}</h3>
 
 			<span class="text-really-small text-muted">
-				<span *ngFor="let item of recipeInput.dishType">
+				@for (item of recipeInput.dishType; track item) {
+<span>
 					{{item | sentenceCase}}
 				</span>
+}
 			</span>
 		</div>
 		<div class="flex-box flex-align-center p-1" title="Number of Servings">
@@ -50,3 +55,4 @@
 		</button>
 	</div>
 </mat-card>
+}

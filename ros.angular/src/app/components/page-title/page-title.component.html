@@ -1,4 +1,8 @@
-<div class="p-2 negative-margin flex-box flex-row flex-align-center" *ngIf="!isLoginPage">
-	<mat-icon class="mr-2" *ngIf="pageSymbol$ | async as pageSymbol">{{pageSymbol}}</mat-icon>
+@if (!isLoginPage) {
+<div class="p-2 negative-margin flex-box flex-row flex-align-center">
+	@if (pageSymbol$ | async; as pageSymbol) {
+<mat-icon class="mr-2">{{pageSymbol}}</mat-icon>
+}
 	<h1>{{pageTitle$ | async}}</h1>
 </div>
+}

@@ -1,6 +1,9 @@
-<mat-card *ngIf="!isGettingJwt; else showLoading">
+@if (!isGettingJwt) {
+<mat-card>
 	<router-outlet></router-outlet>
 </mat-card>
-<ng-template #showLoading>
+} @else {
+
 	<app-loading-indicator></app-loading-indicator>
-</ng-template>
+
+}
