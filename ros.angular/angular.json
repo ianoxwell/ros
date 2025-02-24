@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "CookBook:build:production"
+              "buildTarget": "CookBook:build:production"
             },
             "development": {
-              "browserTarget": "CookBook:build:development"
+              "buildTarget": "CookBook:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "CookBook:build"
+            "buildTarget": "CookBook:build"
           }
         },
         "test": {
