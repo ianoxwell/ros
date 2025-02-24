@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MessageService } from '@services/message.service';
 import { autoSpy, Spy } from '@tests/auto-spy';
 import { Subject } from 'rxjs';
 import { VerifyEmailComponent } from './verify-email.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('VerifyEmailComponent', () => {
   let component: VerifyEmailComponent;
@@ -21,18 +22,17 @@ describe('VerifyEmailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatCardModule,
-        HttpClientTestingModule,
+    declarations: [VerifyEmailComponent],
+    imports: [MatCardModule,
         MatIconModule,
-        RouterTestingModule.withRoutes([{ path: 'account/login', component: VerifyEmailComponent }])
-      ],
-      declarations: [VerifyEmailComponent],
-      providers: [
+        RouterTestingModule.withRoutes([{ path: 'account/login', component: VerifyEmailComponent }])],
+    providers: [
         { provide: MessageService, useValue: messageServiceSpy },
-        { provide: AccountService, useValue: accountServiceSpy }
-      ]
-    }).compileComponents();
+        { provide: AccountService, useValue: accountServiceSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

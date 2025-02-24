@@ -1,5 +1,5 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { autoSpy, Spy } from '@tests/auto-spy';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { LoginComponent } from './login.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -30,16 +31,18 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatCardModule, MatDialogModule, MatSnackBarModule, HttpClientTestingModule, RouterTestingModule],
-      declarations: [LoginComponent, MockComponent(LoadingIndicatorComponent)],
-      providers: [
+    declarations: [LoginComponent, MockComponent(LoadingIndicatorComponent)],
+    imports: [MatCardModule, MatDialogModule, MatSnackBarModule, RouterTestingModule],
+    providers: [
         { provide: LoginService, userValue: loginServiceSpy },
         { provide: DialogService, userValue: dialogServiceSpy },
         { provide: StorageService, useValue: storageServiceSpy },
         { provide: SocialAuthService, useValue: socialAuthSpy },
-        { provide: MessageService, useValue: messageServiceSpy }
-      ]
-    }).compileComponents();
+        { provide: MessageService, useValue: messageServiceSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

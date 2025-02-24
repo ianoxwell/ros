@@ -1,5 +1,5 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -14,6 +14,7 @@ import { autoSpy, Spy } from 'autospy';
 import { of } from 'rxjs';
 import { UserProfileService } from '../../services/user-profile.service';
 import { AppHeaderComponent } from './app-header.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AppHeaderComponent', () => {
   let component: AppHeaderComponent;
@@ -30,23 +31,22 @@ describe('AppHeaderComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [
-          MatIconModule,
-          MatToolbarModule,
-          MatButtonModule,
-          MatDividerModule,
-          MatMenuModule,
-          HttpClientTestingModule,
-          RouterTestingModule,
-          NoopAnimationsModule
-        ],
-        declarations: [AppHeaderComponent],
-        providers: [
-          { provide: UserProfileService, userValue: userProfileServiceSpy },
-          { provide: StorageService, useValue: storageServiceSpy },
-          { provide: SocialAuthService, useValue: socialAuthSpy }
-        ]
-      }).compileComponents();
+    declarations: [AppHeaderComponent],
+    imports: [MatIconModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatMenuModule,
+        RouterTestingModule,
+        NoopAnimationsModule],
+    providers: [
+        { provide: UserProfileService, userValue: userProfileServiceSpy },
+        { provide: StorageService, useValue: storageServiceSpy },
+        { provide: SocialAuthService, useValue: socialAuthSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
     })
   );
 

@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,25 +27,23 @@ describe('WelcomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MatButtonModule,
+    declarations: [WelcomeComponent, MockComponents(PageTitleComponent, ToastComponent, SiteLogoComponent)],
+    imports: [MatButtonModule,
         MatIconModule,
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([
-          {
-            path: '',
-            component: WelcomeComponent
-          }
-        ]),
-        HttpClientModule
-      ],
-      declarations: [WelcomeComponent, MockComponents(PageTitleComponent, ToastComponent, SiteLogoComponent)],
-      providers: [
+            {
+                path: '',
+                component: WelcomeComponent
+            }
+        ])],
+    providers: [
         { provide: LoginService, userValue: loginServiceSpy },
         { provide: StorageService, useValue: storageServiceSpy },
-        { provide: SocialAuthService, useValue: socialAuthServiceSpy }
-      ]
-    }).compileComponents();
+        { provide: SocialAuthService, useValue: socialAuthServiceSpy },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

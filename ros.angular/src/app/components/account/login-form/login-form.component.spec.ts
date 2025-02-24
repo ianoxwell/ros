@@ -1,5 +1,5 @@
 import { SocialAuthService } from '@abacritt/angularx-social-login';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +19,7 @@ import { autoSpy, Spy } from '@tests/auto-spy';
 import { MockComponents } from 'ng-mocks';
 import { of } from 'rxjs';
 import { LoginFormComponent } from './login-form.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
@@ -33,14 +34,13 @@ describe('LoginFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
+    declarations: [LoginFormComponent, MockComponents(SaveButtonComponent)],
+    imports: [ReactiveFormsModule,
         RouterTestingModule.withRoutes([
-          {
-            path: '',
-            component: LoginFormComponent
-          }
+            {
+                path: '',
+                component: LoginFormComponent
+            }
         ]),
         MatFormFieldModule,
         MatIconModule,
@@ -49,16 +49,16 @@ describe('LoginFormComponent', () => {
         MatCardModule,
         MatCheckboxModule,
         MatButtonModule,
-        NoopAnimationsModule
-      ],
-      declarations: [LoginFormComponent, MockComponents(SaveButtonComponent)],
-      providers: [
+        NoopAnimationsModule],
+    providers: [
         { provide: LoginService, userValue: loginServiceSpy },
         { provide: StorageService, useValue: storageServiceSpy },
         { provide: SocialAuthService, useValue: socialAuthServiceSpy },
-        { provide: MessageService, useValue: messageServiceSpy }
-      ]
-    }).compileComponents();
+        { provide: MessageService, useValue: messageServiceSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   });
 
   beforeEach(() => {

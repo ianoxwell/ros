@@ -1,7 +1,7 @@
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
@@ -77,107 +77,97 @@ import { ResetPasswordFormComponent } from '@components/account/reset-password-f
 import { VerifyEmailComponent } from '@components/account/verify-email/verify-email.component';
 import { ToastModule } from '@components/toast/toast.module';
 
-@NgModule({
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    FormsModule,
-    AppRoutingModule,
-    CompleteMaterialModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    SocialLoginModule,
-    LayoutModule,
-    DigitOnlyModule,
-    ToastModule
-  ],
-  declarations: [
-    AppComponent,
-    FavouritesComponent,
-    RecipesComponent,
-    ShoppingComponent,
-    IngredientsComponent,
-    UserSettingsComponent,
-    UserRecipesComponent,
-    HomeComponent,
-    HomeDashboardComponent,
-    MainComponent,
-    WelcomeComponent,
-
-    DialogErrorComponent,
-    DialogDeleteIngredientComponent,
-    DialogRecipeComponent,
-    DialogNewIngredientComponent,
-    ConfirmDialogComponent,
-    DialogIngredientMatchComponent,
-
-    SaveButtonComponent,
-    LoadingIndicatorComponent,
-    AutoCompleteSearchComponent,
-    SiteLogoComponent,
-    FooterComponent,
-    SearchBarComponent,
-    RecipeCardComponent,
-    RecipeViewComponent,
-    AppHeaderComponent,
-    IngredientEditComponent,
-    IngredientFilterComponent,
-    IconTextComponent,
-    IngredientTableComponent,
-    IngredientPricesFormComponent,
-    IngredientConversionFormComponent,
-    PageTitleComponent,
-    EditIngredientBasicComponent,
-    EditCommonMineralsComponent,
-    EditCommonVitaminsComponent,
-    EditIngredientNutritionComponent,
-    FormAutocompleteDirective,
-    MatInputAutoCompleteDirective,
-    GraphDoughnutComponent,
-    PaginatorComponent,
-
-    ToTitleCasePipe,
-    SafeHtmlPipe,
-    SentenceCasePipe,
-
-    LoginFormComponent,
-    RegisterFormComponent,
-    ResetPasswordFormComponent,
-    ForgotPasswordComponent,
-    LoginComponent,
-    VerifyEmailComponent
-  ],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
-    AccountService,
-    RestIngredientService,
-    UserProfileService,
-    ReferenceService,
-    RefDataService,
-    DialogService,
-    LogService,
-    LoginService,
-    StorageService,
-    SecurityService,
-    MessageService,
-    UserService,
-    StateService,
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('74967204697-o4tb5b59r1ou0vig4eoks4lst8c4i7vc.apps.googleusercontent.com')
-          }
-        ]
-      } as SocialAuthServiceConfig
-    },
-    ToTitleCasePipe,
-    SentenceCasePipe
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        FavouritesComponent,
+        RecipesComponent,
+        ShoppingComponent,
+        IngredientsComponent,
+        UserSettingsComponent,
+        UserRecipesComponent,
+        HomeComponent,
+        HomeDashboardComponent,
+        MainComponent,
+        WelcomeComponent,
+        DialogErrorComponent,
+        DialogDeleteIngredientComponent,
+        DialogRecipeComponent,
+        DialogNewIngredientComponent,
+        ConfirmDialogComponent,
+        DialogIngredientMatchComponent,
+        SaveButtonComponent,
+        LoadingIndicatorComponent,
+        AutoCompleteSearchComponent,
+        SiteLogoComponent,
+        FooterComponent,
+        SearchBarComponent,
+        RecipeCardComponent,
+        RecipeViewComponent,
+        AppHeaderComponent,
+        IngredientEditComponent,
+        IngredientFilterComponent,
+        IconTextComponent,
+        IngredientTableComponent,
+        IngredientPricesFormComponent,
+        IngredientConversionFormComponent,
+        PageTitleComponent,
+        EditIngredientBasicComponent,
+        EditCommonMineralsComponent,
+        EditCommonVitaminsComponent,
+        EditIngredientNutritionComponent,
+        FormAutocompleteDirective,
+        MatInputAutoCompleteDirective,
+        GraphDoughnutComponent,
+        PaginatorComponent,
+        ToTitleCasePipe,
+        SafeHtmlPipe,
+        SentenceCasePipe,
+        LoginFormComponent,
+        RegisterFormComponent,
+        ResetPasswordFormComponent,
+        ForgotPasswordComponent,
+        LoginComponent,
+        VerifyEmailComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        CommonModule,
+        FormsModule,
+        AppRoutingModule,
+        CompleteMaterialModule,
+        ReactiveFormsModule,
+        SocialLoginModule,
+        LayoutModule,
+        DigitOnlyModule,
+        ToastModule], providers: [
+        { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
+        AccountService,
+        RestIngredientService,
+        UserProfileService,
+        ReferenceService,
+        RefDataService,
+        DialogService,
+        LogService,
+        LoginService,
+        StorageService,
+        SecurityService,
+        MessageService,
+        UserService,
+        StateService,
+        {
+            provide: 'SocialAuthServiceConfig',
+            useValue: {
+                autoLogin: false,
+                providers: [
+                    {
+                        id: GoogleLoginProvider.PROVIDER_ID,
+                        provider: new GoogleLoginProvider('74967204697-o4tb5b59r1ou0vig4eoks4lst8c4i7vc.apps.googleusercontent.com')
+                    }
+                ]
+            } as SocialAuthServiceConfig
+        },
+        ToTitleCasePipe,
+        SentenceCasePipe,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {}
