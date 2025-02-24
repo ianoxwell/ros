@@ -24,6 +24,7 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
   TokenStatus = TokenStatus;
   currentTokenStatus: Observable<TokenStatus> = of(TokenStatus.Validating);
   token: string | undefined;
+  email: string | undefined;
   isSubmitting = false;
   isLoading = false;
 
@@ -41,6 +42,7 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
   ngOnInit(): void {
     // tslint:disable-next-line: no-string-literal
     this.token = this.route.snapshot.queryParams['token'];
+    this.email = this.route.snapshot.queryParams['email'];
 
     // remove token from url to prevent http referer leakage
     this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
@@ -53,9 +55,9 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
    * @returns observable of the tokenStatus.
    */
   resolveTokenStatus(): Observable<TokenStatus> {
-    return this.token === undefined
+    return this.token === undefined || this.email === undefined
       ? of(TokenStatus.Invalid)
-      : this.accountService.validateResetToken(this.token).pipe(
+      : this.accountService.validateResetToken(this.token, this.email).pipe(
           first(),
           map((result: MessageResult) => this.validateResetTokenResult(result)),
           catchError((error: unknown) => {
@@ -106,12 +108,12 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
    * Triggers the password reset pathway.
    */
   resetPassword(): void {
-    if (this.form.invalid || !this.token) {
+    if (this.form.invalid || !this.token || !this.email) {
       return;
     }
     this.isSubmitting = true;
     this.accountService
-      .resetPassword(this.token, this.fPassword.value, this.fPassword.value)
+      .resetPassword(this.token, this.email, this.fPassword.value, this.fPassword.value)
       .pipe(
         first(),
         tap((result: MessageResult) => this.resetPasswordResult(result)),

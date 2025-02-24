@@ -17,6 +17,7 @@ export class VerifyEmailComponent implements OnInit {
   EmailStatus = EmailStatus;
   emailStatus = EmailStatus.Verifying;
   token: string | undefined;
+  email: string | undefined;
 
   addMessages: { [key: string]: Message } = {
     emailVerifiedSuccess: {
@@ -55,6 +56,7 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
     // tslint:disable-next-line: no-string-literal
     this.token = this.route.snapshot.queryParams['token'];
+    this.email = this.route.snapshot.queryParams['email'];
 
     // remove token from url to prevent http referer leakage
     this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
@@ -66,12 +68,12 @@ export class VerifyEmailComponent implements OnInit {
    * Checks token for definition and then verifies token in api.
    */
   verifyToken(): void {
-    if (this.token === undefined) {
+    if (this.token === undefined || this.email === undefined) {
       this.emailStatus = EmailStatus.Failed;
       this.messageService.add(this.addMessages.tokenUndefined);
     } else {
       this.accountService
-        .verifyEmail(this.token)
+        .verifyEmail(this.email, this.token)
         .pipe(
           first(),
           tap((result: MessageResult) => this.verifyTokenResult(result)),
