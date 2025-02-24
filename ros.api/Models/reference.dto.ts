@@ -1,4 +1,4 @@
-import { EReferenceType } from '../ros.api/src/Controllers/reference/reference.entity';
+import { EReferenceType } from '../src/Controllers/reference/reference.entity';
 
 export interface IReference {
   id?: number;

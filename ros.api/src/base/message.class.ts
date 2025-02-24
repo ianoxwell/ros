@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { IMessage } from '@models/message.dto';
+import { IMessage } from 'Models/message.dto';
 
 export class CMessage implements IMessage {
   message: string;
