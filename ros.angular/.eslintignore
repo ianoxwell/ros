@@ -8,5 +8,5 @@ protractor.conf.js
 angular.json
 tsconfig.json
 .eslintrc.js
-tsconfig.app.json
+tsconfig.base.json
 tsconfig.spec.json
