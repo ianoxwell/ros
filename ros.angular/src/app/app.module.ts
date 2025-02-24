@@ -24,6 +24,7 @@ import { UserService } from '@services/user.service';
 import { CompleteMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DigitOnlyModule } from '@uiowa/digit-only';
 
 import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -74,6 +75,7 @@ import { LoginComponent } from '@components/account/login.component';
 import { RegisterFormComponent } from '@components/account/register-form/register-form.component';
 import { ResetPasswordFormComponent } from '@components/account/reset-password-form/reset-password-form.component';
 import { VerifyEmailComponent } from '@components/account/verify-email/verify-email.component';
+import { ToastModule } from '@components/toast/toast.module';
 
 @NgModule({
   imports: [
@@ -86,7 +88,9 @@ import { VerifyEmailComponent } from '@components/account/verify-email/verify-em
     HttpClientModule,
     ReactiveFormsModule,
     SocialLoginModule,
-    LayoutModule
+    LayoutModule,
+    DigitOnlyModule,
+    ToastModule
   ],
   declarations: [
     AppComponent,
