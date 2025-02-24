@@ -19,9 +19,10 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-recipes',
-  templateUrl: './recipes.component.html',
-  styleUrls: ['./recipes.component.scss']
+    selector: 'app-recipes',
+    templateUrl: './recipes.component.html',
+    styleUrls: ['./recipes.component.scss'],
+    standalone: false
 })
 export class RecipesComponent extends ComponentBase implements OnInit {
   recipes: IRecipe[] = [];

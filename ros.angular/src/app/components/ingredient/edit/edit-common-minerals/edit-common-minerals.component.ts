@@ -4,9 +4,10 @@ import { DecimalThreePlaces, DecimalTwoPlaces } from '@models/static-variables';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit-common-minerals',
-  templateUrl: './edit-common-minerals.component.html',
-  styleUrls: ['./edit-common-minerals.component.scss']
+    selector: 'app-edit-common-minerals',
+    templateUrl: './edit-common-minerals.component.html',
+    styleUrls: ['./edit-common-minerals.component.scss'],
+    standalone: false
 })
 export class EditCommonMineralsComponent implements OnInit {
   @Input() form!: UntypedFormGroup;

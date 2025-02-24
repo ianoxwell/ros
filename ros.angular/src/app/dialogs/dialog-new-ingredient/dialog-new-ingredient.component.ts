@@ -21,9 +21,10 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-dialog-new-ingredient',
-  templateUrl: './dialog-new-ingredient.component.html',
-  styleUrls: ['./dialog-new-ingredient.component.scss']
+    selector: 'app-dialog-new-ingredient',
+    templateUrl: './dialog-new-ingredient.component.html',
+    styleUrls: ['./dialog-new-ingredient.component.scss'],
+    standalone: false
 })
 
 // done check that ingredient name is available in ingredientsDB

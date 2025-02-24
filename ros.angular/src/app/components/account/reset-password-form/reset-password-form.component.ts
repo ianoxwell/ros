@@ -13,9 +13,10 @@ import { Observable, of } from 'rxjs';
 import { catchError, first, map, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-reset-password-form',
-  templateUrl: './reset-password-form.component.html',
-  styleUrls: ['./reset-password-form.component.scss']
+    selector: 'app-reset-password-form',
+    templateUrl: './reset-password-form.component.html',
+    styleUrls: ['./reset-password-form.component.scss'],
+    standalone: false
 })
 export class ResetPasswordFormComponent extends ComponentBase implements OnInit {
   form: UntypedFormGroup;

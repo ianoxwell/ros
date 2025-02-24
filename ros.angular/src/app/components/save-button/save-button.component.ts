@@ -2,9 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-save-button',
-  templateUrl: './save-button.component.html',
-  styleUrls: ['./save-button.component.scss']
+    selector: 'app-save-button',
+    templateUrl: './save-button.component.html',
+    styleUrls: ['./save-button.component.scss'],
+    standalone: false
 })
 export class SaveButtonComponent {
   @Input() dirty = true;

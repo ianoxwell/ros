@@ -12,9 +12,10 @@ import { of } from 'rxjs';
 import { catchError, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-forgot-password',
-  templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+    selector: 'app-forgot-password',
+    templateUrl: './forgot-password.component.html',
+    styleUrls: ['./forgot-password.component.scss'],
+    standalone: false
 })
 export class ForgotPasswordComponent extends ComponentBase implements OnInit {
   form: UntypedFormGroup;

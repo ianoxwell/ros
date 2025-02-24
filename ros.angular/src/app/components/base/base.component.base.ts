@@ -2,7 +2,8 @@ import { OnDestroy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class ComponentBase implements OnDestroy {

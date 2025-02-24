@@ -6,34 +6,29 @@ import { Subject, timer } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-toast-item',
-  templateUrl: './toast-item.component.html',
-  styleUrls: ['../toast.component.scss'],
-  animations: [
-    trigger('messageState', [
-      state(
-        'visible',
-        style({
-          transform: 'translateY(0)',
-          opacity: 1
-        })
-      ),
-      transition('void => *', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('{{showTransitionParams}}')
-      ]),
-      transition('* => void', [
-        animate(
-          '{{hideTransitionParams}}',
-          style({
-            height: 0,
-            opacity: 0,
-            transform: 'translateY(-100%)'
-          })
-        )
-      ])
-    ])
-  ]
+    selector: 'app-toast-item',
+    templateUrl: './toast-item.component.html',
+    styleUrls: ['../toast.component.scss'],
+    animations: [
+        trigger('messageState', [
+            state('visible', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
+            transition('void => *', [
+                style({ transform: 'translateY(100%)', opacity: 0 }),
+                animate('{{showTransitionParams}}')
+            ]),
+            transition('* => void', [
+                animate('{{hideTransitionParams}}', style({
+                    height: 0,
+                    opacity: 0,
+                    transform: 'translateY(-100%)'
+                }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class ToastItemComponent implements AfterViewInit, OnDestroy {
   @Input() message: Message = { severity: MessageStatus.Information };

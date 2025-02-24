@@ -8,9 +8,10 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, map, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-ingredient-filter',
-  templateUrl: './ingredient-filter.component.html',
-  styleUrls: ['./ingredient-filter.component.scss']
+    selector: 'app-ingredient-filter',
+    templateUrl: './ingredient-filter.component.html',
+    styleUrls: ['./ingredient-filter.component.scss'],
+    standalone: false
 })
 export class IngredientFilterComponent extends ComponentBase implements OnInit {
   searchForm: UntypedFormGroup = new UntypedFormGroup({});

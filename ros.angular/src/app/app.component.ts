@@ -4,9 +4,10 @@ import { PageTitleService } from '@services/page-title.service';
 import { WidthObserverService } from '@services/width-observer/width-observer.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent {
   constructor(

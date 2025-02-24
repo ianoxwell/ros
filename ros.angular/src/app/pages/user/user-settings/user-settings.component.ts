@@ -3,9 +3,10 @@ import { UserProfileService } from '../../../services/user-profile.service';
 import { IUser } from '../../../models/user';
 
 @Component({
-  selector: 'app-user-settings',
-  templateUrl: './user-settings.component.html',
-  styleUrls: ['./user-settings.component.scss']
+    selector: 'app-user-settings',
+    templateUrl: './user-settings.component.html',
+    styleUrls: ['./user-settings.component.scss'],
+    standalone: false
 })
 export class UserSettingsComponent implements OnInit {
   cookBookUserProfile: IUser | null = null;

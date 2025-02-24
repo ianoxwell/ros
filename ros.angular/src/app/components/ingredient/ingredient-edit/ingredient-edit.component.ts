@@ -19,9 +19,10 @@ import { of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-ingredient-edit',
-  templateUrl: './ingredient-edit.component.html',
-  styleUrls: ['./ingredient-edit.component.scss']
+    selector: 'app-ingredient-edit',
+    templateUrl: './ingredient-edit.component.html',
+    styleUrls: ['./ingredient-edit.component.scss'],
+    standalone: false
 })
 // done saving after adding a subDocument - re-write api to pick this up
 // done deleting subDocuments with ID's - can the api also pick this up on save?

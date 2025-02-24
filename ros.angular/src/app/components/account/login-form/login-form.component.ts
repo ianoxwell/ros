@@ -16,9 +16,10 @@ import { ILoginForm } from './login-form.model';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
-  selector: 'app-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss']
+    selector: 'app-login-form',
+    templateUrl: './login-form.component.html',
+    styleUrls: ['./login-form.component.scss'],
+    standalone: false
 })
 export class LoginFormComponent extends ComponentBase {
   @ViewChild('passwordInput', { static: false }) passwordInput!: ElementRef<HTMLInputElement>;

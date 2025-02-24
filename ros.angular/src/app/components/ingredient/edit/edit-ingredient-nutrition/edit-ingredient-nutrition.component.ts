@@ -7,9 +7,10 @@ import { combineLatest, merge } from 'rxjs';
 import { first, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit-ingredient-nutrition',
-  templateUrl: './edit-ingredient-nutrition.component.html',
-  styleUrls: ['./edit-ingredient-nutrition.component.scss']
+    selector: 'app-edit-ingredient-nutrition',
+    templateUrl: './edit-ingredient-nutrition.component.html',
+    styleUrls: ['./edit-ingredient-nutrition.component.scss'],
+    standalone: false
 })
 export class EditIngredientNutritionComponent extends ComponentBase implements OnInit {
   @ViewChild('doughNutCanvas', { static: false }) doughNutCanvas!: ElementRef;

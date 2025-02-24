@@ -20,9 +20,10 @@ import { isObservable, Observable, of } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-auto-complete-search',
-  templateUrl: './auto-complete-search.component.html',
-  styleUrls: ['./auto-complete-search.component.scss']
+    selector: 'app-auto-complete-search',
+    templateUrl: './auto-complete-search.component.html',
+    styleUrls: ['./auto-complete-search.component.scss'],
+    standalone: false
 })
 export class AutoCompleteSearchComponent
   extends ComponentBase

@@ -4,9 +4,10 @@ import { PageTitleService } from '@services/page-title.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-page-title',
-  templateUrl: './page-title.component.html',
-  styleUrls: ['./page-title.component.scss']
+    selector: 'app-page-title',
+    templateUrl: './page-title.component.html',
+    styleUrls: ['./page-title.component.scss'],
+    standalone: false
 })
 export class PageTitleComponent implements OnInit {
   pageTitle$: Observable<string>;

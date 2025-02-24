@@ -5,9 +5,10 @@ import { Observable, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-loading-indicator',
-  templateUrl: './loading-indicator.component.html',
-  styleUrls: ['./loading-indicator.component.scss']
+    selector: 'app-loading-indicator',
+    templateUrl: './loading-indicator.component.html',
+    styleUrls: ['./loading-indicator.component.scss'],
+    standalone: false
 })
 export class LoadingIndicatorComponent implements OnDestroy {
   @Input() spinnerClass = 'full-spinner'; // used to determine the spinner class applied

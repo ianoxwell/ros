@@ -4,9 +4,10 @@ import { PageEvent } from '@angular/material/paginator';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-paginator',
-  templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.scss']
+    selector: 'app-paginator',
+    templateUrl: './paginator.component.html',
+    styleUrls: ['./paginator.component.scss'],
+    standalone: false
 })
 export class PaginatorComponent {
   /** The current page index. */

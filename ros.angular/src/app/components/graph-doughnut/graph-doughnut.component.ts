@@ -8,9 +8,10 @@ export interface DataRef {
 }
 
 @Component({
-  selector: 'app-graph-doughnut',
-  templateUrl: './graph-doughnut.component.html',
-  styleUrls: ['./graph-doughnut.component.scss']
+    selector: 'app-graph-doughnut',
+    templateUrl: './graph-doughnut.component.html',
+    styleUrls: ['./graph-doughnut.component.scss'],
+    standalone: false
 })
 
 // https://codepen.io/jerrylow/pen/OJyREdw?editors=1100

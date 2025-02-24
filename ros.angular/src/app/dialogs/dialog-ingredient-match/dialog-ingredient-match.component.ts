@@ -14,9 +14,10 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, first, switchMap, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-dialog-ingredient-match',
-  templateUrl: './dialog-ingredient-match.component.html',
-  styleUrls: ['./dialog-ingredient-match.component.scss']
+    selector: 'app-dialog-ingredient-match',
+    templateUrl: './dialog-ingredient-match.component.html',
+    styleUrls: ['./dialog-ingredient-match.component.scss'],
+    standalone: false
 })
 export class DialogIngredientMatchComponent extends ComponentBase implements OnInit {
   form: UntypedFormGroup;

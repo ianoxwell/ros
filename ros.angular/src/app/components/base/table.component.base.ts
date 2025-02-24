@@ -4,7 +4,10 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class BaseTableComponent<T = any> implements OnChanges {
   @Input() data!: PagedResult<T>;

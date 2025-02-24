@@ -4,9 +4,10 @@ import { BaseTableComponent } from '@components/base/table.component.base';
 import { IIngredient, PurchasedBy } from '@models/ingredient/ingredient.model';
 
 @Component({
-  selector: 'app-ingredient-table',
-  templateUrl: './ingredient-table.component.html',
-  styleUrls: ['./ingredient-table.component.scss']
+    selector: 'app-ingredient-table',
+    templateUrl: './ingredient-table.component.html',
+    styleUrls: ['./ingredient-table.component.scss'],
+    standalone: false
 })
 export class IngredientTableComponent extends BaseTableComponent<IIngredient> implements OnInit {
   @Output() editRow = new EventEmitter<IIngredient>();

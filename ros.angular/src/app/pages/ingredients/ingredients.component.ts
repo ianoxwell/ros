@@ -21,9 +21,10 @@ import { catchError, first, map, switchMap, takeUntil, tap } from 'rxjs/operator
 import { ComponentBase } from '../../components/base/base.component.base';
 
 @Component({
-  selector: 'app-ingredients',
-  templateUrl: './ingredients.component.html',
-  styleUrls: ['./ingredients.component.scss']
+    selector: 'app-ingredients',
+    templateUrl: './ingredients.component.html',
+    styleUrls: ['./ingredients.component.scss'],
+    standalone: false
 })
 export class IngredientsComponent extends ComponentBase implements OnInit {
   selectedIngredient$: Observable<IIngredient> | undefined;

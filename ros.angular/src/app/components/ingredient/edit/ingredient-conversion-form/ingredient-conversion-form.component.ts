@@ -4,9 +4,10 @@ import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceItemFull } from '@models/reference.model';
 
 @Component({
-  selector: 'app-ingredient-conversion-form',
-  templateUrl: './ingredient-conversion-form.component.html',
-  styleUrls: ['./ingredient-conversion-form.component.scss']
+    selector: 'app-ingredient-conversion-form',
+    templateUrl: './ingredient-conversion-form.component.html',
+    styleUrls: ['./ingredient-conversion-form.component.scss'],
+    standalone: false
 })
 export class IngredientConversionFormComponent {
   @Input() convert: UntypedFormGroup = new UntypedFormGroup({});

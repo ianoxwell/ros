@@ -9,9 +9,10 @@ import { Observable, of } from 'rxjs';
 import { catchError, first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-verify-email',
-  templateUrl: './verify-email.component.html',
-  styleUrls: ['./verify-email.component.scss']
+    selector: 'app-verify-email',
+    templateUrl: './verify-email.component.html',
+    styleUrls: ['./verify-email.component.scss'],
+    standalone: false
 })
 export class VerifyEmailComponent implements OnInit {
   EmailStatus = EmailStatus;

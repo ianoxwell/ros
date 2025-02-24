@@ -14,9 +14,10 @@ import { of } from 'rxjs';
 import { catchError, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent extends ComponentBase implements OnInit {
   googleUserData: SocialUser | undefined;

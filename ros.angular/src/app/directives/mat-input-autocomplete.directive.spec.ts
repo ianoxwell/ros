@@ -5,9 +5,10 @@ import { By } from '@angular/platform-browser';
 import { MatInputAutoCompleteDirective } from './mat-input-autocomplete.directive';
 
 @Component({
-  template: ` <form>
+    template: ` <form>
     <input matInput placeholder="testing" />
-  </form>`
+  </form>`,
+    standalone: false
 })
 class TestHostComponent {}
 

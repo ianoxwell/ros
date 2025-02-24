@@ -16,9 +16,10 @@ import { of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-register-form',
-  templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.scss']
+    selector: 'app-register-form',
+    templateUrl: './register-form.component.html',
+    styleUrls: ['./register-form.component.scss'],
+    standalone: false
 })
 export class RegisterFormComponent extends ComponentBase implements OnInit {
   form: UntypedFormGroup = new UntypedFormGroup({});

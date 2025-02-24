@@ -5,9 +5,10 @@ import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 
 @Component({
-  template: ` <form class="test-form">
+    template: ` <form class="test-form">
     <input matInput placeholder="testing" />
-  </form>`
+  </form>`,
+    standalone: false
 })
 class TestHostComponent {}
 

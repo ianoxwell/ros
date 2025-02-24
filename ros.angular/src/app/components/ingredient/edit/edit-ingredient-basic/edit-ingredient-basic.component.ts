@@ -7,9 +7,10 @@ import { DialogService } from '@services/dialog.service';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit-ingredient-basic',
-  templateUrl: './edit-ingredient-basic.component.html',
-  styleUrls: ['./edit-ingredient-basic.component.scss']
+    selector: 'app-edit-ingredient-basic',
+    templateUrl: './edit-ingredient-basic.component.html',
+    styleUrls: ['./edit-ingredient-basic.component.scss'],
+    standalone: false
 })
 export class EditIngredientBasicComponent {
   @Input() refData!: IReferenceAll;

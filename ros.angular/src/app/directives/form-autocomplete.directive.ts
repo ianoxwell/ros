@@ -1,8 +1,9 @@
 import { Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: 'form'
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'form',
+    standalone: false
 })
 export class FormAutocompleteDirective {
   constructor(private elRef: ElementRef, private renderer: Renderer2) {

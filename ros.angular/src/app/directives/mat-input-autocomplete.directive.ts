@@ -1,8 +1,9 @@
 import { Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[matInput]'
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[matInput]',
+    standalone: false
 })
 export class MatInputAutoCompleteDirective {
   constructor(private elRef: ElementRef, private renderer: Renderer2) {

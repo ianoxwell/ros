@@ -4,9 +4,10 @@ import { DecimalThreePlaces, DecimalTwoPlaces } from '@models/static-variables';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit-common-vitamins',
-  templateUrl: './edit-common-vitamins.component.html',
-  styleUrls: ['./edit-common-vitamins.component.scss']
+    selector: 'app-edit-common-vitamins',
+    templateUrl: './edit-common-vitamins.component.html',
+    styleUrls: ['./edit-common-vitamins.component.scss'],
+    standalone: false
 })
 export class EditCommonVitaminsComponent implements OnInit {
   @Input() form!: UntypedFormGroup;

@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-toast',
-  templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.scss'],
-  animations: [trigger('toastAnimation', [transition(':enter, :leave', [query('@*', animateChild())])])]
+    selector: 'app-toast',
+    templateUrl: './toast.component.html',
+    styleUrls: ['./toast.component.scss'],
+    animations: [trigger('toastAnimation', [transition(':enter, :leave', [query('@*', animateChild())])])],
+    standalone: false
 })
 
 // note - strongly based off of primeFaces - https://primefaces.org/primeng/showcase/#/toast
