@@ -13,7 +13,7 @@ export class MailService {
     return await this.mailerService.sendMail({
       to: email,
       subject: 'Recipe Ordering Simplified - password reset request',
-      template: './password-reset', // `.hbs` extension is appended automatically
+      template: '../../../../Services/mail/templates/password-reset', // `.hbs` extension is appended automatically
       context: {
         name,
         url
