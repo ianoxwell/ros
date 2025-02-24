@@ -81,7 +81,7 @@ api is accessible as normal at localhost:8080 for local dev
 
 ### Cost for deploying accessible ipv4
 
-`flyctl ips allocate-v4 -a` - might be a cost though...
+`flyctl ips allocate-v4 -a api-ros` - might be a cost though...
 `fly ips list` - get list of allocated ips
 `fly ips release <ip address>`
 
