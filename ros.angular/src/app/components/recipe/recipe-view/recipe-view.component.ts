@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IRecipeIngredient } from '@models/recipe-ingredient.model';
+import { IRecipe } from '@DomainModels/recipe.dto';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
-import { Recipe } from '@models/recipe.model';
+import { IRecipeIngredient } from '@models/recipe-ingredient.model';
 import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
 
 @Component({
@@ -10,7 +10,7 @@ import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
   styleUrls: ['./recipe-view.component.scss']
 })
 export class RecipeViewComponent implements OnInit {
-  @Input() selectedRecipe: Recipe | undefined;
+  @Input() selectedRecipe: IRecipe | undefined;
   @Input() measurements: IMeasurement[] = [];
 
   constructor(private sentenceCase: SentenceCasePipe) {}

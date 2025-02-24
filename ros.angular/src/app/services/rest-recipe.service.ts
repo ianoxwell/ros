@@ -5,7 +5,7 @@ import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.mo
 import { Suggestion } from '@models/suggestion';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Recipe } from '../models/recipe.model';
+import { IRecipe } from '@DomainModels/recipe.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class RestRecipeService {
   private apiUrl = environment.apiUrl + environment.apiVersion;
 
   constructor(private httpClient: HttpClient) {}
-  public getRecipe(filterQuery: IRecipeFilterQuery | null): Observable<PagedResult<Recipe>> {
+  public getRecipe(filterQuery: IRecipeFilterQuery | null): Observable<PagedResult<IRecipe>> {
     if (!filterQuery) {
       filterQuery = new RecipeFilterQuery();
     }
@@ -39,14 +39,15 @@ export class RestRecipeService {
     }
     queryString = queryString.slice(0, -1);
     console.log('ready the query', `${this.apiUrl}recipe/search${queryString}`);
-    return this.httpClient.get<PagedResult<Recipe>>(`${this.apiUrl}recipe/search${queryString}`, {
+    ///search${queryString}`
+    return this.httpClient.get<PagedResult<IRecipe>>(`${this.apiUrl}recipe`, {
       headers: this.defaultHeader
     });
   }
 
   // don't currently have this - but good idea
-  public getRecipeRandom(): Observable<Recipe> {
-    return this.httpClient.get<Recipe>(`${this.apiUrl}recipe/random`, {
+  public getRecipeRandom(): Observable<IRecipe> {
+    return this.httpClient.get<IRecipe>(`${this.apiUrl}recipe/random`, {
       headers: this.defaultHeader
     });
   }
@@ -62,24 +63,24 @@ export class RestRecipeService {
     return this.httpClient.get<boolean>(`${this.apiUrl}recipe/check-name${queryStr}`);
   }
 
-  public getRecipeById(itemId: number): Observable<Recipe> {
-    return this.httpClient.get<Recipe>(`${this.apiUrl}recipe/${itemId}`, {
+  public getRecipeById(itemId: number): Observable<IRecipe> {
+    return this.httpClient.get<IRecipe>(`${this.apiUrl}recipe/${itemId}`, {
       headers: this.defaultHeader
     });
   }
 
-  public createRecipe(newItem: Recipe): Observable<Recipe> {
-    return this.httpClient.post<Recipe>(`${this.apiUrl}recipe`, newItem, {
+  public createRecipe(newItem: IRecipe): Observable<IRecipe> {
+    return this.httpClient.post<IRecipe>(`${this.apiUrl}recipe`, newItem, {
       headers: this.defaultHeader
     });
   }
 
-  public updateRecipe(itemId: string, update: any): Observable<Recipe> {
-    return this.httpClient.put<Recipe>(`${this.apiUrl}recipe/${itemId}`, update, { headers: this.defaultHeader });
+  public updateRecipe(itemId: string, update: any): Observable<IRecipe> {
+    return this.httpClient.put<IRecipe>(`${this.apiUrl}recipe/${itemId}`, update, { headers: this.defaultHeader });
   }
 
-  public deleteRecipe(itemID: string): Observable<Recipe> {
-    return this.httpClient.delete<Recipe>(`${this.apiUrl}recipe${itemID}`, {
+  public deleteRecipe(itemID: string): Observable<IRecipe> {
+    return this.httpClient.delete<IRecipe>(`${this.apiUrl}recipe${itemID}`, {
       headers: this.defaultHeader
     });
   }

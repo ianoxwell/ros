@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Recipe } from '@models/recipe.model';
+import { IRecipe } from '@DomainModels/recipe.dto';
 
 @Component({
   selector: 'app-recipe-card',
@@ -7,8 +7,8 @@ import { Recipe } from '@models/recipe.model';
   styleUrls: ['./recipe-card.component.scss']
 })
 export class RecipeCardComponent {
-  @Input() recipeInput: Recipe | undefined;
-  @Output() clickedRecipe = new EventEmitter<Recipe>();
+  @Input() recipeInput: IRecipe | undefined;
+  @Output() clickedRecipe = new EventEmitter<IRecipe>();
 
   more() {
     console.log('guess what - more');

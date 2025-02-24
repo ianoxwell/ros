@@ -196,7 +196,8 @@ export class RecipeService {
       ...this.mapRecipeToShortRecipeDto(recipe),
       ingredients,
       ingredientList,
-      steppedInstructions
+      steppedInstructions,
+      equipment: recipe.equipment.map((equip) => equip.name)
     };
   }
 

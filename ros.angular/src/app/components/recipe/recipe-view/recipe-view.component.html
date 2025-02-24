@@ -4,7 +4,7 @@
 	<!-- Additional details -->
 	<section class="flex-box flex-column mt-2">
 		<mat-chip-list aria-label="Recipe Types" horizontal>
-			<mat-chip *ngFor="let tag of selectedRecipe.recipeDishTypes">{{tag.title}}</mat-chip>
+			<mat-chip *ngFor="let tag of selectedRecipe.dishType">{{tag}}</mat-chip>
 		</mat-chip-list>
 	</section>
 	<section class="mt-2">
@@ -12,32 +12,32 @@
 	</section>
 	<section class="flex-box flex-row">
 		<section class="w-50 flex-column flex-box mr-2">
-			<div *ngIf="selectedRecipe.teaser && selectedRecipe.teaser.length > 0">
+			<div *ngIf="selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0">
 				<h4>Description</h4>
 				<blockquote >
-					<p [innerHTML]="selectedRecipe.teaser | safeHtml"></p>
+					<p [innerHTML]="selectedRecipe.shortSummary | safeHtml"></p>
 					<footer>
-						<cite><a [href]="selectedRecipe.sourceOfRecipeLink" [title]="selectedRecipe.creditsText">{{selectedRecipe.creditsText}}</a></cite>
+						<cite><a [href]="selectedRecipe.sourceUrl" [title]="selectedRecipe.creditsText">{{selectedRecipe.creditsText}}</a></cite>
 					</footer>
 				</blockquote>
 			</div>
 			<div class="w-full mt-4">
 				<h4>Ingredients</h4>
 				<mat-list>
-					<mat-list-item *ngFor="let item of selectedRecipe.recipeIngredientLists" class="pb-1">
+					<mat-list-item *ngFor="let item of selectedRecipe.ingredientList" class="pb-1">
 						<span class="mr-1">{{englishIngredientItem(item)}}</span>
 						<!-- <span class="mr-1">{{item.unit}} -</span> -->
 						<span><a [routerLink]="[routerLinkURL(item)]">{{item.ingredientId}}</a></span>
-						<span *ngIf="item.allergies?.length">          
+						<!-- <span *ngIf="item.allergies?.length">          
 							<mat-icon class="text-warning">warning</mat-icon>
-						</span>
+						</span> -->
 					</mat-list-item>
 				</mat-list>
 			</div>
 		</section>
 		<!-- Image and favourites  -->
 		<div class="w-50">
-			<img *ngIf="!!selectedRecipe.recipePictures" [src]="selectedRecipe.recipePictures[0].fileLink" [alt]="selectedRecipe.recipePictures[0].title" class="w-full"/>
+			<!-- <img *ngIf="!!selectedRecipe.recipePictures" [src]="selectedRecipe.recipePictures[0].fileLink" [alt]="selectedRecipe.recipePictures[0].title" class="w-full"/>
 			<div class="flex-box flex-row flex-justify-center">
 				<app-icon-text icon="star" [text]="selectedRecipe.numberStars + ' - (' + selectedRecipe.numberReviews + ') Rate it'" titleText="Number Servings"></app-icon-text>
 				<app-icon-text icon="favorite" [text]="selectedRecipe.numberFavourites + ' Favourites'" titleText="Favourites"></app-icon-text>
@@ -55,25 +55,25 @@
 					<span *ngFor="let allergy of selectedRecipe.allergyWarnings">
 						{{allergy}}
 					</span>
-				</ng-template>
+				</ng-template> -->
 				<!-- Todo - add print functionality -->
 				<!-- <div>
 					<button mat-icon-button type="button" aria-label="Print" (click)="printView()"><mat-icon>print</mat-icon></button>
 				</div> -->
-			</div>
+			<!-- </div> -->
 		</div>
 	</section>
 
 	<!-- Allergy Alerts -->
-	<div *ngIf="selectedRecipe.allergyWarnings?.length">
+	<!-- <div *ngIf="selectedRecipe.allergyWarnings?.length">
 		<h4>Allergy Warnings</h4>
 		<span *ngFor="let warning of selectedRecipe.allergyWarnings">{{warning}}</span>
-	</div>
+	</div> -->
 	<!-- Equipment Required -->
 	<div class="mt-2">
 		<h4>Equipment Required</h4>
 		<mat-chip-list aria-label="Equipment Required">
-			<mat-chip *ngFor="let item of selectedRecipe.equipmentRequired">{{item}}</mat-chip>
+			<mat-chip *ngFor="let item of selectedRecipe.equipment">{{item}}</mat-chip>
 		</mat-chip-list>
 	</div>
     <main class="flex-box flex-column">
@@ -85,14 +85,14 @@
             <mat-list-item *ngFor="let item of selectedRecipe.steppedInstructions">
               <div class="flex-box flex-row p-1">
                 <span class="text-small text-muted mr-2 w-7 align-self-center">Step {{item.stepNumber}}</span>
-                <span [innerHTML]="item.stepDescription | safeHtml"></span>
+                <span [innerHTML]="item.step | safeHtml"></span>
               </div>
               <mat-divider></mat-divider>
           </mat-list-item>
           </mat-list>
         </ng-container>
         <ng-template #blockInstructionsTemplate>
-          <div [innerHTML]="selectedRecipe.rawInstructions"></div>
+          <div [innerHTML]="selectedRecipe.instructions"></div>
         </ng-template>    
       </div>
     </main>
