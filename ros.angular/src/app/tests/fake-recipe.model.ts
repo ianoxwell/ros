@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { PagedResult } from '@models/common.model';
+import { CBlankPagedMeta, PagedResult } from '@models/common.model';
 import { Recipe } from '@models/recipe.model';
 
 export const fakeRecipe1: Recipe = {
@@ -291,6 +291,6 @@ export const fakeRecipe2: Recipe = {
 };
 
 export const fakeRecipeReturn: PagedResult<Recipe> = {
-  items: [fakeRecipe1, fakeRecipe2],
-  totalCount: 2
+  results: [fakeRecipe1, fakeRecipe2],
+  meta: { ...CBlankPagedMeta, itemCount: 2 }
 };

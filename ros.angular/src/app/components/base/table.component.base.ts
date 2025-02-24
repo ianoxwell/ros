@@ -7,7 +7,7 @@ import { ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
 @Component({ template: '' })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class BaseTableComponent<T = any> implements OnChanges {
-  @Input() data: PagedResult<T> = { items: [], totalCount: 0 };
+  @Input() data!: PagedResult<T>;
   @Input() sortPageObj: ISortPageObj = new SortPageObj();
   @Output() sortingPageChange = new EventEmitter<ISortPageObj>();
   @Output() updateTableRequest = new EventEmitter();
@@ -23,9 +23,9 @@ export abstract class BaseTableComponent<T = any> implements OnChanges {
   ngOnChanges(change: SimpleChanges): void {
     if (!!change.data && !change.data.firstChange) {
       const data: PagedResult<T> = change.data.currentValue;
-      this.dataSource.data = data.items;
-      this.dataCount = data.items.length;
-      this.dataLength = data.totalCount;
+      this.dataSource.data = data.results;
+      this.dataCount = data.results.length;
+      this.dataLength = data.meta.itemCount;
     }
   }
   /** This MUST be implemented in the extending class */

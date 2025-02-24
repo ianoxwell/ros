@@ -3,10 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
-import { PagedResult } from '@models/common.model';
+import { CBlankPagedMeta, PagedResult } from '@models/common.model';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
-import { Recipe } from '@models/recipe.model';
 import { IReferenceAll } from '@models/reference.model';
 import { IUser } from '@models/user';
 import { ConstructRecipeService } from '@services/construct-recipe.service';
@@ -18,6 +17,7 @@ import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IRecipe } from '@DomainModels/recipe.dto';
 
 @Component({
   selector: 'app-recipes',
@@ -25,11 +25,11 @@ import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/opera
   styleUrls: ['./recipes.component.scss']
 })
 export class RecipesComponent extends ComponentBase implements OnInit {
-  recipes: Recipe[] = [];
+  recipes: IRecipe[] = [];
   refDataAll: IReferenceAll | undefined;
   measurementRef: IMeasurement[] = [];
   isLoading = false;
-  selectedRecipe: Recipe | undefined;
+  selectedRecipe: IRecipe | undefined;
   selectedIndex = 0;
   selectedTab = 0; // controls the selectedIndex of the mat-tab-group
   isNew = true; // edit or new ingredient;
@@ -147,23 +147,26 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     console.log('here is the filter change', ev);
   }
 
-  getRecipes(): Observable<PagedResult<Recipe>> {
+  getRecipes(): Observable<PagedResult<IRecipe>> {
     this.isLoading = true;
     this.dataLength = 0;
     return this.restRecipeService.getRecipe(this.filterQuery).pipe(
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
         this.dialogService.alert('Error getting recipes', err);
-        return of({ items: [], totalCount: 0 });
+        return of({
+          results: [],
+          meta: CBlankPagedMeta
+        });
       }),
       tap(() => {
         console.log('stop loading');
         this.isLoading = false;
       }),
-      filter((result: PagedResult<Recipe>) => result.totalCount > 0),
-      tap((recipeResults: PagedResult<Recipe>) => {
-        this.dataLength = recipeResults.totalCount;
-        this.recipes = recipeResults.items;
+      filter((result: PagedResult<IRecipe>) => result.meta.itemCount > 0),
+      tap((recipeResults: PagedResult<IRecipe>) => {
+        this.dataLength = recipeResults.meta.itemCount;
+        this.recipes = recipeResults.results;
         console.log('setting the recipe results', recipeResults, this.dataLength);
       })
     );
@@ -173,7 +176,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     console.log('new maybe', action);
   }
 
-  selectThisRecipe(recipe: Recipe, i: number) {
+  selectThisRecipe(recipe: IRecipe, i: number) {
     // set the selectedRecipe and the selectedIndex
     this.loadRecipeSelect(recipe.id);
     this.selectedIndex = i;
@@ -191,24 +194,24 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     }
   }
 
-  getSpoonAcularRecipe(count: number): void {
-    this.isLoading = true;
-    if (!this.cookBookUserProfile || !this.refDataAll) {
-      return;
-    }
+  // getSpoonAcularRecipe(count: number): void {
+  //   this.isLoading = true;
+  //   if (!this.cookBookUserProfile || !this.refDataAll) {
+  //     return;
+  //   }
 
-    this.constructRecipeService
-      .getSpoonAcularRecipe(count, this.cookBookUserProfile.id, this.refDataAll, this.measurementRef)
-      .pipe(
-        first(),
-        switchMap(() => this.getRecipes()),
-        catchError((error: unknown) => {
-          const err = error as HttpErrorResponse;
-          this.dialogService.alert('Error getting spoon recipe', err.message);
-          this.isLoading = false;
-          return of();
-        })
-      )
-      .subscribe();
-  }
+  //   this.constructRecipeService
+  //     .getSpoonAcularRecipe(count, this.cookBookUserProfile.id, this.refDataAll, this.measurementRef)
+  //     .pipe(
+  //       first(),
+  //       switchMap(() => this.getRecipes()),
+  //       catchError((error: unknown) => {
+  //         const err = error as HttpErrorResponse;
+  //         this.dialogService.alert('Error getting spoon recipe', err.message);
+  //         this.isLoading = false;
+  //         return of();
+  //       })
+  //     )
+  //     .subscribe();
+  // }
 }

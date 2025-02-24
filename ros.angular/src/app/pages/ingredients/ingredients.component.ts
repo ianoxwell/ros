@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
+import { CBlankPagedMeta, ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
 import { IIngredientFilterObject, IngredientFilterObject } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IIngredient } from '@models/ingredient/ingredient.model';
@@ -125,7 +125,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
         this.dialogService.confirm(MessageStatus.Critical, 'Error getting ingredients', err.message);
-        return of({ items: [], totalCount: 0 });
+        return of({ results: [], meta: CBlankPagedMeta });
       }),
       takeUntil(this.ngUnsubscribe)
     );

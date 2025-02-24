@@ -18,9 +18,9 @@ export class IngredientTableComponent extends BaseTableComponent<IIngredient> im
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.data.items);
-    this.dataLength = this.data.totalCount;
-    this.dataCount = this.data.items.length;
+    this.dataSource = new MatTableDataSource(this.data.results);
+    this.dataLength = this.data.meta.itemCount;
+    this.dataCount = this.data.results.length;
   }
 
   /** on row / ingredient clicked emit to parent the row */

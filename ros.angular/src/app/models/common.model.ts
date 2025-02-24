@@ -49,9 +49,27 @@ export interface IngredientPaginator {
 }
 
 export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
+  results: T[];
+  meta: IPagedMeta;
 }
+
+export interface IPagedMeta {
+  readonly page: number;
+  readonly take: number;
+  readonly itemCount: number;
+  readonly pageCount: number;
+  readonly hasPreviousPage: boolean;
+  readonly hasNextPage: boolean;
+}
+
+export const CBlankPagedMeta = {
+  page: 0,
+  take: 0,
+  itemCount: 0,
+  pageCount: 0,
+  hasPreviousPage: false,
+  hasNextPage: false
+};
 
 export class MessageResult {
   message: string;
