@@ -1,12 +1,12 @@
-import { IBaseDto } from './base.dto'
+import { IBaseDto } from './base.dto';
 
-export class IUserProfile extends IBaseDto {
+export interface IUserProfile extends IBaseDto {
   familyName: string;
   givenNames: string;
   email: string;
 }
 
-export class IUserSummary extends IUserProfile {
+export interface IUserSummary extends IUserProfile {
   photoUrl: string[];
   isActive: boolean;
   phoneNumber?: string;
@@ -21,7 +21,7 @@ export class IUserSummary extends IUserProfile {
   lastLogin?: Date;
 }
 
-export class IUserLogin {
+export interface IUserLogin {
   email: string;
   password: string;
 }

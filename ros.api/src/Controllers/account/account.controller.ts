@@ -28,8 +28,7 @@ export class AccountController {
 
   @Get()
   @ApiOkResponse({
-    description: 'Quick and dirty get all current users',
-    type: [IUserProfile]
+    description: 'Quick and dirty get all current users'
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('JWT-auth')

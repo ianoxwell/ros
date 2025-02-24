@@ -20,8 +20,7 @@ export class RecipeController {
   /** Gets a specific recipe by Id */
   @Get(':id')
   @ApiOkResponse({
-    description: 'Single Recipe',
-    type: IRecipe
+    description: 'Single Recipe'
   })
   async find(@Param('id') id: string): Promise<IRecipe | CMessage> {
     return this.recipeService.getRecipeById(parseInt(id));

@@ -86,7 +86,7 @@ export class UserService {
       return { message: 'No such email address found.', status: HttpStatus.NOT_FOUND };
     }
 
-    if (!user.isActive || user.loginProvider !== 'ros') {
+    if (!user.isActive || !['ros', 'Local'].includes(user.loginProvider)) {
       return {
         message: !user.isActive ? 'Account has been deactivated' : 'Try logging in with Social provider (Google)',
         status: HttpStatus.UNAUTHORIZED
@@ -132,8 +132,13 @@ export class UserService {
     }
 
     await this.repository.update(user.id, user);
-    const payload = { username: user.email, sub: user.id, name: `${user.givenNames} ${user.familyName}`, admin: user.isAdmin };
-    return { access_token: this.jwtTokenService.sign(payload) };
+    const token = this.jwtTokenService.sign({
+      username: user.email,
+      sub: user.id,
+      name: `${user.givenNames} ${user.familyName}`,
+      admin: user.isAdmin
+    });
+    return { token };
   }
 
   /** Temp or partial - later will secure or remove */

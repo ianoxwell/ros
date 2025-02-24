@@ -15,7 +15,7 @@ export interface IRecipeTease {
   ingredientList: string[];
 }
 
-export class IRecipeShort extends IBaseDto {
+export interface IRecipeShort extends IBaseDto {
   name: string;
   instructions: string;
   summary: string;
@@ -45,11 +45,12 @@ export class IRecipeShort extends IBaseDto {
   diets: string[];
 }
 
-export class IRecipe extends IRecipeShort {
+export interface IRecipe extends IRecipeShort {
   name: string;
   instructions: string;
   summary: string;
   shortSummary: string;
+  equipment: string[];
   pricePerServing: number;
   images: string[];
   preparationMinutes: number;

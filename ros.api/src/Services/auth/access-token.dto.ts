@@ -1,3 +1,5 @@
 export class IAccessToken {
-  access_token: string;
+  token: string;
+  expiresIn?: number;
+  refreshToken?: string;
 }
