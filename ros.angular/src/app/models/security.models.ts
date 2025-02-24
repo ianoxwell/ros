@@ -85,14 +85,8 @@ export interface IClaims {
 
 export interface IResponseToken {
   token: string;
-  expiresIn: number;
-  refreshToken: string;
-}
-export interface IToken {
-  token: string;
-  lifetime: number; // The lifetime duration of the token.
-  expiresAt: number; // The absolute time that the token will expire (measured using the client local clock).
-  refreshToken: string;
+  expiresIn?: number;
+  refreshToken?: string;
 }
 
 export interface ApplicableRank {

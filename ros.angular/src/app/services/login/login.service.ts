@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MessageResult } from '@models/common.model';
 import { ITokenState } from '@models/logout.models';
-import { IResponseToken, IToken } from '@models/security.models';
+import { IResponseToken } from '@models/security.models';
 import { IUser } from '@models/user';
 import { JwtHelperService } from '@services/jwt/jwt-helper.service';
 import { ILocalUserJwt } from '@services/jwt/local-user-jwt.model';
@@ -22,7 +22,7 @@ export class LoginService {
   private isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   // JWT token string obtained at login.
-  private jwt: IToken = this.initNewJwt();
+  private jwt: IResponseToken = this.initNewJwt();
 
   // Decoded token containing the authenticated user's claims.
   private claims: string[] | null = null;
@@ -109,10 +109,11 @@ export class LoginService {
     const body = social ? { email } : { email, password };
     const loginUrl = social
       ? `${environment.apiUrl}/token/google?email=${email}`
-      : `${environment.apiUrl}${environment.apiVersion}token/create`;
+      : `${environment.apiUrl}${environment.apiVersion}account/login`;
 
     return this.http.post<IResponseToken>(loginUrl, body).pipe(
       map((resp: IResponseToken | MessageResult) => {
+        console.log('response', resp);
         if (Object.keys(resp).includes('message')) {
           throw resp;
         }
@@ -257,19 +258,13 @@ export class LoginService {
   /**
    * The common method for processing the new JWT (login and refresh)
    */
-  private processJwtResponse(response: IResponseToken): IToken {
+  private processJwtResponse(response: IResponseToken): IResponseToken {
     let newJwt = this.initNewJwt();
 
     // Successful if there is a JWT Response
     if (!!response) {
-      const expiresIn = response.expiresIn || 0;
-      const lifetime = expiresIn * 1000; // Convert to millisecons.
-      const expiresAt = Date.now() + lifetime;
       newJwt = {
-        token: !!response.token ? response.token : '',
-        refreshToken: !!response.refreshToken ? response.refreshToken : '',
-        lifetime,
-        expiresAt
+        token: !!response.token ? response.token : ''
       };
     }
 
@@ -293,9 +288,9 @@ export class LoginService {
   }
 
   /** 'Installs' a new JWT */
-  private setJwt(newJwt: IToken): boolean {
+  private setJwt(newJwt: IResponseToken): boolean {
     // Default
-    if (!newJwt.token || !newJwt.refreshToken || !newJwt.expiresAt) {
+    if (!newJwt.token) {
       this.claims = null;
 
       this.jwt = this.initNewJwt();
@@ -313,14 +308,6 @@ export class LoginService {
 
     this.storeJwt(this.jwt);
 
-    const expiresAt = newJwt.expiresAt;
-    const lifetime = newJwt.lifetime;
-
-    const refreshesAt = expiresAt - Math.floor(lifetime / 2);
-    const warnsAt = expiresAt - Math.floor(lifetime / 4);
-
-    this.authentication$.next({ expiresAt, refreshesAt, warnsAt });
-
     this.claims = this.decodeRoles(this.jwt.token);
 
     // Google Analytics - Requires UserId
@@ -332,12 +319,9 @@ export class LoginService {
   /**
    * Initialises a new Jwt Object
    */
-  private initNewJwt(): IToken {
+  private initNewJwt(): IResponseToken {
     return {
-      token: '',
-      refreshToken: '',
-      expiresAt: 0,
-      lifetime: 0
+      token: ''
     };
   }
 
@@ -353,19 +337,14 @@ export class LoginService {
   /** Restores the JWT from session storage. */
   restoreJwt(): void {
     this.setJwt({
-      token: this.getJwt(),
-      refreshToken: this.getJwtRefresh(),
-      expiresAt: this.getJwtExpiry(),
-      lifetime: this.getJwtExpiry() - Date.now()
+      token: this.getJwt()
     });
   }
 
   // #region Storage Setters/Getters
   /** Saves the JWT token details in storage */
-  private storeJwt(jwt: IToken): void {
+  private storeJwt(jwt: IResponseToken): void {
     this.storageService.setItem(this.storageKeys.tokenKey, jwt.token);
-    this.storageService.setItem(this.storageKeys.refreshKey, jwt.refreshToken);
-    this.storageService.setItem(this.storageKeys.expiryKey, jwt.expiresAt.toString());
   }
 
   /** Gets the JWT Token from storage */
