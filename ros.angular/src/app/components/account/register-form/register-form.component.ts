@@ -45,12 +45,12 @@ export class RegisterFormComponent extends ComponentBase implements OnInit {
       this.newUser =
         !!gUser && gUser !== null
           ? {
-              firstName: gUser.firstName,
-              lastName: gUser.lastName,
+              givenNames: gUser.firstName,
+              familyName: gUser.lastName,
               email: gUser.email,
               loginProvider: gUser.provider,
               loginProviderId: gUser.id,
-              photoUrl: gUser.photoUrl,
+              photoUrl: [gUser.photoUrl],
               verified: new Date()
             }
           : new NewUser();
@@ -63,8 +63,8 @@ export class RegisterFormComponent extends ComponentBase implements OnInit {
 
   createForm(user: INewUser): void {
     this.form = this.formBuilder.group({
-      firstName: [user.firstName, Validators.required],
-      lastName: [user.lastName, Validators.required],
+      firstName: [user.givenNames, Validators.required],
+      lastName: [user.familyName, Validators.required],
       email: [user.email, [Validators.required, Validators.email]],
       acceptTerms: [false, Validators.requiredTrue]
     });
@@ -81,13 +81,16 @@ export class RegisterFormComponent extends ComponentBase implements OnInit {
     }
     this.isSubmitting = true;
     const formValues = this.form.getRawValue();
-    this.newUser.firstName = formValues.firstName;
-    this.newUser.lastName = formValues.lastName;
-    this.newUser.email = formValues.email;
+    this.newUser = {
+      ...this.newUser,
+      givenNames: formValues.firstName,
+      familyName: formValues.lastName,
+      email: formValues.email
+    };
     if (this.newUser.loginProvider !== 'GOOGLE') {
       this.newUser.password = formValues.password;
     }
-    console.log('register the form', this.form.getRawValue(), this.newUser);
+
     this.accountService
       .register(this.newUser)
       .pipe(

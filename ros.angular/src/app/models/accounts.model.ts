@@ -1,26 +1,28 @@
 import { SocialUser } from 'angularx-social-login';
 
 export interface INewUser {
-  firstName: string;
-  lastName: string;
+  givenNames: string;
+  familyName: string;
   email: string;
   password?: string;
-  photoUrl?: string;
+  photoUrl: string[];
   loginProvider: string;
   loginProviderId?: string;
   verified?: Date;
 }
 
 export class NewUser implements INewUser {
-  firstName: string;
-  lastName: string;
+  givenNames: string;
+  familyName: string;
   email: string;
   loginProvider: 'Local' | 'Social';
+  photoUrl: string[];
   constructor() {
-    this.firstName = '';
-    this.lastName = '';
+    this.givenNames = '';
+    this.familyName = '';
     this.email = '';
     this.loginProvider = 'Local';
+    this.photoUrl = [];
   }
 }
 
