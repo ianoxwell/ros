@@ -5,7 +5,9 @@
     </div>
     <!-- Additional details -->
     <section class="flex-box flex-column mt-2">
-      <mat-chip *ngFor="let tag of selectedRecipe.dishType">{{ tag }}</mat-chip>
+      <mat-chip-listbox>
+        <mat-chip *ngFor="let tag of selectedRecipe.dishType">{{ tag }}</mat-chip>
+      </mat-chip-listbox>
     </section>
     <section class="mt-2">
       <h4>Author and link</h4>

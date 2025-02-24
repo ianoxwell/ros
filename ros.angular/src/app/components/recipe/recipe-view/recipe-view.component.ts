@@ -10,7 +10,7 @@ import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
   styleUrls: ['./recipe-view.component.scss']
 })
 export class RecipeViewComponent implements OnInit {
-  @Input() selectedRecipe: IRecipe | undefined;
+  @Input({ required: true }) selectedRecipe!: IRecipe;
   @Input() measurements: IMeasurement[] = [];
 
   constructor(private sentenceCase: SentenceCasePipe) {}
