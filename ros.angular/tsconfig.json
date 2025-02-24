@@ -13,6 +13,7 @@
       "@tests/*": ["src/app/tests/*"],
       "@styles/*": ["src/app/styles/*"],
       "@dialogs/*": ["scr/app/dialogs/*"],
+      "@DomainModels/*": ["../ros.api/Models/*"],
       "autospy": ["src/app/tests/auto-spy"]
     },
     "outDir": "./dist/out-tsc",
