@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { allergyReference } from './reference.data';
-import { IReference } from '../../../../Models/reference.dto';
+import { IReference } from '../../../Models/reference.dto';
 import { EReferenceType, Reference } from './reference.entity';
 
 @Injectable()

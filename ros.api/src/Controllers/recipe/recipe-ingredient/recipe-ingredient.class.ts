@@ -1,6 +1,6 @@
-import { IIngredientShort } from '@models/ingredient.dto';
-import { IMeasurement } from '@models/measurement.dto';
-import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
+import { IIngredientShort } from 'Models/ingredient.dto';
+import { IMeasurement } from 'Models/measurement.dto';
+import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
 
 export class CRecipeIngredient implements IRecipeIngredient {
   ingredientId: number;

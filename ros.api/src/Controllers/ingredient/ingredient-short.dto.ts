@@ -1,4 +1,4 @@
-import { IIngredientShort } from '@models/ingredient.dto';
+import { IIngredientShort } from 'Models/ingredient.dto';
 import { Ingredient } from './ingredient.entity';
 
 export class CIngredientShort implements IIngredientShort {

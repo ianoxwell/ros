@@ -1,6 +1,6 @@
 import { CMessage } from '@base/message.class';
-import { IResetPasswordRequest, IUserBasicAuth } from '@models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from '@models/user.dto';
+import { IResetPasswordRequest, IUserBasicAuth } from 'Models/reset-password-request.dto';
+import { IUserProfile, IUserSummary } from 'Models/user.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';

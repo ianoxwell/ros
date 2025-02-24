@@ -1,4 +1,4 @@
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, JoinTable, ManyToMany, Unique } from 'typeorm';
 import { Recipe } from '../recipe.entity';
 

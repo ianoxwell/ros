@@ -1,4 +1,4 @@
-import { IReference } from '../../../../Models/reference.dto';
+import { IReference } from '../../../Models/reference.dto';
 import { EReferenceType } from './reference.entity';
 
 export const allergyReference: IReference[] = [

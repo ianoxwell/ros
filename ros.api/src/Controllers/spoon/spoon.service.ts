@@ -1,5 +1,5 @@
 // import { HttpService } from '@nestjs/axios';
-import { EPurchasedBy } from '@models/ingredient.dto';
+import { EPurchasedBy } from 'Models/ingredient.dto';
 import { CMessage } from '@base/message.class';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';

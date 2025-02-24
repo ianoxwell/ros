@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity } from 'typeorm';
-import { IReference } from '../../../../Models/reference.dto';
+import { IReference } from '../../../Models/reference.dto';
 
 export enum EReferenceType {
   allergyWarning,

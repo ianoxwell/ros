@@ -1,12 +1,12 @@
 import { CMessage } from '@base/message.class';
 import { Measurement } from '@controllers/measurement/measurement.entity';
-import { IIngredient, IIngredientShort } from '@models/ingredient.dto';
+import { IIngredient, IIngredientShort } from 'Models/ingredient.dto';
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { Delete, Query } from '@nestjs/common/decorators';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IFilterBase } from 'src/Base/filter.entity';
-import { PageMetaDto, PaginatedDto } from 'src/Base/paginated.entity';
+import { IFilterBase } from '@base/filter.entity';
+import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { Repository } from 'typeorm';
 import { Ingredient } from './ingredient.entity';
 import { IngredientService } from './ingredient.service';

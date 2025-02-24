@@ -1,6 +1,6 @@
 import { CMessage } from '@base/message.class';
-import { IResetPasswordRequest, IUserBasicAuth } from '@models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from '@models/user.dto';
+import { IResetPasswordRequest, IUserBasicAuth } from 'Models/reset-password-request.dto';
+import { IUserProfile, IUserSummary } from 'Models/user.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { Body, Get, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';

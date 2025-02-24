@@ -1,4 +1,4 @@
-import { IRecipeTease } from '@models/recipe.dto';
+import { IRecipeTease } from 'Models/recipe.dto';
 import { CuisineType } from './cuisine-type/cuisine-type.entity';
 import { DishType } from './dish-type/dish-type.entity';
 import { Equipment } from './equipment/equipment.entity';

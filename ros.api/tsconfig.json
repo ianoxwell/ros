@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@models/*": ["../Models/*"],
+      "@models/*": ["Models/*"],
       "@controllers/*": ["./src/Controllers/*"],
       "@base/*": ["./src/Base/*"],
       "@services/*": ["./src/Services/*"]

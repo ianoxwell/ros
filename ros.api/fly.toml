@@ -39,3 +39,7 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
+
+  [[services.environments]]
+    environment = "production"
+    url = "https://api.ros.fly.dev"

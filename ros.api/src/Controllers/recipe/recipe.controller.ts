@@ -2,8 +2,8 @@ import { CMessage } from '@base/message.class';
 import { Controller, Get, Param } from '@nestjs/common';
 import { Delete } from '@nestjs/common/decorators';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { PaginatedDto } from 'src/Base/paginated.entity';
-import { IRecipe, IRecipeShort } from '../../../../Models/recipe.dto';
+import { PaginatedDto } from '@base/paginated.entity';
+import { IRecipe, IRecipeShort } from '../../../Models/recipe.dto';
 import { RecipeService } from './recipe.service';
 
 @ApiTags('Recipe')

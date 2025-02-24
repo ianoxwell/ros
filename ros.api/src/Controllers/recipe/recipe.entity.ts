@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { User } from '../account/user.entity';
 import { Ingredient } from '../ingredient/ingredient.entity';

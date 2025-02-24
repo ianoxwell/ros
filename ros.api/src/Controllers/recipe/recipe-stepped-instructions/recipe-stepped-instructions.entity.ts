@@ -1,6 +1,6 @@
 import { Ingredient } from '@controllers/ingredient/ingredient.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Recipe } from '../recipe.entity';
 import { EquipmentSteppedInstruction } from './equipment-stepped-instruction.entity';

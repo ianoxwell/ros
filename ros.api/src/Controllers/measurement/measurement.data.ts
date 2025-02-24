@@ -1,5 +1,5 @@
-import { EPurchasedBy } from '../../../../Models/ingredient.dto';
-import { ECountryCode, IMeasurement } from '../../../../Models/measurement.dto';
+import { EPurchasedBy } from '../../../Models/ingredient.dto';
+import { ECountryCode, IMeasurement } from '../../../Models/measurement.dto';
 
 export const CMeasurementData: IMeasurement[] = [
   {

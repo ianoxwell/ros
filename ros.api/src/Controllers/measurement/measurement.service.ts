@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CMeasurementData } from './measurement.data';
-import { IMeasurement } from '../../../../Models/measurement.dto';
+import { IMeasurement } from '../../../Models/measurement.dto';
 import { Measurement } from './measurement.entity';
 
 @Injectable()

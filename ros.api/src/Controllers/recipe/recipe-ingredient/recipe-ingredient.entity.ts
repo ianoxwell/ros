@@ -1,6 +1,6 @@
 import { Ingredient } from '@controllers/ingredient/ingredient.entity';
 import { Measurement } from '@controllers/measurement/measurement.entity';
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Recipe } from '../recipe.entity';
 

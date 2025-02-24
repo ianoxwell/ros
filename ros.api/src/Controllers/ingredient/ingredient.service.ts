@@ -1,5 +1,5 @@
 import { EOrder, PageMetaDto, PaginatedDto } from '@base//paginated.entity';
-import { IConversion } from '@models/conversion.dto';
+import { IConversion } from 'Models/conversion.dto';
 import {
   EPurchasedBy,
   ICaloricBreakdown,
@@ -8,15 +8,15 @@ import {
   INutrients,
   INutritionProperties,
   IReferenceShort
-} from '@models/ingredient.dto';
-import { IMeasurement } from '@models/measurement.dto';
+} from 'Models/ingredient.dto';
+import { IMeasurement } from 'Models/measurement.dto';
 import { CMessage } from '@base/message.class';
-import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
+import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CPageOptionsDto } from 'src/base/filter.const';
-import { IFilterBase } from 'src/Base/filter.entity';
+import { CPageOptionsDto } from '@base/filter.const';
+import { IFilterBase } from '@base/filter.entity';
 import { ILike, Like, Repository, UpdateResult } from 'typeorm';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';

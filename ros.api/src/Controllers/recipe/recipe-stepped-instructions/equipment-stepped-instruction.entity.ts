@@ -1,4 +1,4 @@
-import { RosBaseEntity } from 'src/base/base.entity';
+import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Equipment } from '../equipment/equipment.entity';
 import { RecipeSteppedInstruction } from './recipe-stepped-instructions.entity';
