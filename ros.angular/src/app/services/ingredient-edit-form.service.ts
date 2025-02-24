@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Conversion } from '@models/conversion';
 import { IIngredient } from '@models/ingredient/ingredient.model';
 import { ICommonMinerals, ICommonVitamins, INutritionFacts, IPrice } from '@models/ingredient/ingredient-model';
@@ -10,9 +10,9 @@ import { NutrientTotalValidator } from '../validators/nutrient-total.validator';
   providedIn: 'root'
 })
 export class IngredientEditFormService {
-  constructor(private fb: FormBuilder, private nutrientTotalValidator: NutrientTotalValidator) {}
+  constructor(private fb: UntypedFormBuilder, private nutrientTotalValidator: NutrientTotalValidator) {}
 
-  private initPricesFormGroup(price: Price | undefined, isNew = false): FormGroup {
+  private initPricesFormGroup(price: Price | undefined, isNew = false): UntypedFormGroup {
     const fbGroup = this.fb.group({
       brandName: [price?.brandName],
       price: [price?.price, Validators.min(0)],
@@ -23,12 +23,12 @@ export class IngredientEditFormService {
       apiLink: price?.apiLink
     });
     if (!isNew) {
-      fbGroup.addControl('id', new FormControl(price?.id));
+      fbGroup.addControl('id', new UntypedFormControl(price?.id));
     }
     return fbGroup;
   }
 
-  initConversionFormGroup(convert: Conversion, isNew = false): FormGroup {
+  initConversionFormGroup(convert: Conversion, isNew = false): UntypedFormGroup {
     const fbGroup = this.fb.group({
       baseMeasurementUnit: convert.baseMeasurementUnit?.id,
       baseState: convert.baseState?.id,
@@ -39,13 +39,13 @@ export class IngredientEditFormService {
       preference: [convert.preference, Validators.min(0)]
     });
     if (!isNew) {
-      fbGroup.addControl('id', new FormControl(convert.id));
-      fbGroup.addControl('ingredientId', new FormControl(convert.ingredientId));
+      fbGroup.addControl('id', new UntypedFormControl(convert.id));
+      fbGroup.addControl('ingredientId', new UntypedFormControl(convert.ingredientId));
     }
     return fbGroup;
   }
 
-  private initNutritionFactsFormGroup(nutrition: INutritionFacts | undefined): FormGroup {
+  private initNutritionFactsFormGroup(nutrition: INutritionFacts | undefined): UntypedFormGroup {
     const fbGroup = this.fb.group(
       {
         calories: [nutrition?.calories, [Validators.min(0)]],
@@ -68,7 +68,7 @@ export class IngredientEditFormService {
     return fbGroup;
   }
 
-  private initCommonMineralsFormGroup(minerals: ICommonMinerals | undefined): FormGroup {
+  private initCommonMineralsFormGroup(minerals: ICommonMinerals | undefined): UntypedFormGroup {
     const fbGroup = this.fb.group({
       calcium: [minerals?.calcium, [Validators.min(0)]],
       copperCu: [minerals?.copperCu, [Validators.min(0)]],
@@ -84,7 +84,7 @@ export class IngredientEditFormService {
     return fbGroup;
   }
 
-  private initCommonVitaminsFormGroup(vita: ICommonVitamins | undefined): FormGroup {
+  private initCommonVitaminsFormGroup(vita: ICommonVitamins | undefined): UntypedFormGroup {
     const fbGroup = this.fb.group({
       folateB9: [vita?.folateB9, [Validators.min(0)]],
       folateDfe: [vita?.folateDfe, [Validators.min(0)]],
@@ -121,8 +121,8 @@ export class IngredientEditFormService {
     return price;
   }
 
-  createForm(ingredient: IIngredient, isNew: boolean): FormGroup {
-    let conversionSummary: FormGroup[] = [];
+  createForm(ingredient: IIngredient, isNew: boolean): UntypedFormGroup {
+    let conversionSummary: UntypedFormGroup[] = [];
     // let nutritionSummary = [];
     // if editing the ingredient, then populate the additional controls needed to edit any of the sub-documents
     if (!isNew && ingredient) {

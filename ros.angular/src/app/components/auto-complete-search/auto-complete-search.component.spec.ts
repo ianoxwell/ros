@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,7 +57,7 @@ describe('AutoCompleteSearchComponent', () => {
 
   describe('errorStateMatcher', () => {
     beforeEach(() => {
-      component.control = new FormControl();
+      component.control = new UntypedFormControl();
     });
     it('should not report errors for valid controls', () => {
       component.control.markAsTouched();
@@ -156,7 +156,7 @@ describe('AutoCompleteSearchComponent', () => {
     it('should be the input values if values is an observable', (done) => {
       const values$ = of([{ title: 'a' }, { title: 'b' }] as any[]);
       component.values = values$;
-      component.control = new FormControl();
+      component.control = new UntypedFormControl();
 
       component.ngOnChanges({
         values: { currentValue: values$, previousValue: null, isFirstChange: () => false, firstChange: false }
@@ -170,7 +170,7 @@ describe('AutoCompleteSearchComponent', () => {
     it('should convert the input values to an observable', (done) => {
       const values = [{ title: 'a' }, { title: 'b' }] as any[];
       component.values = values;
-      component.control = new FormControl();
+      component.control = new UntypedFormControl();
 
       component.ngOnChanges({
         values: { currentValue: values, previousValue: null, isFirstChange: () => false, firstChange: false }

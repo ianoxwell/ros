@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NgControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ComponentBase } from '@components/base/base.component.base';
@@ -49,8 +49,8 @@ export class AutoCompleteSearchComponent
   // Copy of '@Input() values' guaranteed to be an actual observable (as opposed to the 'maybe observable maybe sync data' @Input() values)
   values$: Observable<IReferenceItem[]> = of([]);
 
-  filterControl = new FormControl();
-  control: FormControl = new FormControl();
+  filterControl = new UntypedFormControl();
+  control: UntypedFormControl = new UntypedFormControl();
   value: IReferenceItem | undefined;
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -65,7 +65,7 @@ export class AutoCompleteSearchComponent
   }
 
   ngAfterContentInit(): void {
-    this.control = this.ngControl && (this.ngControl.control as FormControl);
+    this.control = this.ngControl && (this.ngControl.control as UntypedFormControl);
     this.getWatchFilterText(this.filterControl.valueChanges).subscribe();
     this.resetFilterValue(this.control.valueChanges).subscribe();
   }

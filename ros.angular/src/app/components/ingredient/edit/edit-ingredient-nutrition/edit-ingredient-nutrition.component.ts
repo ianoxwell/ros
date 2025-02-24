@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IGraphDonutData } from '@components/graph-doughnut/graph-donut.model';
 import { DecimalThreePlaces, DecimalTwoPlaces } from '@models/static-variables';
@@ -13,7 +13,7 @@ import { first, takeUntil, tap } from 'rxjs/operators';
 })
 export class EditIngredientNutritionComponent extends ComponentBase implements OnInit {
   @ViewChild('doughNutCanvas', { static: false }) doughNutCanvas!: ElementRef;
-  @Input() form: FormGroup = new FormGroup({});
+  @Input() form: UntypedFormGroup = new UntypedFormGroup({});
   @Output() markAsDirty = new EventEmitter<void>();
 
   decimalTwoPlaces = DecimalTwoPlaces;
@@ -81,11 +81,11 @@ export class EditIngredientNutritionComponent extends ComponentBase implements O
   // Subscribe to valueChanges in the major 4 items and mark as touched to update the error status of the form
   // links to nutrient-total.validator
   listenNutrientTotals(): void {
-    const carbs: FormControl = this.form.get('totalCarbohydrate') as FormControl;
-    const fat: FormControl = this.form.get('totalFat') as FormControl;
-    const water: FormControl = this.form.get('water') as FormControl;
-    const protein: FormControl = this.form.get('protein') as FormControl;
-    const calories: FormControl = this.form.get('calories') as FormControl;
+    const carbs: UntypedFormControl = this.form.get('totalCarbohydrate') as UntypedFormControl;
+    const fat: UntypedFormControl = this.form.get('totalFat') as UntypedFormControl;
+    const water: UntypedFormControl = this.form.get('water') as UntypedFormControl;
+    const protein: UntypedFormControl = this.form.get('protein') as UntypedFormControl;
+    const calories: UntypedFormControl = this.form.get('calories') as UntypedFormControl;
     merge(carbs.valueChanges, fat.valueChanges, water.valueChanges, protein.valueChanges, calories.valueChanges)
       .pipe(
         tap(() => {

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
@@ -17,13 +17,13 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent extends ComponentBase implements OnInit, OnChanges {
-  searchForm: FormGroup;
+  searchForm: UntypedFormGroup;
   @Input() filterQuery: IRecipeFilterQuery = new RecipeFilterQuery();
   @Input() dataLength = 0;
   orderRecipesBy = OrderRecipesBy;
   allergyArray$: Observable<IReferenceItemFull[]>;
 
-  constructor(private fb: FormBuilder, private referenceService: ReferenceService, private stateService: StateService) {
+  constructor(private fb: UntypedFormBuilder, private referenceService: ReferenceService, private stateService: StateService) {
     super();
     this.searchForm = this.createForm();
     this.allergyArray$ = this.referenceService.getAllReferences().pipe(
@@ -118,18 +118,18 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
     });
   }
 
-  get totalTime(): FormControl {
-    return this.searchForm.get('totalTime') as FormControl;
+  get totalTime(): UntypedFormControl {
+    return this.searchForm.get('totalTime') as UntypedFormControl;
   }
-  get servingPrice(): FormControl {
-    return this.searchForm.get('servingPrice') as FormControl;
+  get servingPrice(): UntypedFormControl {
+    return this.searchForm.get('servingPrice') as UntypedFormControl;
   }
 
   /**
    * Creates the initial form with blank values.
    * @returns the initial blank form.
    */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     return this.fb.group({
       name: '',
       ingredient: '',

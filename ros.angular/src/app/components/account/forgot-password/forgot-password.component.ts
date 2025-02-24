@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
 import { MessageResult } from '@models/common.model';
@@ -17,12 +17,12 @@ import { catchError, takeUntil, tap } from 'rxjs/operators';
   styleUrls: ['./forgot-password.component.scss']
 })
 export class ForgotPasswordComponent extends ComponentBase implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   validationMessages = ValidationMessages;
   showLookInYourEmail = false;
   isSubmitting = false;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
@@ -48,7 +48,7 @@ export class ForgotPasswordComponent extends ComponentBase implements OnInit {
   get f() {
     return this.form.controls;
   }
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     // Create the controls for the reactive forms
     return this.fb.group({
       email: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120), Validators.email]]

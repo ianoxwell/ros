@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
 import { INewUser, NewUser } from '@models/accounts.model';
@@ -21,14 +21,14 @@ import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/opera
   styleUrls: ['./register-form.component.scss']
 })
 export class RegisterFormComponent extends ComponentBase implements OnInit {
-  form: FormGroup = new FormGroup({});
+  form: UntypedFormGroup = new UntypedFormGroup({});
   newUser: INewUser = new NewUser();
   validationMessages = ValidationMessages;
 
   displayAwaitingVerificationEmail = false;
   isSubmitting = false;
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private accountService: AccountService,
     private loginService: LoginService,
     private messageService: MessageService,
@@ -69,7 +69,7 @@ export class RegisterFormComponent extends ComponentBase implements OnInit {
       acceptTerms: [false, Validators.requiredTrue]
     });
     if (this.newUser.loginProvider !== 'GOOGLE') {
-      this.form.addControl('password', new FormControl('', [Validators.required, Validators.minLength(6)]));
+      this.form.addControl('password', new UntypedFormControl('', [Validators.required, Validators.minLength(6)]));
     } else {
       this.f.email.disable();
     }

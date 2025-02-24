@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
@@ -36,7 +36,7 @@ import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } fr
 // TODO Add origin to the dialog (eg recipeImport || ingredients)
 // TODO Create new Ingredient from all the relevant information and if origin was ingredients navigate to the editable ingredient
 export class DialogNewIngredientComponent extends ComponentBase implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   filterRawSuggestions$: Observable<IRawFoodSuggestion[]> = of([]);
   rawFoodFilter$ = new BehaviorSubject<string>('');
 
@@ -57,7 +57,7 @@ export class DialogNewIngredientComponent extends ComponentBase implements OnIni
       ingredientStateRef: IReferenceItemFull[];
       measurements: IMeasurement[];
     },
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private messageService: MessageService,
     private constructIngredientService: ConstructIngredientService,
     private restIngredientService: RestIngredientService
@@ -90,17 +90,17 @@ export class DialogNewIngredientComponent extends ComponentBase implements OnIni
       })
     );
   }
-  get rawName(): FormControl {
-    return this.form.get('name') as FormControl;
+  get rawName(): UntypedFormControl {
+    return this.form.get('name') as UntypedFormControl;
   }
-  get foodGroup(): FormControl {
-    return this.form.get('foodGroup') as FormControl;
+  get foodGroup(): UntypedFormControl {
+    return this.form.get('foodGroup') as UntypedFormControl;
   }
   /**
    * Creates the initial form
    * @returns Form Group containing the form
    */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     return this.fb.group({
       name: ['', [Validators.required]],
       foodGroup: null

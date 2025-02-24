@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { environment } from 'src/environments/environment';
 
@@ -24,15 +24,15 @@ export class PaginatorComponent {
   /** Event emitted when the paginator changes the page size or page index. */
   @Output() readonly page = new EventEmitter<PageEvent>();
 
-  form: FormGroup = {} as FormGroup;
-  constructor(private fb: FormBuilder) {
+  form: UntypedFormGroup = {} as UntypedFormGroup;
+  constructor(private fb: UntypedFormBuilder) {
     this.form = this.fb.group({
       perPage: this.pageSize
     });
   }
 
-  get perPage(): FormControl {
-    return this.form.get('perPage') as FormControl;
+  get perPage(): UntypedFormControl {
+    return this.form.get('perPage') as UntypedFormControl;
   }
 
   /** Advances to the next page if it exists. */

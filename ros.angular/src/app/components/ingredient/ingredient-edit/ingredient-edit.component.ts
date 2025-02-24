@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IScrollPositions } from '@models/common.model';
@@ -50,7 +50,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
   @ViewChild('constanceId', { static: true }) constanceSelect!: MatSelect;
 
   selected: IIngredient | null = null;
-  ingredientForm: FormGroup = new FormGroup({});
+  ingredientForm: UntypedFormGroup = new UntypedFormGroup({});
   // priceForm: FormGroup;
   // conversionsForm: FormGroup;
   editedItem: IEditedField[] = [];
@@ -71,7 +71,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
   isSavingResults = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private restIngredientService: RestIngredientService,
     private dialogService: DialogService,
     private messageService: MessageService,
@@ -94,42 +94,42 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
       .subscribe();
   }
 
-  get foodGroup(): FormControl {
-    return this.ingredientForm.get('foodGroup') as FormControl;
+  get foodGroup(): UntypedFormControl {
+    return this.ingredientForm.get('foodGroup') as UntypedFormControl;
   }
-  get allergiesControl(): FormControl {
-    return this.ingredientForm.get('allergies') as FormControl;
+  get allergiesControl(): UntypedFormControl {
+    return this.ingredientForm.get('allergies') as UntypedFormControl;
   }
-  get purchasedByControl(): FormControl {
-    return this.ingredientForm.get('purchasedBy') as FormControl;
+  get purchasedByControl(): UntypedFormControl {
+    return this.ingredientForm.get('purchasedBy') as UntypedFormControl;
   }
-  get linkUrl(): FormControl {
-    return this.ingredientForm.get('linkUrl') as FormControl;
+  get linkUrl(): UntypedFormControl {
+    return this.ingredientForm.get('linkUrl') as UntypedFormControl;
   }
-  get price(): FormArray {
-    return this.ingredientForm.get('price') as FormArray;
+  get price(): UntypedFormArray {
+    return this.ingredientForm.get('price') as UntypedFormArray;
   }
-  get ingredientConversions(): FormArray {
-    return this.ingredientForm.get('ingredientConversions') as FormArray;
+  get ingredientConversions(): UntypedFormArray {
+    return this.ingredientForm.get('ingredientConversions') as UntypedFormArray;
   }
-  get nutrition(): FormArray {
-    return this.ingredientForm.get('nutrition') as FormArray;
+  get nutrition(): UntypedFormArray {
+    return this.ingredientForm.get('nutrition') as UntypedFormArray;
   }
-  get caloricBreakdown(): FormGroup {
-    return this.ingredientForm.get('caloricBreakdown') as FormGroup;
+  get caloricBreakdown(): UntypedFormGroup {
+    return this.ingredientForm.get('caloricBreakdown') as UntypedFormGroup;
   }
-  get nutritionFacts(): FormGroup {
-    return this.ingredientForm.get('nutritionFacts') as FormGroup;
+  get nutritionFacts(): UntypedFormGroup {
+    return this.ingredientForm.get('nutritionFacts') as UntypedFormGroup;
   }
-  get commonVitamins(): FormGroup {
-    return this.ingredientForm.get('commonVitamins') as FormGroup;
+  get commonVitamins(): UntypedFormGroup {
+    return this.ingredientForm.get('commonVitamins') as UntypedFormGroup;
   }
-  get commonMinerals(): FormGroup {
-    return this.ingredientForm.get('commonMinerals') as FormGroup;
+  get commonMinerals(): UntypedFormGroup {
+    return this.ingredientForm.get('commonMinerals') as UntypedFormGroup;
   }
 
-  getFormGroupOfArray(fArray: FormArray, index: number): FormGroup {
-    return fArray.at(index) as FormGroup;
+  getFormGroupOfArray(fArray: UntypedFormArray, index: number): UntypedFormGroup {
+    return fArray.at(index) as UntypedFormGroup;
   }
 
   markFormClean(): void {

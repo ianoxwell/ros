@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IIngredientFilterObject, IngredientFilterObject } from '@models/filter-queries.model';
 import { IReferenceAll } from '@models/reference.model';
@@ -13,12 +13,12 @@ import { debounceTime, map, take, takeUntil, tap } from 'rxjs/operators';
   styleUrls: ['./ingredient-filter.component.scss']
 })
 export class IngredientFilterComponent extends ComponentBase implements OnInit {
-  searchForm: FormGroup = new FormGroup({});
+  searchForm: UntypedFormGroup = new UntypedFormGroup({});
   @Input() refData: IReferenceAll = {};
   filterQuery: IIngredientFilterObject = new IngredientFilterObject();
   isFormReady$: Observable<boolean> = of(false);
 
-  constructor(private fb: FormBuilder, private stateService: StateService) {
+  constructor(private fb: UntypedFormBuilder, private stateService: StateService) {
     super();
   }
 
@@ -62,7 +62,7 @@ export class IngredientFilterComponent extends ComponentBase implements OnInit {
    * Creates the form after the stateService IngredientFilterQuery returns.
    * @returns FormGroup for searchForm.
    */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     return this.fb.group({
       name: this.filterQuery.name,
       type: this.filterQuery.type,

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
@@ -22,11 +22,11 @@ import { ILoginForm } from './login-form.model';
 })
 export class LoginFormComponent extends ComponentBase {
   @ViewChild('passwordInput', { static: false }) passwordInput!: ElementRef<HTMLInputElement>;
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   validationMessages = ValidationMessages;
   isSubmitting = false;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private authService: SocialAuthService,
     private loginService: LoginService,
     private router: Router,
@@ -43,7 +43,7 @@ export class LoginFormComponent extends ComponentBase {
   }
 
   /** Create the controls for the reactive forms */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     return this.fb.group({
       username: [
         'testuser@noemail.com',

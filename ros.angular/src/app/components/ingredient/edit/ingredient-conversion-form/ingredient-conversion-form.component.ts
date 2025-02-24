@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceItemFull } from '@models/reference.model';
 
@@ -9,7 +9,7 @@ import { IReferenceItemFull } from '@models/reference.model';
   styleUrls: ['./ingredient-conversion-form.component.scss']
 })
 export class IngredientConversionFormComponent {
-  @Input() convert: FormGroup = new FormGroup({});
+  @Input() convert: UntypedFormGroup = new UntypedFormGroup({});
   @Input() ingredientState: IReferenceItemFull[] = [];
   @Input() measurements: IMeasurement[] = [];
   @Output() markAsDirty = new EventEmitter<void>();

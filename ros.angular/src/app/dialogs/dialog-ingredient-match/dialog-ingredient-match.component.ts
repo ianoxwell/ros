@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IIngredient } from '@models/ingredient/ingredient.model';
@@ -19,7 +19,7 @@ import { catchError, debounceTime, filter, first, switchMap, tap } from 'rxjs/op
   styleUrls: ['./dialog-ingredient-match.component.scss']
 })
 export class DialogIngredientMatchComponent extends ComponentBase implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   usdaFoodMatched: IRawFoodIngredient | null = null;
   filterRawSuggestions$: Observable<IRawFoodSuggestion[]> = of([]);
 
@@ -30,7 +30,7 @@ export class DialogIngredientMatchComponent extends ComponentBase implements OnI
       ingredient: IIngredient;
       foodGroup: IReferenceItemFull[];
     },
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private constructIngredientService: ConstructIngredientService,
     private restIngredientService: RestIngredientService,
     private messageService: MessageService
@@ -46,17 +46,17 @@ export class DialogIngredientMatchComponent extends ComponentBase implements OnI
     setTimeout(() => this.patchForm(this.data.ingredient), 50);
   }
 
-  get usdaFoodName(): FormControl {
-    return this.form.get('usdaFoodName') as FormControl;
+  get usdaFoodName(): UntypedFormControl {
+    return this.form.get('usdaFoodName') as UntypedFormControl;
   }
-  get foodGroup(): FormControl {
-    return this.form.get('foodGroup') as FormControl;
+  get foodGroup(): UntypedFormControl {
+    return this.form.get('foodGroup') as UntypedFormControl;
   }
   /**
    * Creates the initial form
    * @returns Form Group containing the form
    */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     return this.fb.group({
       name: [{ value: this.data.ingredient.name, disabled: true }],
       usdaFoodName: ['', [Validators.required]],

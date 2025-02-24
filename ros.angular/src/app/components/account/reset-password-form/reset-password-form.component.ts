@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
 import { TokenStatus } from '@models/common.enum';
@@ -18,7 +18,7 @@ import { catchError, first, map, tap } from 'rxjs/operators';
   styleUrls: ['./reset-password-form.component.scss']
 })
 export class ResetPasswordFormComponent extends ComponentBase implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   validationMessages = ValidationMessages;
 
   TokenStatus = TokenStatus;
@@ -29,7 +29,7 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
   isLoading = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
@@ -89,15 +89,15 @@ export class ResetPasswordFormComponent extends ComponentBase implements OnInit 
     }
   }
 
-  get fPassword(): FormControl {
-    return this.form.get('password') as FormControl;
+  get fPassword(): UntypedFormControl {
+    return this.form.get('password') as UntypedFormControl;
   }
 
   /**
    * Creates form.
    * @returns FormGroup for password required.
    */
-  createForm(): FormGroup {
+  createForm(): UntypedFormGroup {
     // Create the controls for the reactive forms
     return this.fb.group({
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]]

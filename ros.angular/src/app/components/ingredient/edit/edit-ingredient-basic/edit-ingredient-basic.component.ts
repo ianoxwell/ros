@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CPurchasedBy, IIngredient } from '@models/ingredient/ingredient.model';
 import { IReferenceAll } from '@models/reference.model';
 import { ValidationMessages } from '@models/static-variables';
@@ -13,7 +13,7 @@ import { first, tap } from 'rxjs/operators';
 })
 export class EditIngredientBasicComponent {
   @Input() refData!: IReferenceAll;
-  @Input() ingredientForm!: FormGroup;
+  @Input() ingredientForm!: UntypedFormGroup;
   @Input() selectedIngredient: IIngredient | null = null;
   @Output() updatedIngredient = new EventEmitter<IIngredient>();
   validationMessages = ValidationMessages;
@@ -24,11 +24,11 @@ export class EditIngredientBasicComponent {
 
   constructor(private dialogService: DialogService) {}
 
-  get nameControl(): FormControl {
-    return this.ingredientForm.get('name') as FormControl;
+  get nameControl(): UntypedFormControl {
+    return this.ingredientForm.get('name') as UntypedFormControl;
   }
-  get usdaFoodId(): FormControl {
-    return this.ingredientForm.get('usdaFoodId') as FormControl;
+  get usdaFoodId(): UntypedFormControl {
+    return this.ingredientForm.get('usdaFoodId') as UntypedFormControl;
   }
 
   /** Fires a dialog to attempt to match and update ingredient from the rawUsdaFood database */

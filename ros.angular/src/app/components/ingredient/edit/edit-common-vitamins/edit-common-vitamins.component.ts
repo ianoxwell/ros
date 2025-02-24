@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { DecimalThreePlaces, DecimalTwoPlaces } from '@models/static-variables';
 import { first, tap } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { first, tap } from 'rxjs/operators';
   styleUrls: ['./edit-common-vitamins.component.scss']
 })
 export class EditCommonVitaminsComponent implements OnInit {
-  @Input() form!: FormGroup;
+  @Input() form!: UntypedFormGroup;
   @Output() markAsDirty = new EventEmitter<void>();
 
   decimalTwoPlaces = DecimalTwoPlaces;
