@@ -34,11 +34,11 @@ export class RefDataService {
   }
 
   public getAllReferences(): Observable<IReferenceAll> {
-    return this.httpClient.get<IReferenceAll>(`${this.apiUrl}reference/all`, { headers: this.defaultHeader });
+    return this.httpClient.get<IReferenceAll>(`${this.apiUrl}reference`, { headers: this.defaultHeader });
   }
 
   public getMeasurements(): Observable<Array<IMeasurement>> {
-    return this.httpClient.get<Array<IMeasurement>>(`${this.apiUrl}reference/measurements`, {
+    return this.httpClient.get<Array<IMeasurement>>(`${this.apiUrl}measurement`, {
       headers: this.defaultHeader
     });
   }
