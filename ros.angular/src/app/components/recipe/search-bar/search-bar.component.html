@@ -30,11 +30,15 @@
 	<div class="ml-2">
 		<div>
 			<label>Cooking Time </label>
-			<mat-slider max="60" step="5" min="0" [value]="totalTime.value"></mat-slider>
+			<mat-slider max="60" step="5" min="0">
+				<input [value]="totalTime.value" matSliderThumb>
+			</mat-slider>
 		</div>
 		<div>
 			<label>Serving Price </label>
-			<mat-slider max="60" step="5" min="0" [value]="servingPrice.value" ></mat-slider>
+			<mat-slider max="60" step="5" min="0"  >
+				<input [value]="servingPrice.value" matSliderThumb>
+			</mat-slider>
 		</div>
 		<mat-form-field class=" w-14em">
 			<mat-label>Allergies</mat-label>
