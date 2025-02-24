@@ -68,6 +68,9 @@ $ npm run start:prod
 
 # update the api on fly.io
 $ fly deploy
+
+# if stuck on waiting for depot builder
+$ fly deploy --depot=false
 ```
 
 Notes on deploy <https://fly.io/docs/launch/deploy/>
@@ -75,7 +78,12 @@ Notes on deploy <https://fly.io/docs/launch/deploy/>
 `http://localhost:8080/api#` - will get you the swagger documents
 api is accessible as normal at localhost:8080 for local dev
 `https://api-ros.fly.dev` - should be the online api (note that the machine will need an ip assigned?) 
-`flyctl ips allocate-v4` - might be a cost though...
+
+### Cost for deploying accessible ipv4
+
+`flyctl ips allocate-v4 -a` - might be a cost though...
+`fly ips list` - get list of allocated ips
+`fly ips release <ip address>`
 
 ## Postgres problem solving
 
@@ -88,6 +96,10 @@ $ fly checks list -a api-ros-db
 
 # if the machine has not started
 $ fly m start 24d89024a06587 -a api-ros-db
+
+# Check status of agent and wireguard
+$ flyctl doctor
+
 ```
 
 ## Test
