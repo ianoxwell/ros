@@ -45,8 +45,11 @@ export class LoginFormComponent extends ComponentBase {
   /** Create the controls for the reactive forms */
   createForm(): FormGroup {
     return this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120), Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(2)]],
+      username: [
+        'testuser@noemail.com',
+        [Validators.required, Validators.minLength(2), Validators.maxLength(120), Validators.email]
+      ],
+      password: ['testPassword', [Validators.required, Validators.minLength(2)]],
       remember: false
     });
   }
@@ -67,6 +70,7 @@ export class LoginFormComponent extends ComponentBase {
       .pipe(
         tap((result: MessageResult) => this.loginResult(result, form)),
         catchError((error: unknown) => {
+          console.log('unknown error', error);
           const err = error as HttpErrorResponse;
           return this.catchFormError(err.message);
         }),
