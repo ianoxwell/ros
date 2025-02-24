@@ -8,7 +8,7 @@ export const environment = {
   production: false,
   baseURL: 'https://localhost:4200/',
   version: require('../../package.json').version,
-  apiUrl: 'https://localhost:44303',
+  apiUrl: 'http://localhost:8080',
   apiVersion: '/api/v1/',
   resultsPerPage: 10
 };
