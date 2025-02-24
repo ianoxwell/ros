@@ -13,7 +13,6 @@ import { DialogRecipeComponent } from './dialog-recipe/dialog-recipe.component';
 
 @NgModule({
   imports: [
-    CompleteMaterialModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

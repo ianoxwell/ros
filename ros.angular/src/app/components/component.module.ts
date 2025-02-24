@@ -34,7 +34,6 @@ import { ToastModule } from './toast/toast.module';
 
 @NgModule({
   imports: [
-    CompleteMaterialModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

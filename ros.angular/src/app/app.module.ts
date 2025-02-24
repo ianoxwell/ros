@@ -1,3 +1,4 @@
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,11 +8,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AutoCompleteSearchComponent } from '@components/auto-complete-search/auto-complete-search.component';
-import { ComponentModule } from '@components/component.module';
 import { FooterComponent } from '@components/footer/footer.component';
-import { SharedComponentModule } from '@components/shared-component.module';
 import { SiteLogoComponent } from '@components/site-logo/site-logo.component';
-import { PipesModule } from '@pipes/pipes.module';
 import { AccountService } from '@services/account.service';
 import { LogService } from '@services/log.service';
 import { LoginService } from '@services/login/login.service';
@@ -23,12 +21,10 @@ import { SecurityService } from '@services/security.service';
 import { StateService } from '@services/state.service';
 import { StorageService } from '@services/storage/storage.service';
 import { UserService } from '@services/user.service';
-import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { CompleteMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DialogModule } from './dialogs/dialogs.module';
+
 import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
 import { IngredientsComponent } from './pages/ingredients/ingredients.component';
@@ -42,7 +38,56 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { DialogService } from './services/dialog.service';
 import { UserProfileService } from './services/user-profile.service';
 
+import { AppHeaderComponent } from '@components/app-header/app-header.component';
+import { GraphDoughnutComponent } from '@components/graph-doughnut/graph-doughnut.component';
+import { IconTextComponent } from '@components/icon-text/icon-text.component';
+import { EditCommonMineralsComponent } from '@components/ingredient/edit/edit-common-minerals/edit-common-minerals.component';
+import { EditCommonVitaminsComponent } from '@components/ingredient/edit/edit-common-vitamins/edit-common-vitamins.component';
+import { EditIngredientBasicComponent } from '@components/ingredient/edit/edit-ingredient-basic/edit-ingredient-basic.component';
+import { EditIngredientNutritionComponent } from '@components/ingredient/edit/edit-ingredient-nutrition/edit-ingredient-nutrition.component';
+import { IngredientConversionFormComponent } from '@components/ingredient/edit/ingredient-conversion-form/ingredient-conversion-form.component';
+import { IngredientPricesFormComponent } from '@components/ingredient/edit/ingredient-prices-form/ingredient-prices-form.component';
+import { IngredientEditComponent } from '@components/ingredient/ingredient-edit/ingredient-edit.component';
+import { IngredientFilterComponent } from '@components/ingredient/ingredient-filter/ingredient-filter.component';
+import { IngredientTableComponent } from '@components/ingredient/ingredient-table/ingredient-table.component';
+import { LoadingIndicatorComponent } from '@components/loading-indicator/loading-indicator.component';
+import { PageTitleComponent } from '@components/page-title/page-title.component';
+import { PaginatorComponent } from '@components/paginator/paginator.component';
+import { RecipeCardComponent } from '@components/recipe/recipe-card/recipe-card.component';
+import { RecipeViewComponent } from '@components/recipe/recipe-view/recipe-view.component';
+import { SearchBarComponent } from '@components/recipe/search-bar/search-bar.component';
+import { SaveButtonComponent } from '@components/save-button/save-button.component';
+import { SafeHtmlPipe } from '@pipes/safe-html.pipe';
+import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
+import { ToTitleCasePipe } from '@pipes/title-case.pipe';
+import { FormAutocompleteDirective } from './directives/form-autocomplete.directive';
+import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomplete.directive';
+import { ConfirmDialogComponent } from './dialogs/dialog-confirm/confirm.component';
+import { DialogDeleteIngredientComponent } from './dialogs/dialog-delete-ingredient/dialog-delete-ingredient.component';
+import { DialogErrorComponent } from './dialogs/dialog-error/dialog-error.component';
+import { DialogIngredientMatchComponent } from './dialogs/dialog-ingredient-match/dialog-ingredient-match.component';
+import { DialogNewIngredientComponent } from './dialogs/dialog-new-ingredient/dialog-new-ingredient.component';
+import { DialogRecipeComponent } from './dialogs/dialog-recipe/dialog-recipe.component';
+import { ForgotPasswordComponent } from '@components/account/forgot-password/forgot-password.component';
+import { LoginFormComponent } from '@components/account/login-form/login-form.component';
+import { LoginComponent } from '@components/account/login.component';
+import { RegisterFormComponent } from '@components/account/register-form/register-form.component';
+import { ResetPasswordFormComponent } from '@components/account/reset-password-form/reset-password-form.component';
+import { VerifyEmailComponent } from '@components/account/verify-email/verify-email.component';
+
 @NgModule({
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    FormsModule,
+    AppRoutingModule,
+    CompleteMaterialModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    SocialLoginModule,
+    LayoutModule
+  ],
   declarations: [
     AppComponent,
     FavouritesComponent,
@@ -55,27 +100,49 @@ import { UserProfileService } from './services/user-profile.service';
     HomeDashboardComponent,
     MainComponent,
     WelcomeComponent,
+
+    DialogErrorComponent,
+    DialogDeleteIngredientComponent,
+    DialogRecipeComponent,
+    DialogNewIngredientComponent,
+    ConfirmDialogComponent,
+    DialogIngredientMatchComponent,
+
+    SaveButtonComponent,
+    LoadingIndicatorComponent,
     AutoCompleteSearchComponent,
     SiteLogoComponent,
-    FooterComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    FormsModule,
-    AppRoutingModule,
-    CompleteMaterialModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    LayoutModule,
-    ComponentModule,
-    DialogModule,
-    PipesModule,
-    SharedComponentModule,
-    NgxMaterialTimepickerModule,
-    NgxMaterialTimepickerModule.setLocale('en-au'),
-    SocialLoginModule
+    FooterComponent,
+    SearchBarComponent,
+    RecipeCardComponent,
+    RecipeViewComponent,
+    AppHeaderComponent,
+    IngredientEditComponent,
+    IngredientFilterComponent,
+    IconTextComponent,
+    IngredientTableComponent,
+    IngredientPricesFormComponent,
+    IngredientConversionFormComponent,
+    PageTitleComponent,
+    EditIngredientBasicComponent,
+    EditCommonMineralsComponent,
+    EditCommonVitaminsComponent,
+    EditIngredientNutritionComponent,
+    FormAutocompleteDirective,
+    MatInputAutoCompleteDirective,
+    GraphDoughnutComponent,
+    PaginatorComponent,
+
+    ToTitleCasePipe,
+    SafeHtmlPipe,
+    SentenceCasePipe,
+
+    LoginFormComponent,
+    RegisterFormComponent,
+    ResetPasswordFormComponent,
+    ForgotPasswordComponent,
+    LoginComponent,
+    VerifyEmailComponent
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
@@ -103,7 +170,9 @@ import { UserProfileService } from './services/user-profile.service';
           }
         ]
       } as SocialAuthServiceConfig
-    }
+    },
+    ToTitleCasePipe,
+    SentenceCasePipe
   ],
   bootstrap: [AppComponent]
 })

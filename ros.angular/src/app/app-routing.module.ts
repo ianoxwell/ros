@@ -12,8 +12,12 @@ import { UserRecipesComponent } from './pages/user/user-recipes/user-recipes.com
 import { UserSettingsComponent } from './pages/user/user-settings/user-settings.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { InterceptorService } from './services/interceptor.service';
+import { ForgotPasswordComponent } from '@components/account/forgot-password/forgot-password.component';
+import { LoginFormComponent } from '@components/account/login-form/login-form.component';
+import { RegisterFormComponent } from '@components/account/register-form/register-form.component';
+import { ResetPasswordFormComponent } from '@components/account/reset-password-form/reset-password-form.component';
+import { VerifyEmailComponent } from '@components/account/verify-email/verify-email.component';
 
-const accountModule = () => import('@components/account/account.module').then((x) => x.AccountModule);
 
 const routes: Routes = [
   {
@@ -27,7 +31,13 @@ const routes: Routes = [
     children: [
       {
         path: 'account',
-        loadChildren: accountModule
+        children: [
+          { path: 'login', component: LoginFormComponent },
+          { path: 'register', component: RegisterFormComponent },
+          { path: 'verify-email', component: VerifyEmailComponent },
+          { path: 'forgot-password', component: ForgotPasswordComponent },
+          { path: 'reset-password', component: ResetPasswordFormComponent }
+        ]
       }
     ]
   },
@@ -99,9 +109,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled',
-    paramsInheritanceStrategy: 'always'
-})
+      initialNavigation: 'enabledNonBlocking',
+      paramsInheritanceStrategy: 'always'
+    })
   ],
   exports: [RouterModule],
   providers: [

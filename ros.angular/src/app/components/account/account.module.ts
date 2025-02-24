@@ -8,7 +8,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { SharedComponentModule } from '@components/shared-component.module';
 import { AccountService } from '@services/account.service';
 import { AccountRoutingModule } from './account-routing.module';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -30,7 +29,6 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    SharedComponentModule
   ],
   declarations: [
     LoginFormComponent,
