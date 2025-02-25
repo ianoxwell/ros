@@ -52,4 +52,4 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
   declarations: [SearchBarComponent, RecipeCardComponent, RecipeViewComponent, RecipesComponent],
   exports: [RecipesComponent]
 })
-export class RecipeModule {}
+export class RecipesModule {}

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RecipesComponent } from './recipes.component';
 
-export const recipeRoutes = [
+const recipeRoutes = [
   {
     path: 'browse',
     component: RecipesComponent,
