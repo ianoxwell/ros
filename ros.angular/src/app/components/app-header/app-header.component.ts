@@ -8,12 +8,18 @@ import { Observable, of, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { filterNullish } from 'src/app/utils/filter-nullish';
 import { UserProfileService } from '../../services/user-profile.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './app-header.component.html',
-    styleUrls: ['./app-header.component.scss'],
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './app-header.component.html',
+  styleUrls: ['./app-header.component.scss'],
+  imports: [MatToolbarModule, MatIconModule, MatMenuModule, MatButtonModule, MatDividerModule, RouterModule]
 })
 export class AppHeaderComponent implements OnInit {
   profile: IUser | null = null;

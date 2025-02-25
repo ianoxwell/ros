@@ -1,0 +1,44 @@
+nav {
+  background: black;
+  color: white;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  ul {
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 100;
+    left: 0;
+    top: 0;
+
+    li {
+      position: relative;
+      width: 100%;
+      list-style: none;
+
+      .mat-mdc-button {
+        position: absolute;
+        top: 0;
+        left: -99998px;
+        width: 100%;
+        display: block;
+        padding: 0.5em 1em;
+        background: black;
+        color: white;
+
+        &:focus {
+          position: relative;
+          left: 0;
+          background: #000;
+        }
+      }
+    }
+  }
+}

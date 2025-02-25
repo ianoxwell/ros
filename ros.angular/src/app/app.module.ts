@@ -39,6 +39,7 @@ import { ToastComponent } from '@components/toast/toast.component';
 import { DialogModule } from './dialogs/dialogs.module';
 import { FormAutocompleteDirective } from './directives/form-autocomplete.directive';
 import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomplete.directive';
+import { SkipToMainComponent } from '@components/skip-to-main/skip-to-main.component';
 
 @NgModule({
   declarations: [
@@ -54,8 +55,6 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     SiteLogoComponent,
     IconTextComponent,
 
-    AppHeaderComponent,
-
     FormAutocompleteDirective,
     MatInputAutoCompleteDirective,
     LoginFormComponent,
@@ -65,7 +64,8 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     LoginComponent,
     VerifyEmailComponent,
     ToastItemComponent,
-    ToastComponent
+    ToastComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -81,7 +81,8 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     DialogModule,
     LoadingIndicatorComponent,
     SaveButtonComponent,
-    PageTitleComponent
+    PageTitleComponent,
+    SkipToMainComponent
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
