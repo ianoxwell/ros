@@ -1,4 +1,6 @@
 
+@use 'sass:list';
+
 .doughnut {
 	--doughnut-spacing-color: 255, 255, 255;
 	--doughnut-spacing-deg: calc(1deg * var(--doughnut-spacing));
@@ -76,7 +78,7 @@
 
 @each $slice in $doughnut-slices {
 	$name: nth($slice, 1);
-	$i: index($doughnut-slices, $slice);
+	$i: list.index($doughnut-slices, $slice);
 
 	@if $i > 1 {
 		.doughnut-slice-#{$name} {

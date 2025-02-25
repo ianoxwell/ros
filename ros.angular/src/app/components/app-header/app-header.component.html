@@ -1,67 +1,83 @@
 @if (isLoggedIn && !!profile) {
-<mat-toolbar color="primary" class="flex-box flex-justify-space-between">
-	<div class="flex-box flex-row">
-		<h1 class="pr-2">
-			<button type="button" mat-button routerLink="/savoury/" aria-label="Provisioners CookBook">
-				<mat-icon class="accent accent-button">loupe</mat-icon>
-				<span class="mat-subheading-2">Provisioners CookBook</span>
-			</button>
-		</h1>
-		<span>
-			@for (menuItem of mainMenuItems; track menuItem) {
-<button type="button" mat-button [routerLink]="menuItem.link"
-					routerLinkActive="active-link" [attr.aria-label]="menuItem.text">
-				<mat-icon class="color-on-primary">{{menuItem.icon}}</mat-icon>
-				{{menuItem.text}}
-			</button>
-}
-		</span>
-	</div>
+  <mat-toolbar color="primary" class="flex-box flex-justify-space-between">
+    <div class="flex-box flex-row">
+      <h1 class="pr-2">
+        <button type="button" mat-button routerLink="/savoury/" aria-label="Provisioners CookBook">
+          <mat-icon class="accent accent-button">loupe</mat-icon>
+          <span class="mat-subheading-2">Provisioners CookBook</span>
+        </button>
+      </h1>
+      <span>
+        @for (menuItem of mainMenuItems; track menuItem) {
+          <button
+            type="button"
+            mat-button
+            [routerLink]="menuItem.link"
+            routerLinkActive="active-link"
+            [attr.aria-label]="menuItem.text"
+          >
+            <mat-icon class="color-on-primary">{{ menuItem.icon }}</mat-icon>
+            {{ menuItem.text }}
+          </button>
+        }
+      </span>
+    </div>
 
-	<mat-menu #appMenu="matMenu" style="width:100%;" role="navigation">
-		<ng-template matMenuContent>
-			<button type="button" mat-menu-item routerLink="/savoury/user/favourites" aria-label="Personal Favourites">
-				<mat-icon>loyalty</mat-icon> Personal Favourites
-			</button>
-			<button type="button" mat-menu-item routerLink="/savoury/user/recipes" aria-label="My Recipes">
-				<mat-icon>local_pizza</mat-icon> My Recipes
-			</button>
-			<button type="button" mat-menu-item routerLink="/savoury/user/settings" aria-label="My Settings">
-				<mat-icon>cake</mat-icon> {{profile.firstName}}
-			</button>
-			<mat-divider></mat-divider>
-			<button type="button" mat-menu-item (click)="signOut()" aria-label="Sign out">
-				<mat-icon class="color-on-primary">keyboard_return</mat-icon> Sign Out
-			</button>
-		</ng-template>
-	</mat-menu>
+    <mat-menu #appMenu="matMenu" style="width: 100%" role="navigation">
+      <ng-template matMenuContent>
+        <button type="button" mat-menu-item routerLink="/savoury/user/favourites" aria-label="Personal Favourites">
+          <mat-icon>loyalty</mat-icon> Personal Favourites
+        </button>
+        <button type="button" mat-menu-item routerLink="/savoury/user/recipes" aria-label="My Recipes">
+          <mat-icon>local_pizza</mat-icon> My Recipes
+        </button>
+        <button type="button" mat-menu-item routerLink="/savoury/user/settings" aria-label="My Settings">
+          <mat-icon>cake</mat-icon> {{ profile.firstName }}
+        </button>
+        <mat-divider></mat-divider>
+        <button type="button" mat-menu-item (click)="signOut()" aria-label="Sign out">
+          <mat-icon class="color-on-primary">keyboard_return</mat-icon> Sign Out
+        </button>
+      </ng-template>
+    </mat-menu>
 
-	<span class="pr-1">
-		<button mat-icon-button type="button" color="primary" class="mr-2" mat-flat-button [matMenuTriggerFor]="appMenu"
-			>
-@switch (!!profile.photoUrl) {
-			@case (true) {
-<img [src]="profile.photoUrl" [alt]="profile.fullName" class="picture-in-icon">
-}
-			@case (false) {
-<mat-icon class="color-on-primary">person</mat-icon>
-}
-		}
-</button>
+    <span class="pr-1">
+      <button mat-icon-button type="button" color="primary" class="mr-2" mat-flat-button [matMenuTriggerFor]="appMenu">
+        @switch (!!profile.photoUrl) {
+          @case (true) {
+            <img [src]="profile.photoUrl" [alt]="profile.fullName" class="picture-in-icon" />
+          }
+          @case (false) {
+            <mat-icon class="color-on-primary">person</mat-icon>
+          }
+        }
+      </button>
 
-		@if (adminRights.globalAdmin) {
-<button mat-icon-button type="button" color="primary" mat-flat-button
-				routerLink="/savoury/app/settings" aria-label="Settings">
-			<mat-icon class="color-on-primary">settings</mat-icon>
-		</button>
-}
-		<!-- // TODO change the school settings link -->
-		@if (adminRights.schoolAdmin.length > 0) {
-<button mat-icon-button type="button" color="primary" mat-flat-button
-				routerLink="/savoury/app/settings" aria-label="School Settings">
-			<mat-icon class="color-on-primary">school</mat-icon>
-		</button>
-}
-	</span>
-</mat-toolbar>
+      @if (adminRights.globalAdmin) {
+        <button
+          mat-icon-button
+          type="button"
+          color="primary"
+          mat-flat-button
+          routerLink="/savoury/app/settings"
+          aria-label="Settings"
+        >
+          <mat-icon class="color-on-primary">settings</mat-icon>
+        </button>
+      }
+      <!-- // TODO change the school settings link -->
+      @if (adminRights.schoolAdmin.length > 0) {
+        <button
+          mat-icon-button
+          type="button"
+          color="primary"
+          mat-flat-button
+          routerLink="/savoury/app/settings"
+          aria-label="School Settings"
+        >
+          <mat-icon class="color-on-primary">school</mat-icon>
+        </button>
+      }
+    </span>
+  </mat-toolbar>
 }

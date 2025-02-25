@@ -1,15 +1,18 @@
-@if (labels?.header) {
-<div>{{labels.header}}</div>
+@if (labels.header) {
+  <div>{{ labels.header }}</div>
 }
-<div style="box-sizing: border-box;">
-	<div class="doughnut" [style]="sliceStyle">
-		@for (slice of data; track slice; let i = $index) {
-<div
-			class="doughnut-slice" ngClass="doughnut-slice-{{numberArray[i]}}" title="{{slice.value}} - {{slice.label}}"></div>
-}
-		<div class="doughnut-label">
-			<div class="doughnut-label-header">{{labels.internalLabel}}</div>
-			<div class="doughnut-label-sub">{{labels.internalSubLabel}}</div>
-		</div>
-	</div>
+<div style="box-sizing: border-box">
+  <div class="doughnut" [style]="sliceStyle">
+    @for (slice of data; track slice; let i = $index) {
+      <div
+        class="doughnut-slice"
+        ngClass="doughnut-slice-{{ numberArray[i] }}"
+        title="{{ slice.value }} - {{ slice.label }}"
+      ></div>
+    }
+    <div class="doughnut-label">
+      <div class="doughnut-label-header">{{ labels.internalLabel }}</div>
+      <div class="doughnut-label-sub">{{ labels.internalSubLabel }}</div>
+    </div>
+  </div>
 </div>
