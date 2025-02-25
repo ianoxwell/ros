@@ -37,12 +37,13 @@
 			(mouseout)="mouseRow(row, 'out')"></tr>
 	</table>
 
-	<app-paginator class="bottom-sticky"
+	<!-- !TEMP - add back in when separated into Lazy loaded modules -->
+	<!-- <app-paginator class="bottom-sticky"
 		(page)="onPageChange($event)"
 		[length]="dataLength"
 		[count]="dataCount"
 		[pageSize]="sortPageObj.perPage"
 		[showFirstLastButtons]="true"
 		[pageIndex]="sortPageObj.page">
-	</app-paginator>
+	</app-paginator> -->
 </div>

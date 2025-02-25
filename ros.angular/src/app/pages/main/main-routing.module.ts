@@ -9,6 +9,8 @@ import { UserRecipesComponent } from '../user/user-recipes/user-recipes.componen
 import { UserSettingsComponent } from '../user/user-settings/user-settings.component';
 import { MainComponent } from './main.component';
 
+const recipeModule = () => import('../recipe/recipe.module').then((x) => x.RecipeModule);
+
 const mainRoutes: Routes = [
   {
     path: '',
@@ -30,14 +32,7 @@ const mainRoutes: Routes = [
         data: { title: `Ingredient Edit`, symbol: `edit` }
       },
       {
-        path: 'recipes/browse',
-        component: RecipesComponent,
-        data: { title: `Recipes` }
-      },
-      {
-        path: 'recipes/item/:recipeId',
-        component: RecipesComponent,
-        data: { title: `Recipe` }
+        path: 'recipes', loadChildren: recipeModule 
       },
       {
         path: 'recipes',

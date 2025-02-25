@@ -8,7 +8,7 @@ import { PipeTransform, Pipe } from '@angular/core';
  */
 @Pipe({
     name: 'safeHtml',
-    standalone: false
+    standalone: true
 })
 export class SafeHtmlPipe implements PipeTransform {
   constructor(private sanitized: DomSanitizer) {}

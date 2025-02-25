@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { PageTitleService } from '@services/page-title.service';
 import { Observable } from 'rxjs';
@@ -7,7 +9,8 @@ import { Observable } from 'rxjs';
     selector: 'app-page-title',
     templateUrl: './page-title.component.html',
     styleUrls: ['./page-title.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatIconModule]
 })
 export class PageTitleComponent implements OnInit {
   pageTitle$: Observable<string>;

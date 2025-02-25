@@ -1,32 +1,48 @@
 <form [formGroup]="price" class="p-2">
-	<mat-form-field class="mr-2 w-25">
-		<input matInput type="text" placeholder="Brand Name" Title="Brand Name" formControlName="brandName">
-	</mat-form-field>
-	<mat-form-field class="mr-2 max-width7">
-		<mat-icon matPrefix class="pr-1 color-on-primary">attach_money</mat-icon>
-		<input matInput type="text"
-			digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
-			placeholder="Price" Title="Price" formControlName="price">
-	</mat-form-field>
-	<mat-form-field class="mr-2 max-width4">
-		<input matInput type="text"
-			digitOnly inputmode="numeric" [decimal]="true" [pattern]="decimalTwoPlaces"
-		 	placeholder="Qty" Title="Qty" formControlName="quantity">
-	</mat-form-field>
-	<mat-form-field class="mr-2 max-width7">
-		<mat-select role="" placeholder="Measurement" Title="Measurement" formControlName="measurement">
-			@for (measure of measurements; track measure) {
-<mat-option role="option" [value]="measure.title">{{measure.title}}</mat-option>
-}
-		</mat-select>
-	</mat-form-field>
-	<mat-form-field class="mr-2 w-25">
-		<input matInput type="text" placeholder="Store" Title="Store" formControlName="storeName">
-	</mat-form-field>
-	<div class="flex-box flex-justify-space-between">
-		<!--      todo: Make sure this is only visible to admins -->
-		<mat-form-field class="w-25">
-			<input matInput type="url" placeholder="API Link to store" Title="APILink" formControlName="apiLink">
-		</mat-form-field>
-	</div>
+  <mat-form-field class="mr-2 w-25">
+    <input matInput type="text" placeholder="Brand Name" Title="Brand Name" formControlName="brandName" />
+  </mat-form-field>
+  <mat-form-field class="mr-2 max-width7">
+    <mat-icon matPrefix class="pr-1 color-on-primary">attach_money</mat-icon>
+    <input
+      matInput
+      type="text"
+      digitOnly
+      inputmode="numeric"
+      [decimal]="true"
+      [pattern]="decimalTwoPlaces"
+      placeholder="Price"
+      Title="Price"
+      formControlName="price"
+    />
+  </mat-form-field>
+  <mat-form-field class="mr-2 max-width4">
+    <input
+      matInput
+      type="text"
+      digitOnly
+      inputmode="numeric"
+      [decimal]="true"
+      [pattern]="decimalTwoPlaces"
+      placeholder="Qty"
+      Title="Qty"
+      formControlName="quantity"
+    />
+  </mat-form-field>
+  <mat-form-field class="mr-2 max-width7">
+    <mat-select role="" placeholder="Measurement" Title="Measurement" formControlName="measurement">
+      @for (measure of measurements; track measure) {
+        <mat-option role="option" [value]="measure.title">{{ measure.title }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="mr-2 w-25">
+    <input matInput type="text" placeholder="Store" Title="Store" formControlName="storeName" />
+  </mat-form-field>
+  <div class="flex-box flex-justify-space-between">
+    <!--      todo: Make sure this is only visible to admins -->
+    <mat-form-field class="w-25">
+      <input matInput type="url" placeholder="API Link to store" Title="APILink" formControlName="apiLink" />
+    </mat-form-field>
+  </div>
 </form>

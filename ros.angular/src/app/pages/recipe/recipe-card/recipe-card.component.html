@@ -1,58 +1,58 @@
 @if (recipeInput) {
-<mat-card class="recipe-card">
-	<!-- <div class="image" [style.backgroundImage]="'url('+recipeInput.picture[0].fileLink+')'" (click)="clickedRecipe.emit(recipeInput)" [title]="recipeInput.picture[0].title">
+  <mat-card class="recipe-card">
+    <!-- <div class="image" [style.backgroundImage]="'url('+recipeInput.picture[0].fileLink+')'" (click)="clickedRecipe.emit(recipeInput)" [title]="recipeInput.picture[0].title">
 	</div> -->
-	<div class="relative-position show-pointer" (click)="clickedRecipe.emit(recipeInput)">
-		@if (!!recipeInput.images && recipeInput.images.length > 0) {
-<img [src]="recipeInput.images[0]" [alt]="recipeInput.name" />
-}
-		<div class="rating-favourite-position flex-box flex-justify-end">
-			<!-- <span class="flex-box flex-align-center mr-1" title="ratings">
+    <div class="relative-position show-pointer" (click)="clickedRecipe.emit(recipeInput)">
+      @if (!!recipeInput.images && recipeInput.images.length > 0) {
+        <img [src]="recipeInput.images[0]" [alt]="recipeInput.name" />
+      }
+      <div class="rating-favourite-position flex-box flex-justify-end">
+        <!-- <span class="flex-box flex-align-center mr-1" title="ratings">
 				<mat-icon class="mr-1">star</mat-icon>
 				<span class="line-height-icon-adjust">{{recipeInput.numberStars}}</span>
 			</span> -->
-			<!-- <span class="flex-box flex-align-center" title="Number of Favourites">
+        <!-- <span class="flex-box flex-align-center" title="Number of Favourites">
 				<mat-icon class="mr-1">favorite</mat-icon>
 				<span class="line-height-icon-adjust">{{recipeInput.numberFavourites}} Favourites</span>
 			</span> -->
-		</div>
-	</div>
+      </div>
+    </div>
 
-	<div class="show-pointer mt-2 ml-2 mr-2" (click)="clickedRecipe.emit(recipeInput)">
-		<div>
-			<h3 class="recipe-title">{{recipeInput.name}}</h3>
+    <div class="show-pointer mt-2 ml-2 mr-2" (click)="clickedRecipe.emit(recipeInput)">
+      <div>
+        <h3 class="recipe-title">{{ recipeInput.name }}</h3>
 
-			<span class="text-really-small text-muted">
-				@for (item of recipeInput.dishType; track item) {
-<span>
-					{{item | sentenceCase}}
-				</span>
-}
-			</span>
-		</div>
-		<div class="flex-box flex-align-center p-1" title="Number of Servings">
-			<mat-icon class="mr-1">people_outline</mat-icon>serves {{recipeInput.servings}}
-		</div>
+        <span class="text-really-small text-muted">
+          @for (item of recipeInput.dishType; track item) {
+            <span>
+              {{ item | sentenceCase }}
+            </span>
+          }
+        </span>
+      </div>
+      <div class="flex-box flex-align-center p-1" title="Number of Servings">
+        <mat-icon class="mr-1">people_outline</mat-icon>serves {{ recipeInput.servings }}
+      </div>
 
-		<!-- <div *ngIf="recipeInput.allergyWarnings && recipeInput.allergyWarnings.length > 0" title="Allergy Warnings">
+      <!-- <div *ngIf="recipeInput.allergyWarnings && recipeInput.allergyWarnings.length > 0" title="Allergy Warnings">
 			<span *ngFor="let allergy of recipeInput.allergyWarnings">
 				{{allergy.title}}
 			</span>
 		</div> -->
-	</div>
-	<div class="flex-box flex-row flex-justify-space-between pb-2 ml-2 mr-2">
-		<span class="flex-box flex-align-center p-1" title="ready in minutes">
-			<mat-icon class="mr-1">timer</mat-icon> {{recipeInput.readyInMinutes}} min
-		</span>
-		<mat-menu #appMenu="matMenu" xPosition="before">
-			<button mat-menu-item (click)="more()">Favourite (any)</button>
-			<button mat-menu-item (click)="more()">Book (teacher)</button>
-			<button mat-menu-item (click)="more()">Edit (teacher)</button>
-			<button mat-menu-item (click)="more()">Delete (admin)</button>
-		</mat-menu>
-		<button mat-flat-button type="button" aria-label="more" [matMenuTriggerFor]="appMenu">
-			<mat-icon class="color-on-primary">more_vert</mat-icon>
-		</button>
-	</div>
-</mat-card>
+    </div>
+    <div class="flex-box flex-row flex-justify-space-between pb-2 ml-2 mr-2">
+      <span class="flex-box flex-align-center p-1" title="ready in minutes">
+        <mat-icon class="mr-1">timer</mat-icon> {{ recipeInput.readyInMinutes }} min
+      </span>
+      <mat-menu #appMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="more()">Favourite (any)</button>
+        <button mat-menu-item (click)="more()">Book (teacher)</button>
+        <button mat-menu-item (click)="more()">Edit (teacher)</button>
+        <button mat-menu-item (click)="more()">Delete (admin)</button>
+      </mat-menu>
+      <button mat-flat-button type="button" aria-label="more" [matMenuTriggerFor]="appMenu">
+        <mat-icon class="color-on-primary">more_vert</mat-icon>
+      </button>
+    </div>
+  </mat-card>
 }

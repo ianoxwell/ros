@@ -1,6 +1,6 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { ForgotPasswordComponent } from '@components/account/forgot-password/forgot-password.component';
 import { LoginFormComponent } from '@components/account/login-form/login-form.component';
 import { RegisterFormComponent } from '@components/account/register-form/register-form.component';
@@ -45,6 +45,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabledNonBlocking',
+      preloadingStrategy: PreloadAllModules,
       paramsInheritanceStrategy: 'always'
     })
   ],

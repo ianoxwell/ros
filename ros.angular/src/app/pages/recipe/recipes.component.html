@@ -4,42 +4,42 @@
   <div class="flex-box flex-justify-space-between mt-2 mb-2 pl-2 pr-2">
     <span class="ml-12"></span>
     @if (selectedTab === 1 && !!selectedRecipe) {
-<span>
-      <button
-        type="button"
-        mat-flat-button
-        title="Previous"
-        (click)="changeRecipe({ direction: 'prev', id: selectedRecipe.id })"
-      >
-        <mat-icon class="color-on-primary">chevron_left</mat-icon> Prev
-      </button>
-      <button
-        type="button"
-        mat-flat-button
-        title="Next"
-        (click)="changeRecipe({ direction: 'next', id: selectedRecipe.id })"
-        class="ml-2"
-      >
-        Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
-      </button>
-    </span>
-}
+      <span>
+        <button
+          type="button"
+          mat-flat-button
+          title="Previous"
+          (click)="changeRecipe({ direction: 'prev', id: selectedRecipe.id })"
+        >
+          <mat-icon class="color-on-primary">chevron_left</mat-icon> Prev
+        </button>
+        <button
+          type="button"
+          mat-flat-button
+          title="Next"
+          (click)="changeRecipe({ direction: 'next', id: selectedRecipe.id })"
+          class="ml-2"
+        >
+          Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
+        </button>
+      </span>
+    }
     @if (!!selectedRecipe) {
-<span>
-      <h1>{{ selectedRecipe.name }}</h1>
-    </span>
-}
+      <span>
+        <h1>{{ selectedRecipe.name }}</h1>
+      </span>
+    }
     <span>
       @if (selectedTab === 1) {
-<button mat-flat-button type="button" color="accent" (click)="changeTab(0)">
-        <mat-icon class="mr-1">keyboard_return</mat-icon> Back
-      </button>
-}
+        <button mat-flat-button type="button" color="accent" (click)="changeTab(0)">
+          <mat-icon class="mr-1">keyboard_return</mat-icon> Back
+        </button>
+      }
       @if (selectedTab === 0) {
-<button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
-        <mat-icon class="mr-1">add</mat-icon> New
-      </button>
-}
+        <button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
+          <mat-icon class="mr-1">add</mat-icon> New
+        </button>
+      }
     </span>
   </div>
   <mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs">
@@ -49,26 +49,20 @@
           <app-search-bar [filterQuery]="filterQuery" [dataLength]="dataLength"></app-search-bar>
         </div>
         @if (!isLoading) {
-
           <div class="container mt-1 grid-parent">
             @for (recipe of recipes; track recipe; let i = $index) {
-<div class="recipeCard">
-              <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event, i)"> </app-recipe-card>
-            </div>
-}
+              <div class="recipeCard">
+                <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event, i)">
+                </app-recipe-card>
+              </div>
+            }
             @if (recipes.length === 0) {
-
               <div>Sorry I can't find any recipes that match the filters</div>
-            
-}
+            }
           </div>
-        
-} @else {
-
+        } @else {
           <app-loading-indicator></app-loading-indicator>
-        
-}
-        
+        }
       </div>
     </mat-tab>
     <mat-tab>
@@ -79,14 +73,14 @@
     </mat-tab>
   </mat-tab-group>
   @if (selectedRecipe) {
-<div>
-    <mat-toolbar>
-      <h1>{{ 'Recipe ' + selectedRecipe.name }}</h1>
-      <button mat-flat-button aria-label="Search Recipes" (click)="selectedRecipe = undefined">
-        <mat-icon>back</mat-icon>
-        Search Recipes
-      </button>
-    </mat-toolbar>
-  </div>
-}
+    <div>
+      <mat-toolbar>
+        <h1>{{ 'Recipe ' + selectedRecipe.name }}</h1>
+        <button mat-flat-button aria-label="Search Recipes" (click)="selectedRecipe = undefined">
+          <mat-icon>back</mat-icon>
+          Search Recipes
+        </button>
+      </mat-toolbar>
+    </div>
+  }
 </div>

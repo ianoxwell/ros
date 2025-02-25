@@ -1,58 +1,58 @@
 @if (!!selectedRecipe) {
-<article>
-  <main class="mt-1">
-    <div class="print-only">
-      <h2>{{ selectedRecipe.name }}</h2>
-    </div>
-    <!-- Additional details -->
-    <section class="flex-box flex-column mt-2">
-      <mat-chip-listbox>
-        @for (tag of selectedRecipe.dishType; track tag) {
-<mat-chip>{{ tag }}</mat-chip>
-}
-      </mat-chip-listbox>
-    </section>
-    <section class="mt-2">
-      <h4>Author and link</h4>
-    </section>
-    <section class="flex-box flex-row">
-      <section class="w-50 flex-column flex-box mr-2">
-        @if (selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0) {
-<div>
-          <h4>Description</h4>
-          <blockquote>
-            <p [innerHTML]="selectedRecipe.shortSummary | safeHtml"></p>
-            <footer>
-              <cite
-                ><a [href]="selectedRecipe.sourceUrl" [title]="selectedRecipe.creditsText">{{
-                  selectedRecipe.creditsText
-                }}</a></cite
-              >
-            </footer>
-          </blockquote>
-        </div>
-}
-        <div class="w-full mt-4">
-          <h4>Ingredients</h4>
-          <mat-list>
-            @for (item of selectedRecipe.ingredientList; track item) {
-<mat-list-item class="pb-1">
-              <span class="mr-1">{{ englishIngredientItem(item) }}</span>
-              <!-- <span class="mr-1">{{item.unit}} -</span> -->
-              <span
-                ><a [routerLink]="[routerLinkURL(item)]">{{ item.ingredientId }}</a></span
-              >
-              <!-- <span *ngIf="item.allergies?.length">          
+  <article>
+    <main class="mt-1">
+      <div class="print-only">
+        <h2>{{ selectedRecipe.name }}</h2>
+      </div>
+      <!-- Additional details -->
+      <section class="flex-box flex-column mt-2">
+        <mat-chip-listbox>
+          @for (tag of selectedRecipe.dishType; track tag) {
+            <mat-chip>{{ tag }}</mat-chip>
+          }
+        </mat-chip-listbox>
+      </section>
+      <section class="mt-2">
+        <h4>Author and link</h4>
+      </section>
+      <section class="flex-box flex-row">
+        <section class="w-50 flex-column flex-box mr-2">
+          @if (selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0) {
+            <div>
+              <h4>Description</h4>
+              <blockquote>
+                <p [innerHTML]="selectedRecipe.shortSummary | safeHtml"></p>
+                <footer>
+                  <cite
+                    ><a [href]="selectedRecipe.sourceUrl" [title]="selectedRecipe.creditsText">{{
+                      selectedRecipe.creditsText
+                    }}</a></cite
+                  >
+                </footer>
+              </blockquote>
+            </div>
+          }
+          <div class="w-full mt-4">
+            <h4>Ingredients</h4>
+            <mat-list>
+              @for (item of selectedRecipe.ingredientList; track item) {
+                <mat-list-item class="pb-1">
+                  <span class="mr-1">{{ englishIngredientItem(item) }}</span>
+                  <!-- <span class="mr-1">{{item.unit}} -</span> -->
+                  <span
+                    ><a [routerLink]="[routerLinkURL(item)]">{{ item.ingredientId }}</a></span
+                  >
+                  <!-- <span *ngIf="item.allergies?.length">          
 							<mat-icon class="text-warning">warning</mat-icon>
 						</span> -->
-            </mat-list-item>
-}
-          </mat-list>
-        </div>
-      </section>
-      <!-- Image and favourites  -->
-      <div class="w-50">
-        <!-- <img *ngIf="!!selectedRecipe.recipePictures" [src]="selectedRecipe.recipePictures[0].fileLink" [alt]="selectedRecipe.recipePictures[0].title" class="w-full"/>
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        </section>
+        <!-- Image and favourites  -->
+        <div class="w-50">
+          <!-- <img *ngIf="!!selectedRecipe.recipePictures" [src]="selectedRecipe.recipePictures[0].fileLink" [alt]="selectedRecipe.recipePictures[0].title" class="w-full"/>
 			<div class="flex-box flex-row flex-justify-center">
 				<app-icon-text icon="star" [text]="selectedRecipe.numberStars + ' - (' + selectedRecipe.numberReviews + ') Rate it'" titleText="Number Servings"></app-icon-text>
 				<app-icon-text icon="favorite" [text]="selectedRecipe.numberFavourites + ' Favourites'" titleText="Favourites"></app-icon-text>
@@ -71,63 +71,58 @@
 						{{allergy}}
 					</span>
 				</ng-template> -->
-        <!-- Todo - add print functionality -->
-        <!-- <div>
+          <!-- Todo - add print functionality -->
+          <!-- <div>
 					<button mat-icon-button type="button" aria-label="Print" (click)="printView()"><mat-icon>print</mat-icon></button>
 				</div> -->
-        <!-- </div> -->
-      </div>
-    </section>
+          <!-- </div> -->
+        </div>
+      </section>
 
-    <!-- Allergy Alerts -->
-    <!-- <div *ngIf="selectedRecipe.allergyWarnings?.length">
+      <!-- Allergy Alerts -->
+      <!-- <div *ngIf="selectedRecipe.allergyWarnings?.length">
 		<h4>Allergy Warnings</h4>
 		<span *ngFor="let warning of selectedRecipe.allergyWarnings">{{warning}}</span>
 	</div> -->
-    <!-- Equipment Required -->
-    <div class="mt-2">
-      <h4>Equipment Required</h4>
-      <mat-chip-listbox aria-label="Equipment Required">
-        @for (item of selectedRecipe.equipment; track item) {
-<mat-chip>{{ item }}</mat-chip>
-}
-      </mat-chip-listbox>
-    </div>
-    <main class="flex-box flex-column">
-      <div>
-        <h4 class="mt-4">How to Make</h4>
-        @if (selectedRecipe.steppedInstructions) {
-
-          <mat-list>
-            @for (item of selectedRecipe.steppedInstructions; track item) {
-<mat-list-item>
-              <div class="flex-box flex-row p-1">
-                <span class="text-small text-muted mr-2 w-7 align-self-center">Step {{ item.stepNumber }}</span>
-                <span [innerHTML]="item.step | safeHtml"></span>
-              </div>
-              <mat-divider></mat-divider>
-            </mat-list-item>
-}
-          </mat-list>
-        
-} @else {
-
-          <div [innerHTML]="selectedRecipe.instructions"></div>
-        
-}
-        
+      <!-- Equipment Required -->
+      <div class="mt-2">
+        <h4>Equipment Required</h4>
+        <mat-chip-listbox aria-label="Equipment Required">
+          @for (item of selectedRecipe.equipment; track item) {
+            <mat-chip>{{ item }}</mat-chip>
+          }
+        </mat-chip-listbox>
       </div>
-    </main>
-    <section class="mt-2">
-      <h4>Nutrition</h4>
-    </section>
+      <main class="flex-box flex-column">
+        <div>
+          <h4 class="mt-4">How to Make</h4>
+          @if (selectedRecipe.steppedInstructions) {
+            <mat-list>
+              @for (item of selectedRecipe.steppedInstructions; track item) {
+                <mat-list-item>
+                  <div class="flex-box flex-row p-1">
+                    <span class="text-small text-muted mr-2 w-7 align-self-center">Step {{ item.stepNumber }}</span>
+                    <span [innerHTML]="item.step | safeHtml"></span>
+                  </div>
+                  <mat-divider></mat-divider>
+                </mat-list-item>
+              }
+            </mat-list>
+          } @else {
+            <div [innerHTML]="selectedRecipe.instructions"></div>
+          }
+        </div>
+      </main>
+      <section class="mt-2">
+        <h4>Nutrition</h4>
+      </section>
 
-    <section class="mt-2">
-      <h4>Comments and Ratings</h4>
-    </section>
-    <section class="mt-2">
-      <h4>Related Recipes</h4>
-    </section>
-  </main>
-</article>
+      <section class="mt-2">
+        <h4>Comments and Ratings</h4>
+      </section>
+      <section class="mt-2">
+        <h4>Related Recipes</h4>
+      </section>
+    </main>
+  </article>
 }

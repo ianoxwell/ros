@@ -1,35 +1,51 @@
-<form class="flex-box flex-justify-end flex-align-center mat-paginator-sticky pr-4 mat-table" [ngClass]="{'flex-row': horizontalLayout, 'flex-column-reverse': !horizontalLayout}" [formGroup]="form" autocomplete="off">
-	@if (!hidePageSize) {
-<span class="flex-box flex-row flex-align-center">
-		<mat-label for="pageSizeSelect" class="text-small mr-2">Items per page:</mat-label>
-		<mat-form-field class="narrow-select" [ngClass]="{'mr-4' : horizontalLayout}">
-			<mat-select role="" id="pageSizeSelect" formControlName="perPage" (selectionChange)="pageSizeChange()">
-				@for (opt of pageSizeOptions; track opt) {
-<mat-option role="option" [value]="opt">{{opt}}</mat-option>
-}
-			</mat-select>
-		</mat-form-field>
-	</span>
-}
-	<span class="flex-box flex-align-center" [ngClass]="{'flex-row': horizontalLayout, 'flex-column': !horizontalLayout}">
-		<span class="text-small" [ngClass]="{'mr-4': horizontalLayout, 'mb-1': !horizontalLayout}">{{getMinOfItemOnCurrentPage()}}{{getMaxOfItemOnCurrentPage()}} of {{length}}</span>
-		<span class="page-buttons">
-			@if (showFirstLastButtons) {
-<button type="button" mat-icon-button title="First page" (click)="firstPage()" [disabled]="!hasPreviousPage()">
-				<mat-icon class="color-on-primary">first_page</mat-icon>
-			</button>
-}
-			<button type="button" mat-icon-button title="Previous page" (click)="previousPage()" [disabled]="!hasPreviousPage()">
-				<mat-icon class="color-on-primary">chevron_left</mat-icon>
-			</button>
-			<button type="button" mat-icon-button title="Next page" (click)="nextPage()" [disabled]="!hasNextPage()">
-				<mat-icon class="color-on-primary">chevron_right</mat-icon>
-			</button>
-			@if (showFirstLastButtons) {
-<button type="button" mat-icon-button title="Last page" (click)="lastPage()" [disabled]="!hasNextPage()">
-				<mat-icon class="color-on-primary">last_page</mat-icon>
-			</button>
-}
-		</span>
-	</span>
+<form
+  class="flex-box flex-justify-end flex-align-center mat-paginator-sticky pr-4 mat-table"
+  [ngClass]="{ 'flex-row': horizontalLayout, 'flex-column-reverse': !horizontalLayout }"
+  [formGroup]="form"
+  autocomplete="off"
+>
+  @if (!hidePageSize) {
+    <span class="flex-box flex-row flex-align-center">
+      <mat-label for="pageSizeSelect" class="text-small mr-2">Items per page:</mat-label>
+      <mat-form-field class="narrow-select" [ngClass]="{ 'mr-4': horizontalLayout }">
+        <mat-select role="" id="pageSizeSelect" formControlName="perPage" (selectionChange)="pageSizeChange()">
+          @for (opt of pageSizeOptions; track opt) {
+            <mat-option role="option" [value]="opt">{{ opt }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </span>
+  }
+  <span
+    class="flex-box flex-align-center"
+    [ngClass]="{ 'flex-row': horizontalLayout, 'flex-column': !horizontalLayout }"
+  >
+    <span class="text-small" [ngClass]="{ 'mr-4': horizontalLayout, 'mb-1': !horizontalLayout }"
+      >{{ getMinOfItemOnCurrentPage() }}{{ getMaxOfItemOnCurrentPage() }} of {{ length }}</span
+    >
+    <span class="page-buttons">
+      @if (showFirstLastButtons) {
+        <button type="button" mat-icon-button title="First page" (click)="firstPage()" [disabled]="!hasPreviousPage()">
+          <mat-icon class="color-on-primary">first_page</mat-icon>
+        </button>
+      }
+      <button
+        type="button"
+        mat-icon-button
+        title="Previous page"
+        (click)="previousPage()"
+        [disabled]="!hasPreviousPage()"
+      >
+        <mat-icon class="color-on-primary">chevron_left</mat-icon>
+      </button>
+      <button type="button" mat-icon-button title="Next page" (click)="nextPage()" [disabled]="!hasNextPage()">
+        <mat-icon class="color-on-primary">chevron_right</mat-icon>
+      </button>
+      @if (showFirstLastButtons) {
+        <button type="button" mat-icon-button title="Last page" (click)="lastPage()" [disabled]="!hasNextPage()">
+          <mat-icon class="color-on-primary">last_page</mat-icon>
+        </button>
+      }
+    </span>
+  </span>
 </form>

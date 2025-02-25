@@ -30,7 +30,6 @@ import { HomeDashboardComponent } from './pages/home/home-dashboard/home-dashboa
 import { HomeComponent } from './pages/home/home.component';
 import { IngredientsComponent } from './pages/ingredients/ingredients.component';
 import { MainComponent } from './pages/main/main.component';
-import { RecipesComponent } from './pages/recipe/recipes.component';
 import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { FavouritesComponent } from './pages/user/favourites/favourites.component';
 import { UserRecipesComponent } from './pages/user/user-recipes/user-recipes.component';
@@ -48,33 +47,20 @@ import { VerifyEmailComponent } from '@components/account/verify-email/verify-em
 import { AppHeaderComponent } from '@components/app-header/app-header.component';
 import { GraphDoughnutComponent } from '@components/graph-doughnut/graph-doughnut.component';
 import { IconTextComponent } from '@components/icon-text/icon-text.component';
+import { SaveButtonComponent } from '@components/save-button/save-button.component';
+import { ToastItemComponent } from '@components/toast/toast-item/toast-item.component';
+import { ToastComponent } from '@components/toast/toast.component';
+import { ToTitleCasePipe } from '@pipes/title-case.pipe';
 import { EditCommonMineralsComponent } from 'src/app/pages/ingredients/edit-common-minerals/edit-common-minerals.component';
 import { EditCommonVitaminsComponent } from 'src/app/pages/ingredients/edit-common-vitamins/edit-common-vitamins.component';
 import { EditIngredientBasicComponent } from 'src/app/pages/ingredients/edit-ingredient-basic/edit-ingredient-basic.component';
 import { EditIngredientNutritionComponent } from 'src/app/pages/ingredients/edit-ingredient-nutrition/edit-ingredient-nutrition.component';
 import { IngredientConversionFormComponent } from 'src/app/pages/ingredients/ingredient-conversion-form/ingredient-conversion-form.component';
-import { IngredientPricesFormComponent } from 'src/app/pages/ingredients/ingredient-prices-form/ingredient-prices-form.component';
 import { IngredientEditComponent } from 'src/app/pages/ingredients/ingredient-edit/ingredient-edit.component';
 import { IngredientFilterComponent } from 'src/app/pages/ingredients/ingredient-filter/ingredient-filter.component';
+import { IngredientPricesFormComponent } from 'src/app/pages/ingredients/ingredient-prices-form/ingredient-prices-form.component';
 import { IngredientTableComponent } from 'src/app/pages/ingredients/ingredient-table/ingredient-table.component';
-import { LoadingIndicatorComponent } from '@components/loading-indicator/loading-indicator.component';
-import { PageTitleComponent } from '@components/page-title/page-title.component';
-import { PaginatorComponent } from '@components/paginator/paginator.component';
-import { RecipeCardComponent } from 'src/app/pages/recipe/recipe-card/recipe-card.component';
-import { RecipeViewComponent } from 'src/app/pages/recipe/recipe-view/recipe-view.component';
-import { SearchBarComponent } from 'src/app/pages/recipe/search-bar/search-bar.component';
-import { SaveButtonComponent } from '@components/save-button/save-button.component';
-import { ToastItemComponent } from '@components/toast/toast-item/toast-item.component';
-import { ToastComponent } from '@components/toast/toast.component';
-import { SafeHtmlPipe } from '@pipes/safe-html.pipe';
-import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
-import { ToTitleCasePipe } from '@pipes/title-case.pipe';
-import { ConfirmDialogComponent } from './dialogs/dialog-confirm/confirm.component';
-import { DialogDeleteIngredientComponent } from './dialogs/dialog-delete-ingredient/dialog-delete-ingredient.component';
-import { DialogErrorComponent } from './dialogs/dialog-error/dialog-error.component';
-import { DialogIngredientMatchComponent } from './dialogs/dialog-ingredient-match/dialog-ingredient-match.component';
-import { DialogNewIngredientComponent } from './dialogs/dialog-new-ingredient/dialog-new-ingredient.component';
-import { DialogRecipeComponent } from './dialogs/dialog-recipe/dialog-recipe.component';
+import { DialogModule } from './dialogs/dialogs.module';
 import { FormAutocompleteDirective } from './directives/form-autocomplete.directive';
 import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomplete.directive';
 
@@ -82,7 +68,6 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
   declarations: [
     AppComponent,
     FavouritesComponent,
-    RecipesComponent,
     ShoppingComponent,
     IngredientsComponent,
     UserSettingsComponent,
@@ -91,20 +76,10 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     HomeDashboardComponent,
     MainComponent,
     WelcomeComponent,
-    DialogErrorComponent,
-    DialogDeleteIngredientComponent,
-    DialogRecipeComponent,
-    DialogNewIngredientComponent,
-    ConfirmDialogComponent,
-    DialogIngredientMatchComponent,
-    SaveButtonComponent,
-    LoadingIndicatorComponent,
     AutoCompleteSearchComponent,
     SiteLogoComponent,
     FooterComponent,
-    SearchBarComponent,
-    RecipeCardComponent,
-    RecipeViewComponent,
+
     AppHeaderComponent,
     IngredientEditComponent,
     IngredientFilterComponent,
@@ -112,7 +87,6 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     IngredientTableComponent,
     IngredientPricesFormComponent,
     IngredientConversionFormComponent,
-    PageTitleComponent,
     EditIngredientBasicComponent,
     EditCommonMineralsComponent,
     EditCommonVitaminsComponent,
@@ -120,10 +94,7 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     FormAutocompleteDirective,
     MatInputAutoCompleteDirective,
     GraphDoughnutComponent,
-    PaginatorComponent,
     ToTitleCasePipe,
-    SafeHtmlPipe,
-    SentenceCasePipe,
     LoginFormComponent,
     RegisterFormComponent,
     ResetPasswordFormComponent,
@@ -143,7 +114,9 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
     CompleteMaterialModule,
     SocialLoginModule,
     LayoutModule,
-    DigitOnlyModule
+    DigitOnlyModule,
+    SaveButtonComponent,
+    DialogModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
@@ -173,7 +146,6 @@ import { MatInputAutoCompleteDirective } from './directives/mat-input-autocomple
       } as SocialAuthServiceConfig
     },
     ToTitleCasePipe,
-    SentenceCasePipe,
     provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]

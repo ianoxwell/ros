@@ -1,27 +1,27 @@
 @if (filterQuery) {
-<form [formGroup]="searchForm" >
-	<div>
-		<mat-form-field class="ml-2 w-14em">
-			<mat-label>Sort By</mat-label>
-			<mat-select formControlName="orderby" >
-				@for (item of orderRecipesBy; track item) {
-<mat-option [value]="item.value">
-				{{item.key}}
-				</mat-option>
-}
-			</mat-select>
-		</mat-form-field>
-		<mat-toolbar class="flex-justify-space-between">
-			<span class="refine-text">Refine</span>
-			<button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
-				<span class="clear-all-text">Clear all</span>
-			</button>
-		</mat-toolbar>
-		<mat-form-field class="ml-2 mt-1 w-14em">
-			<!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
-			<input matInput type="text" placeholder="Name" Title="Name" formControlName="name" >
-		</mat-form-field>
-		<!-- <mat-form-field class="ml-2">
+  <form [formGroup]="searchForm">
+    <div>
+      <mat-form-field class="ml-2 w-14em">
+        <mat-label>Sort By</mat-label>
+        <mat-select formControlName="orderby">
+          @for (item of orderRecipesBy; track item) {
+            <mat-option [value]="item.value">
+              {{ item.key }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-toolbar class="flex-justify-space-between">
+        <span class="refine-text">Refine</span>
+        <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
+          <span class="clear-all-text">Clear all</span>
+        </button>
+      </mat-toolbar>
+      <mat-form-field class="ml-2 mt-1 w-14em">
+        <!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
+        <input matInput type="text" placeholder="Name" Title="Name" formControlName="name" />
+      </mat-form-field>
+      <!-- <mat-form-field class="ml-2">
 		<mat-icon matPrefix class="pr-1">beach_access</mat-icon>
 		<input matInput type="text" placeholder="Ingredient" Title="Ingredient" formControlName="ingredient" >
 		</mat-form-field>
@@ -29,31 +29,31 @@
 		<mat-icon matPrefix class="pr-1">person</mat-icon>
 		<input matInput type="text" placeholder="Author" Title="Author" formControlName="author" >
 		</mat-form-field> -->
-	</div>
-	<div class="ml-2">
-		<div>
-			<label>Cooking Time </label>
-			<mat-slider max="60" step="5" min="0">
-				<input [value]="totalTime.value" matSliderThumb>
-			</mat-slider>
-		</div>
-		<div>
-			<label>Serving Price </label>
-			<mat-slider max="60" step="5" min="0"  >
-				<input [value]="servingPrice.value" matSliderThumb>
-			</mat-slider>
-		</div>
-		<mat-form-field class=" w-14em">
-			<mat-label>Allergies</mat-label>
-			<mat-select formControlName="allergyWarning" multiple>
-				@for (item of allergyArray$ | async; track item) {
-<mat-option [value]="item.title">
-					{{item.title}}
-				</mat-option>
-}
-			</mat-select>
-		</mat-form-field>
-		<!-- <mat-form-field>
+    </div>
+    <div class="ml-2">
+      <div>
+        <label>Cooking Time </label>
+        <mat-slider max="60" step="5" min="0">
+          <input [value]="totalTime.value" matSliderThumb />
+        </mat-slider>
+      </div>
+      <div>
+        <label>Serving Price </label>
+        <mat-slider max="60" step="5" min="0">
+          <input [value]="servingPrice.value" matSliderThumb />
+        </mat-slider>
+      </div>
+      <mat-form-field class="w-14em">
+        <mat-label>Allergies</mat-label>
+        <mat-select formControlName="allergyWarning" multiple>
+          @for (item of allergyArray$ | async; track item) {
+            <mat-option [value]="item.title">
+              {{ item.title }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <!-- <mat-form-field>
 			<mat-label>Recipe Type</mat-label>
 			<mat-select formControlName="recipeType" multiple>
 			<mat-option *ngFor="let item of allergyArray" [value]="item.name">
@@ -61,19 +61,21 @@
 			</mat-option>
 			</mat-select>
 		</mat-form-field> -->
-		<app-paginator class="bottom-sticky"
-			class="recipe-filter-paginator"
-			[length]="dataLength"
-			[horizontalLayout]="false"
-			[pageSize]="filterQuery.perPage"
-			[pageIndex]="filterQuery.page"
-			[showFirstLastButtons]="true"
-			[pageSizeOptions]="[5, 10, 25, 100]"
-			(page)="pageChange($event)">
-		</app-paginator>
-		<div>&nbsp;</div>
-	</div>
-</form>
+      <app-paginator
+        class="bottom-sticky"
+        class="recipe-filter-paginator"
+        [length]="dataLength"
+        [horizontalLayout]="false"
+        [pageSize]="filterQuery.perPage"
+        [pageIndex]="filterQuery.page"
+        [showFirstLastButtons]="true"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="pageChange($event)"
+      >
+      </app-paginator>
+      <div>&nbsp;</div>
+    </div>
+  </form>
 }
 <!-- 
 d nameControl: text input,
