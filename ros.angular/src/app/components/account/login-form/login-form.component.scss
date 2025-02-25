@@ -1,9 +1,9 @@
-@import '../../../styles/flex-mixins.scss';
+@use '../../../styles/mixins.scss';
 @import '../../../styles/variables.scss';
 
 .mat-card-footer {
 	height: 3em;
-	@include flex-box;
+	@include mixins.flex-box;
 }
 .pcb-divider {
 	overflow: hidden;

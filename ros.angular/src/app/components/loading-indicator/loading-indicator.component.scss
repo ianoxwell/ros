@@ -1,9 +1,10 @@
-@import '../../styles/flex-mixins.scss', '../../styles/variables.scss';
+@use '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
 
 .spinner {
 	background-color: $overlay;
 	transition: opacity 1s ease-in;
-	@include flex-box;
+	@include mixins.flex-box;
 }
 
 .full-spinner {
@@ -13,9 +14,9 @@
 	bottom: 0;
 	right: 0;
 
-	@include align-items(center);
-	@include justify-content(center);
-	@include  flex-direction(column);
+	@include mixins.align-items(center);
+	@include mixins.justify-content(center);
+	@include  mixins.flex-direction(column);
 	opacity: 1;
 
 	z-index: 1;
@@ -36,6 +37,6 @@
 	width: 100%;
 	z-index: 101;
 	font-size: 6em;
-	@include justify-content(center);
+	@include mixins.justify-content(center);
 	padding-top: 2em;
 }

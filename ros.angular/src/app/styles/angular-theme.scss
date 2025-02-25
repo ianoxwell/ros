@@ -3,6 +3,7 @@
 * https://materialtheme.arcsine.dev
 */
 @use '@angular/material' as mat;
+@use './mixins.scss';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -269,13 +270,13 @@ $altTheme: mat.m2-define-light-theme($theme-primary, $theme-accent, $theme-warn)
   font-feature-settings: 'liga';
 }
 .material-icons.mat-icon-no-color {
-	@include color-filter(invert(1));
+	@include mixins.color-filter(invert(1));
 }
 .material-icons.accent {
-    @include color-filter(invert(36%) sepia(99%) saturate(380%) hue-rotate(125deg) brightness(91%) contrast(100%));
+    @include mixins.color-filter(invert(36%) sepia(99%) saturate(380%) hue-rotate(125deg) brightness(91%) contrast(100%));
 }
 .material-icons.color-on-primary {
-    @include color-filter(invert(0));
+    @include mixins.color-filter(invert(0));
 }
 
 a:link{

@@ -1,4 +1,5 @@
 @use "sass:math";
+@use './mixins.scss';
 @import './variables.scss';
 
 // Bootstrap utility classes:
@@ -100,16 +101,16 @@ b {
 }
 
 .flex-row-column {
-	@include breakpoint(xs) {
-		@include flex-direction(column);
+	@include mixins.breakpoint(xs) {
+		@include mixins.flex-direction(column);
 	}
 
-	@include breakpoint(sm) {
-		@include flex-direction(column);
+	@include mixins.breakpoint(sm) {
+		@include mixins.flex-direction(column);
 	}
 
-	@include breakpoint($min: md) {
-		@include flex-direction(row);
+	@include mixins.breakpoint($min: md) {
+		@include mixins.flex-direction(row);
 
 		.max-width-45-large-screens {
 			padding-bottom: 0;
@@ -117,7 +118,7 @@ b {
 	}
 }
 .max-width-45-large-screens {
-	@include breakpoint($min: md) {
+	@include mixins.breakpoint($min: md) {
 		max-width: 45%;
 		width: 45%;
 	}
@@ -155,10 +156,10 @@ b {
 .recipe-filter-paginator {
 	.mat-paginator-outer-container {
 		.mat-paginator-container {
-			@include justify-content(center);
+			@include mixins.justify-content(center);
 			.mat-paginator-range-actions {
-				@include flex-wrap(wrap);
-				@include justify-content(center);
+				@include mixins.flex-wrap(wrap);
+				@include mixins.justify-content(center);
 				.mat-paginator-range-label {
 					width: 100%;
 					text-align: center;

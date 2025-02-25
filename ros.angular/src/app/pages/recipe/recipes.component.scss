@@ -1,4 +1,4 @@
-@import '../../styles/flex-mixins.scss';
+@use '../../styles/mixins.scss';
 
 .container{
     margin: 20px;
@@ -9,18 +9,18 @@
     max-width: 250px;
   }
   .grid-parent {
-	@include display-grid;
-	@include flex-grow(1);
-	@include breakpoint(xs) {
-		@include grid-template-columns(repeat(1,100%));
+	@include mixins.display-grid;
+	@include mixins.flex-grow(1);
+	@include mixins.breakpoint(xs) {
+		@include mixins.grid-template-columns(repeat(1,100%));
 	}
-	@include breakpoint(sm) {
-		@include grid-template-columns(repeat(2,49%));
+	@include mixins.breakpoint(sm) {
+		@include mixins.grid-template-columns(repeat(2,49%));
 	}
-	@include breakpoint(md) {
-		@include grid-template-columns(repeat(3,32%));
+	@include mixins.breakpoint(md) {
+		@include mixins.grid-template-columns(repeat(3,32%));
 	}
-	@include breakpoint(lg) {
-		@include grid-template-columns(repeat(4,24%));
+	@include mixins.breakpoint(lg) {
+		@include mixins.grid-template-columns(repeat(4,24%));
 	}
   }
