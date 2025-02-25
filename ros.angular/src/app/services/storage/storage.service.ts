@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class StorageService {
   /**
    * Retrieves a specific item from the browser's local storage.
