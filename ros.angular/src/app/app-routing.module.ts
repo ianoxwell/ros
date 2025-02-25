@@ -1,11 +1,11 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { ForgotPasswordComponent } from '@components/account/forgot-password/forgot-password.component';
-import { LoginFormComponent } from '@components/account/login-form/login-form.component';
-import { RegisterFormComponent } from '@components/account/register-form/register-form.component';
-import { ResetPasswordFormComponent } from '@components/account/reset-password-form/reset-password-form.component';
-import { VerifyEmailComponent } from '@components/account/verify-email/verify-email.component';
+import { ForgotPasswordComponent } from 'src/app/pages/account/forgot-password/forgot-password.component';
+import { LoginFormComponent } from 'src/app/pages/account/login-form/login-form.component';
+import { RegisterFormComponent } from 'src/app/pages/account/register-form/register-form.component';
+import { ResetPasswordFormComponent } from 'src/app/pages/account/reset-password-form/reset-password-form.component';
+import { VerifyEmailComponent } from 'src/app/pages/account/verify-email/verify-email.component';
 import { AuthGuard } from './guards/auth.guard';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { InterceptorService } from './services/interceptor.service';

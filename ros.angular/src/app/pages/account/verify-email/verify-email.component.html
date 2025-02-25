@@ -1,0 +1,24 @@
+<mat-card-header>
+  <mat-card-title>
+    <h1 class="flex-box">
+      <mat-icon aria-hidden="false" aria-label="Forgot Password" class="mr-2">security icon</mat-icon>Reset Password
+    </h1>
+  </mat-card-title>
+</mat-card-header>
+<div mat-card-content>
+  @if (emailStatus === EmailStatus.Verifying) {
+    <div>Verifying...</div>
+  } @else {
+    <p>Unfortunately, the verify email token failed, you can get a new token at</p>
+    <button
+      mat-flat-button
+      class="mt-2 mb-2"
+      color="accent"
+      aria-label="Navigate to register"
+      type="button"
+      routerLink="/account/register"
+    >
+      Forgot Password
+    </button>
+  }
+</div>

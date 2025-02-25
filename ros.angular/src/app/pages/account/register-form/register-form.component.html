@@ -1,0 +1,96 @@
+<mat-card-header>
+  <mat-card-title>
+    <h1 class="flex-box flex-align-center">
+      <mat-icon aria-hidden="false" aria-label="Register New User" class="mr-2">person_add</mat-icon>Register
+    </h1>
+  </mat-card-title>
+</mat-card-header>
+
+@if (!!form && !displayAwaitingVerificationEmail) {
+  <form [formGroup]="form" mat-card-content (keyup.enter)="register()">
+    <div class="flex-box flex-row mt-2">
+      <mat-form-field class="mr-2 w-45">
+        <input matInput type="text" placeholder="First Name *" Title="First Name" formControlName="firstName" />
+        @for (validation of validationMessages.username; track validation) {
+          <mat-error>
+            @if (f.firstName.hasError(validation.type) && (f.firstName.dirty || f.firstName.touched)) {
+              <mat-error class="error-message">
+                <span [innerHTML]="validation.message"></span>
+              </mat-error>
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="w-50">
+        <input matInput type="text" placeholder="Last Name *" Title="Last Name" formControlName="lastName" />
+        @for (validation of validationMessages.username; track validation) {
+          <mat-error>
+            @if (f.lastName.hasError(validation.type) && (f.lastName.dirty || f.lastName.touched)) {
+              <mat-error class="error-message">
+                <span [innerHTML]="validation.message"></span>
+              </mat-error>
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="w-100">
+        <input matInput type="email" placeholder="Email *" Title="Email" formControlName="email" />
+        @for (validation of validationMessages.email; track validation) {
+          <mat-error>
+            @if (f.email.hasError(validation.type) && (f.email.dirty || f.email.touched)) {
+              <mat-error class="error-message">
+                <span [innerHTML]="validation.message"></span>
+              </mat-error>
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+    @if (newUser.loginProvider !== 'GOOGLE') {
+      <div>
+        <mat-form-field class="w-100">
+          <input matInput type="password" placeholder="Password *" Title="Password" formControlName="password" />
+          @for (validation of validationMessages.password; track validation) {
+            <mat-error>
+              @if (f.password.hasError(validation.type) && (f.password.dirty || f.password.touched)) {
+                <mat-error class="error-message">
+                  <span [innerHTML]="validation.message"></span>
+                </mat-error>
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
+    <div class="mt-2 mb-4">
+      <mat-checkbox
+        aria-label="Accept Terms and conditions"
+        formControlName="acceptTerms"
+        (change)="form.markAsTouched()"
+        >Accept Terms and conditions (when we get some)</mat-checkbox
+      >
+    </div>
+    <div class="flex-box flex-justify-end">
+      <button mat-flat-button type="button" class="mr-1" aria-label="Cancel" routerLink="/account/login">Cancel</button>
+      <app-save-button
+        [dirty]="form.dirty"
+        color="accent"
+        [valid]="form.valid"
+        iconName="chevron_right"
+        iconPosition="right"
+        [isSaving]="isSubmitting"
+        label="Register"
+        (save)="register()"
+      ></app-save-button>
+    </div>
+  </form>
+}
+
+@if (displayAwaitingVerificationEmail) {
+  <div>
+    <p><strong>Note</strong> - Email is currently trapped in mailtrap.io</p>
+    <p>Please look in your email account (or double check your spam) for a registration email.</p>
+  </div>
+}

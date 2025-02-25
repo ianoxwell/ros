@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from '../home/home.component';
-import { IngredientsComponent } from '../ingredients/ingredients.component';
-import { RecipesComponent } from '../recipe/recipes.component';
 import { ShoppingComponent } from '../shopping/shopping.component';
 import { FavouritesComponent } from '../user/favourites/favourites.component';
 import { UserRecipesComponent } from '../user/user-recipes/user-recipes.component';
@@ -17,11 +14,6 @@ const mainRoutes: Routes = [
     path: '',
     component: MainComponent,
     children: [
-      {
-        path: '',
-        component: HomeComponent,
-        data: { title: `Provisioner's Cookbook` }
-      },
       {
         path: 'ingredients',
         loadChildren: ingredientsModule

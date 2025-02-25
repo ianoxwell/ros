@@ -16,6 +16,8 @@ import { LoginComponent } from './login.component';
 import { RegisterFormComponent } from './register-form/register-form.component';
 import { ResetPasswordFormComponent } from './reset-password-form/reset-password-form.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { LoadingIndicatorComponent } from '@components/loading-indicator/loading-indicator.component';
+import { SaveButtonComponent } from '@components/save-button/save-button.component';
 
 @NgModule({
   imports: [
@@ -29,6 +31,8 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
+    LoadingIndicatorComponent,
+    SaveButtonComponent
   ],
   declarations: [
     LoginFormComponent,
