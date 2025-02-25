@@ -1,70 +1,67 @@
 <app-page-title></app-page-title>
 <div class="flex-box flex-justify-space-between mt-2 mb-2">
-	<span class="ml-12">
-		@if (cookBookUserProfile$ | async; as cookBookUserProfile) {
-
-			@if (cookBookUserProfile.lastName==='Oxwell' && selectedTab === 0) {
-<span class="ml-12">
-				<!-- <span class="mr-1 ml-1">
+  <span class="ml-12">
+    @if (cookBookUserProfile$ | async; as cookBookUserProfile) {
+      @if (cookBookUserProfile.lastName === 'Oxwell' && selectedTab === 0) {
+        <span class="ml-12">
+          <!-- <span class="mr-1 ml-1">
 					<button mat-flat-button color="primary" (click)="cleanRecipeIngredients()"><mat-icon>add</mat-icon> Clean Ingredients</button>
 				</span> -->
-				<span class="ml-12">
-					<button mat-flat-button color="accent" (click)="getRecipeList()">
-						<mat-icon class="mr-1 color-on-primary">add</mat-icon> Search Spoonacular
-					</button>
-				</span>
-			</span>
-}
-
-		
-}
-	</span>
-	<span class="mr-2">
-@switch (selectedTab) {
-		@case (1) {
-<button mat-flat-button type="button" color="accent" title="Back to Ingredient List"
-			(click)="changeTab(0)">
-			<mat-icon class="mr-1 color-on-primary">keyboard_return</mat-icon>
-			<span>Back to Ingredient List</span>
-		</button>
-}
-		@default {
-<button mat-flat-button type="button" color="accent" title="New Ingredient"
-			(click)="createOrEdit('new')">
-			<mat-icon class="mr-1 color-on-primary">add</mat-icon>
-			<span>New Ingredient</span>
-		</button>
-}
-	}
-</span>
+          <span class="ml-12">
+            <button mat-flat-button color="accent" (click)="getRecipeList()">
+              <mat-icon class="mr-1 color-on-primary">add</mat-icon> Search Spoonacular
+            </button>
+          </span>
+        </span>
+      }
+    }
+  </span>
+  <span class="mr-2">
+    @switch (selectedTab) {
+      @case (1) {
+        <button mat-flat-button type="button" color="accent" title="Back to Ingredient List" (click)="changeTab(0)">
+          <mat-icon class="mr-1 color-on-primary">keyboard_return</mat-icon>
+          <span>Back to Ingredient List</span>
+        </button>
+      }
+      @default {
+        <button mat-flat-button type="button" color="accent" title="New Ingredient" (click)="createOrEdit('new')">
+          <mat-icon class="mr-1 color-on-primary">add</mat-icon>
+          <span>New Ingredient</span>
+        </button>
+      }
+    }
+  </span>
 </div>
 
 @if (refData) {
-
-	@if (data$ | async; as data) {
-<mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs"
-	>
-		<mat-tab>
-			<app-ingredient-filter [refData]="refData"></app-ingredient-filter>
-			<app-ingredient-table [data]="data" [sortPageObj]="sortPageObj" (sortingPageChange)="sortPageChange($event)"
-				(editRow)="createOrEdit('edit', $event)">
-			</app-ingredient-table>
-		</mat-tab>
-		<mat-tab>
-			@if (selectedIngredient$ | async; as selectedIngredient) {
-
-				@if (selectedTab === 1) {
-<app-ingredient-edit [singleIngredient]="selectedIngredient" [isNew]="isNew"
-					(back)="changeTab(0)" [refData]="refData" [measurements]="measurements"></app-ingredient-edit>
-}
-			
-}
-		</mat-tab>
-	</mat-tab-group>
-} @else {
-
-	<app-loading-indicator></app-loading-indicator>
-
-}
-
+  @if (data$ | async; as data) {
+    <mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs">
+      <mat-tab>
+        <app-ingredient-filter [refData]="refData"></app-ingredient-filter>
+        <app-ingredient-table
+          [data]="data"
+          [sortPageObj]="sortPageObj"
+          (sortingPageChange)="sortPageChange($event)"
+          (editRow)="createOrEdit('edit', $event)"
+        >
+        </app-ingredient-table>
+      </mat-tab>
+      <mat-tab>
+        @if (selectedIngredient$ | async; as selectedIngredient) {
+          @if (selectedTab === 1) {
+            <app-ingredient-edit
+              [singleIngredient]="selectedIngredient"
+              [isNew]="isNew"
+              (back)="changeTab(0)"
+              [refData]="refData"
+              [measurements]="measurements"
+            ></app-ingredient-edit>
+          }
+        }
+      </mat-tab>
+    </mat-tab-group>
+  } @else {
+    <app-loading-indicator></app-loading-indicator>
+  }
 }

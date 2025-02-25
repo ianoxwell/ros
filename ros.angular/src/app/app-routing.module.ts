@@ -35,7 +35,7 @@ const routes: Routes = [
   },
   {
     path: 'savoury',
-    loadChildren: () => import('./pages/main/main-routing.module').then(m => m.MainRoutingModule),
+    loadChildren: () => import('./pages/main/main.component').then(m => m.MainComponent),
     canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '' }

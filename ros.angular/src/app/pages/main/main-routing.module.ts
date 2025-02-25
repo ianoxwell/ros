@@ -9,7 +9,8 @@ import { UserRecipesComponent } from '../user/user-recipes/user-recipes.componen
 import { UserSettingsComponent } from '../user/user-settings/user-settings.component';
 import { MainComponent } from './main.component';
 
-const recipeModule = () => import('../recipe/recipe.module').then((x) => x.RecipeModule);
+const recipesModule = () => import('../recipe/recipes.module').then((x) => x.RecipesModule);
+const ingredientsModule = () => import('../ingredients/ingredients.module').then((x) => x.IngredientsModule);
 
 const mainRoutes: Routes = [
   {
@@ -23,16 +24,11 @@ const mainRoutes: Routes = [
       },
       {
         path: 'ingredients',
-        component: IngredientsComponent,
-        data: { title: `Ingredients` }
+        loadChildren: ingredientsModule
       },
       {
-        path: 'ingredients/item/:ingredientId',
-        component: IngredientsComponent,
-        data: { title: `Ingredient Edit`, symbol: `edit` }
-      },
-      {
-        path: 'recipes', loadChildren: recipeModule 
+        path: 'recipes',
+        loadChildren: recipesModule
       },
       {
         path: 'recipes',

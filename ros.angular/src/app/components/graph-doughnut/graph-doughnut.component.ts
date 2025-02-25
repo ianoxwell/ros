@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IGraphDonutData } from './graph-donut.model';
+import { CommonModule } from '@angular/common';
 
 export interface DataRef {
   label?: string;
@@ -8,10 +9,11 @@ export interface DataRef {
 }
 
 @Component({
-    selector: 'app-graph-doughnut',
-    templateUrl: './graph-doughnut.component.html',
-    styleUrls: ['./graph-doughnut.component.scss'],
-    standalone: false
+  selector: 'app-graph-doughnut',
+  templateUrl: './graph-doughnut.component.html',
+  styleUrls: ['./graph-doughnut.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 
 // https://codepen.io/jerrylow/pen/OJyREdw?editors=1100

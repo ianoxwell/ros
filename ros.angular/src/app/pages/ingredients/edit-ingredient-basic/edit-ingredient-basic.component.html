@@ -1,82 +1,91 @@
 <form class="ml-2" [formGroup]="ingredientForm">
-	<div class="flex-box flex-row-column">
-		<mat-form-field class="mr-2 w-50">
-			<input matInput type="text" placeholder="Name *" Title="Name" formControlName="name">
-			@for (validation of validationMessages.reasonControl; track validation) {
-<mat-error>
-				@if (nameControl.hasError(validation.type) && (nameControl.dirty || nameControl.touched)) {
-<mat-error class="error-message">
-						<span [innerHTML]="validation.message"></span>
-				</mat-error>
-}
-			</mat-error>
-}
-		</mat-form-field>
-		<div class="flex-box flex-column flex-grow-1">
-			<div class="flex-box ">
-				<mat-form-field class="mr-2 w-30">
-					<mat-label id="parent-label">Food Group</mat-label>
-					<mat-select placeholder="Food Group" role="" formControlName="foodGroup" >
-						<div role="listbox" aria-labelledby="parent-label">
-							@for (parent of refData.IngredientFoodGroup; track parent) {
-<mat-option role="option" [value]="parent.id" >{{parent.title}}</mat-option>
-}
-						</div>
-					</mat-select>
-				</mat-form-field>
-				<mat-form-field class="mr-2 w-30">
-					<mat-label id="ex1-label" for="ex1-listbox">Consistency / state</mat-label>
-					<mat-select id="constanceId" role="" placeholder="Consistency" formControlName="ingredientStateId" [attr.aria-owns]="'ex1-listbox'" aria-haspopup="listbox" >				
-						<div role="listbox" aria-labelledby="ex1-label">
-							@for (consistency of refData.IngredientState; track consistency) {
-<mat-option role="option" [value]="consistency.id" >{{consistency.title}}</mat-option>
-}
-						</div>
-					</mat-select>
-				</mat-form-field>
-				<mat-form-field class="mr-2 w-30">
-					<mat-label id="purchased-by-label">Generally Purchased By</mat-label>
-					<mat-select placeholder="Purchased By" role="" formControlName="purchasedBy">
-						<div role="listbox" aria-labelledby="purchased-by-label">
-							@for (type of purchasedByList; track type) {
-<mat-option role="option" [value]="type.id" >{{type.item | toTitleCase}}</mat-option>
-}
-						</div>
-					</mat-select>
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-form-field class="mr-2 w-50">
-					<mat-label id="allergy-label">Food Allergies</mat-label>
-					<mat-select placeholder="Allergies" role="" formControlName="allergies" multiple>
-						<div role="listbox" aria-labelledby="allergy-label">
-							@for (allergy of refData.AllergyWarning; track allergy) {
-<mat-option role="option" [value]="allergy.id">{{allergy.title}}</mat-option>
-}
-						</div>
-					</mat-select>
-				</mat-form-field>
+  <div class="flex-box flex-row-column">
+    <mat-form-field class="mr-2 w-50">
+      <input matInput type="text" placeholder="Name *" Title="Name" formControlName="name" />
+      @for (validation of validationMessages.reasonControl; track validation) {
+        <mat-error>
+          @if (nameControl.hasError(validation.type) && (nameControl.dirty || nameControl.touched)) {
+            <mat-error class="error-message">
+              <span [innerHTML]="validation.message"></span>
+            </mat-error>
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+    <div class="flex-box flex-column flex-grow-1">
+      <div class="flex-box">
+        <mat-form-field class="mr-2 w-30">
+          <mat-label id="parent-label">Food Group</mat-label>
+          <mat-select placeholder="Food Group" role="" formControlName="foodGroup">
+            <div role="listbox" aria-labelledby="parent-label">
+              @for (parent of refData.IngredientFoodGroup; track parent) {
+                <mat-option role="option" [value]="parent.id">{{ parent.title }}</mat-option>
+              }
+            </div>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mr-2 w-30">
+          <mat-label id="ex1-label" for="ex1-listbox">Consistency / state</mat-label>
+          <mat-select
+            id="constanceId"
+            role=""
+            placeholder="Consistency"
+            formControlName="ingredientStateId"
+            [attr.aria-owns]="'ex1-listbox'"
+            aria-haspopup="listbox"
+          >
+            <div role="listbox" aria-labelledby="ex1-label">
+              @for (consistency of refData.IngredientState; track consistency) {
+                <mat-option role="option" [value]="consistency.id">{{ consistency.title }}</mat-option>
+              }
+            </div>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mr-2 w-30">
+          <mat-label id="purchased-by-label">Generally Purchased By</mat-label>
+          <mat-select placeholder="Purchased By" role="" formControlName="purchasedBy">
+            <div role="listbox" aria-labelledby="purchased-by-label">
+              @for (type of purchasedByList; track type) {
+                <mat-option role="option" [value]="type.id">{{ type.item | toTitleCase }}</mat-option>
+              }
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="mr-2 w-50">
+          <mat-label id="allergy-label">Food Allergies</mat-label>
+          <mat-select placeholder="Allergies" role="" formControlName="allergies" multiple>
+            <div role="listbox" aria-labelledby="allergy-label">
+              @for (allergy of refData.AllergyWarning; track allergy) {
+                <mat-option role="option" [value]="allergy.id">{{ allergy.title }}</mat-option>
+              }
+            </div>
+          </mat-select>
+        </mat-form-field>
 
-				<mat-form-field class="mr-2 w-30" >
-					<mat-label>Pral Score (0 is neutral)</mat-label>
-					<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="pralScore"/>
-				</mat-form-field>
-			</div>
-		</div>
-	</div>
-	<!-- TODO make visible only to ADMIN -->
-	<div class="flex-box flex-row flex-align-center">
-		<mat-icon class="text-warning mr-2" title="Admin only">lock</mat-icon>
-		<mat-form-field class="pr-2 w-20">
-			<input matInput type="text" placeholder="Link Id to Spoonacular" formControlName="linkUrl">
-		</mat-form-field>
-		<!-- <button mat-flat-button aria-label="Refresh data online" (click)="refreshData()" [disabled]="!linkUrl.value || linkUrl.value.length === 0">Refresh Data online</button> -->
-		<mat-form-field class="pr-2 w-20">
-			<mat-label>Usda Food Id</mat-label>
-			<input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="usdaFoodId"/>
-		</mat-form-field>
-		@if (usdaFoodId.value === null) {
-<button mat-flat-button aria-label="Attempt to match with Usda Food Id" (click)="matchUsda()">Match Usda Food Id</button>
-}
-	</div>
+        <mat-form-field class="mr-2 w-30">
+          <mat-label>Pral Score (0 is neutral)</mat-label>
+          <input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="pralScore" />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <!-- TODO make visible only to ADMIN -->
+  <div class="flex-box flex-row flex-align-center">
+    <mat-icon class="text-warning mr-2" title="Admin only">lock</mat-icon>
+    <mat-form-field class="pr-2 w-20">
+      <input matInput type="text" placeholder="Link Id to Spoonacular" formControlName="linkUrl" />
+    </mat-form-field>
+    <!-- <button mat-flat-button aria-label="Refresh data online" (click)="refreshData()" [disabled]="!linkUrl.value || linkUrl.value.length === 0">Refresh Data online</button> -->
+    <mat-form-field class="pr-2 w-20">
+      <mat-label>Usda Food Id</mat-label>
+      <input type="text" matInput digitOnly inputmode="numeric" [decimal]="false" formControlName="usdaFoodId" />
+    </mat-form-field>
+    @if (usdaFoodId.value === null) {
+      <button mat-flat-button aria-label="Attempt to match with Usda Food Id" (click)="matchUsda()">
+        Match Usda Food Id
+      </button>
+    }
+  </div>
 </form>
