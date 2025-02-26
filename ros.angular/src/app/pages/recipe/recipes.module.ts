@@ -24,6 +24,7 @@ import { RecipeRoutingModule } from './recipe-routing.module';
 import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 import { RecipesComponent } from './recipes.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { IconTextComponent } from '@components/icon-text/icon-text.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     PageTitleComponent,
     LoadingIndicatorComponent,
     SafeHtmlPipe,
-    SentenceCasePipe
+    SentenceCasePipe,
+    IconTextComponent
   ],
   declarations: [SearchBarComponent, RecipeCardComponent, RecipeViewComponent, RecipesComponent],
   exports: [RecipesComponent]

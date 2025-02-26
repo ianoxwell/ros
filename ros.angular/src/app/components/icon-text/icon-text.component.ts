@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-icon-text',
     templateUrl: './icon-text.component.html',
     styleUrls: ['./icon-text.component.scss'],
-    standalone: false
+    imports: [MatIconModule]
 })
 export class IconTextComponent {
   @Input() text = '';
