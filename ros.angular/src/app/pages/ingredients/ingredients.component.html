@@ -2,7 +2,7 @@
 <div class="flex-box flex-justify-space-between mt-2 mb-2">
   <span class="ml-12">
     @if (cookBookUserProfile$ | async; as cookBookUserProfile) {
-      @if (cookBookUserProfile.lastName === 'Oxwell' && selectedTab === 0) {
+      @if (cookBookUserProfile.familyName === 'Oxwell' && selectedTab === 0) {
         <span class="ml-12">
           <!-- <span class="mr-1 ml-1">
 					<button mat-flat-button color="primary" (click)="cleanRecipeIngredients()"><mat-icon>add</mat-icon> Clean Ingredients</button>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { IDictionary } from '@models/common.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -17,23 +17,18 @@ export class NavigationService {
 
   productDetailsContext = this.routes.products;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router) {}
 
   /**
    * Listens for router / navigation end events and stores visited pages in history.
    * @returns the current route url as string.
    */
   listenToRouteEnd(): Observable<string> {
-    if (!this.urlHistory.length) {
-      console.log('current url', this.activatedRoute);
-    }
-
     return this.router.events.pipe(
       // only listen for nav end
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       filter((event: any) => event instanceof NavigationEnd),
       map((route: NavigationEnd) => {
-        console.log('navigation end', route);
         const url = route.urlAfterRedirects || route.url;
         this.urlHistory.push(url);
         this.pageUrlSubject$.next(url);

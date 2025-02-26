@@ -8,10 +8,10 @@ import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IIngredient } from '@models/ingredient/ingredient.model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceAll } from '@models/reference.model';
-import { IUser } from '@models/user';
 import { DialogService } from '@services/dialog.service';
 import { ReferenceService } from '@services/reference.service';
 // import {ConversionModel, EditedFieldModel, IngredientModel, PriceModel} from '../models/ingredient-model';
+import { IUserSummary } from '@DomainModels/user.dto';
 import { RestIngredientService } from '@services/rest-ingredient.service';
 import { RestRecipeService } from '@services/rest-recipe.service';
 import { StateService } from '@services/state.service';
@@ -30,7 +30,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   selectedIngredient$: Observable<IIngredient> | undefined;
   selectedTab = 0; // controls the selectedIndex of the mat-tab-group
   isNew = true; // edit or new ingredient;
-  cookBookUserProfile$: Observable<IUser | null>;
+  cookBookUserProfile$: Observable<IUserSummary | null>;
   currentPath: string | undefined = '';
   filterObject: IIngredientFilterObject = new IngredientFilterObject();
   sortPageObj: SortPageObj = new SortPageObj();

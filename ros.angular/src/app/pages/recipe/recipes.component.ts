@@ -4,14 +4,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IRecipe } from '@DomainModels/recipe.dto';
+import { IUserSummary } from '@DomainModels/user.dto';
 import { CBlankPagedMeta, PagedResult } from '@models/common.model';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceAll } from '@models/reference.model';
-import { IUser } from '@models/user';
 import { DialogService } from '@services/dialog.service';
+import { NavigationService } from '@services/navigation/navigation.service';
+import { CRouteList } from '@services/navigation/route-list.const';
+import { PageTitleService } from '@services/page-title.service';
 import { RefDataService } from '@services/ref-data.service';
-import { RestIngredientService } from '@services/rest-ingredient.service';
 import { RestRecipeService } from '@services/rest-recipe.service';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
@@ -19,10 +21,10 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-recipes',
-    templateUrl: './recipes.component.html',
-    styleUrls: ['./recipes.component.scss'],
-    standalone: false
+  selector: 'app-recipes',
+  templateUrl: './recipes.component.html',
+  styleUrls: ['./recipes.component.scss'],
+  standalone: false
 })
 export class RecipesComponent extends ComponentBase implements OnInit {
   recipes: IRecipe[] = [];
@@ -37,17 +39,17 @@ export class RecipesComponent extends ComponentBase implements OnInit {
   currentPath: string | undefined = '';
   filterQuery: IRecipeFilterQuery = new RecipeFilterQuery();
   dataLength = 0;
-  cookBookUserProfile: IUser | null = null;
+  cookBookUserProfile: IUserSummary | null = null;
 
   constructor(
     private restRecipeService: RestRecipeService,
     private route: ActivatedRoute,
-    private restIngredientService: RestIngredientService,
     private location: Location,
     private userProfileService: UserProfileService,
     private dialogService: DialogService,
     private stateService: StateService,
-    private refDataService: RefDataService
+    private refDataService: RefDataService,
+    private navigationService: NavigationService
   ) {
     super();
     this.getAllReferences();
@@ -153,6 +155,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
         this.dialogService.alert('Error getting recipes', err);
+        this.isLoading = false;
         return of({
           results: [],
           meta: CBlankPagedMeta
@@ -187,30 +190,9 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     this.selectedTab = event;
     if (this.selectedTab === 0) {
       this.selectedRecipe = undefined;
-      this.location.replaceState('savoury/recipes/browse');
+      this.navigationService.navigateToUrl(CRouteList.recipes);
     } else if (!!this.selectedRecipe) {
-      this.location.replaceState(`savoury/recipes/item/${this.selectedRecipe.id}`);
+      this.navigationService.navigateToUrl(`${CRouteList.recipe}/${this.selectedRecipe.id}`);
     }
   }
-
-  // getSpoonAcularRecipe(count: number): void {
-  //   this.isLoading = true;
-  //   if (!this.cookBookUserProfile || !this.refDataAll) {
-  //     return;
-  //   }
-
-  //   this.constructRecipeService
-  //     .getSpoonAcularRecipe(count, this.cookBookUserProfile.id, this.refDataAll, this.measurementRef)
-  //     .pipe(
-  //       first(),
-  //       switchMap(() => this.getRecipes()),
-  //       catchError((error: unknown) => {
-  //         const err = error as HttpErrorResponse;
-  //         this.dialogService.alert('Error getting spoon recipe', err.message);
-  //         this.isLoading = false;
-  //         return of();
-  //       })
-  //     )
-  //     .subscribe();
-  // }
 }

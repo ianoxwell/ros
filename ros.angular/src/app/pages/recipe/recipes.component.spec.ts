@@ -13,9 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { RecipeViewComponent } from 'src/app/pages/recipe/recipe-view/recipe-view.component';
-import { SearchBarComponent } from 'src/app/pages/recipe/search-bar/search-bar.component';
-import { IUser } from '@models/user';
+import { IUserSummary } from '@DomainModels/user.dto';
 import { ToTitleCasePipe } from '@pipes/title-case.pipe';
 import { MessageService } from '@services/message.service';
 import { RestIngredientService } from '@services/rest-ingredient.service';
@@ -24,6 +22,8 @@ import { UserProfileService } from '@services/user-profile.service';
 import { autoSpy, Spy } from 'autospy';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
+import { RecipeViewComponent } from 'src/app/pages/recipe/recipe-view/recipe-view.component';
+import { SearchBarComponent } from 'src/app/pages/recipe/search-bar/search-bar.component';
 import { RecipesComponent } from './recipes.component';
 
 describe('RecipesComponent', () => {
@@ -48,7 +48,7 @@ describe('RecipesComponent', () => {
   const restIngredientServiceSpy: Spy<RestIngredientService> = autoSpy(RestIngredientService);
   const locationSpy: Spy<Location> = autoSpy(Location);
   const userProfileServiceSpy: Spy<UserProfileService> = autoSpy(UserProfileService);
-  userProfileServiceSpy.getUserProfile.and.returnValue(of({} as IUser));
+  userProfileServiceSpy.getUserProfile.and.returnValue(of({} as IUserSummary));
   const toTitleCasePipeSpy: Spy<ToTitleCasePipe> = autoSpy(ToTitleCasePipe);
   const messageServiceSpy: Spy<MessageService> = autoSpy(MessageService);
 

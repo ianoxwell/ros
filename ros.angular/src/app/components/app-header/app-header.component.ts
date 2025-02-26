@@ -1,29 +1,40 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AdminRights } from '@models/common.model';
-import { IUser } from '@models/user';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
+import { IUserSummary } from '@DomainModels/user.dto';
 import { LoginService } from '@services/login/login.service';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { CRouteList } from '@services/navigation/route-list.const';
+import { PageTitleService } from '@services/page-title.service';
 import { Observable, of, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { filterNullish } from 'src/app/utils/filter-nullish';
 import { UserProfileService } from '../../services/user-profile.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
-import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
   styleUrls: ['./app-header.component.scss'],
-  imports: [MatToolbarModule, MatIconModule, MatMenuModule, MatButtonModule, MatDividerModule, RouterModule]
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatDividerModule,
+    RouterModule
+  ]
 })
 export class AppHeaderComponent implements OnInit {
-  profile: IUser | null = null;
+  profile: IUserSummary | null = null;
   currentUrl = '';
+  pageTitle$: Observable<string>;
+  pageSymbol$: Observable<string>;
   readonly routeList = CRouteList;
 
   mainMenuItems = [
@@ -34,10 +45,6 @@ export class AppHeaderComponent implements OnInit {
     { link: this.routeList.ingredients, icon: 'list_alt', text: 'Ingredients' }
   ];
 
-  adminRights: AdminRights = {
-    globalAdmin: false,
-    schoolAdmin: []
-  };
   isLoggedIn = false;
   /** Delays navigation to ensure the rest of the logout events complete. */
   navigationDelayOnLogout = 1200;
@@ -45,9 +52,12 @@ export class AppHeaderComponent implements OnInit {
   constructor(
     private userProfileService: UserProfileService,
     private loginService: LoginService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private pageTitleService: PageTitleService
   ) {
     this.listenCurrentRoute().subscribe();
+    this.pageTitle$ = this.pageTitleService.pageTitle$;
+    this.pageSymbol$ = this.pageTitleService.pageSymbol$;
   }
 
   ngOnInit(): void {
@@ -65,7 +75,7 @@ export class AppHeaderComponent implements OnInit {
   }
 
   /** On init of the app header - which always exists. */
-  initialProfileLoad(): Observable<IUser | null> {
+  initialProfileLoad(): Observable<IUserSummary | null> {
     this.loginService.restoreJwt();
 
     return this.loginService.getAuthentication().pipe(
@@ -77,7 +87,7 @@ export class AppHeaderComponent implements OnInit {
       // if not logged in, leave the userProfile alone, jwt is expired or doesn't exist.
       filter((actuallyLoggedIn: boolean) => actuallyLoggedIn),
       switchMap(() => this.userProfileService.getUserProfile()),
-      switchMap((profile: IUser | null) => {
+      switchMap((profile: IUserSummary | null) => {
         this.profile = profile;
         if (profile === null) {
           return this.loginService.getSingleUserProfile();
@@ -89,8 +99,7 @@ export class AppHeaderComponent implements OnInit {
       filterNullish(),
       // delay to wait for the child routes to completely settle.
       delay(0),
-      tap((profile: IUser) => {
-        this.adminRights = this.userProfileService.checkAdminRights(profile);
+      tap(() => {
         if (this.currentUrl.includes(this.routeList.account)) {
           this.navigationService.navigateToUrl(this.routeList.recipes);
         }
