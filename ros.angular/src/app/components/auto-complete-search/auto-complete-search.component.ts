@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function, @typescript-eslint/explicit-module-boundary-types */
+import { CommonModule } from '@angular/common';
 import {
   AfterContentInit,
   Component,
@@ -11,19 +12,21 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, UntypedFormControl, NgControl } from '@angular/forms';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { ControlValueAccessor, NgControl, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IReferenceItem } from '@models/reference.model';
 import { isObservable, Observable, of } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-auto-complete-search',
-    templateUrl: './auto-complete-search.component.html',
-    styleUrls: ['./auto-complete-search.component.scss'],
-    standalone: false
+  selector: 'app-auto-complete-search',
+  templateUrl: './auto-complete-search.component.html',
+  styleUrls: ['./auto-complete-search.component.scss'],
+  imports: [CommonModule, MatAutocompleteModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule]
 })
 export class AutoCompleteSearchComponent
   extends ComponentBase
