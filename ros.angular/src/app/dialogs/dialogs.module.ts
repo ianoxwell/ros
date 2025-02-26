@@ -15,6 +15,7 @@ import { DialogIngredientMatchComponent } from './dialog-ingredient-match/dialog
 import { DialogNewIngredientComponent } from './dialog-new-ingredient/dialog-new-ingredient.component';
 import { DialogRecipeComponent } from './dialog-recipe/dialog-recipe.component';
 import { MatButtonModule } from '@angular/material/button';
+import { AutoCompleteSearchComponent } from '@components/auto-complete-search/auto-complete-search.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatSelectModule,
     ReactiveFormsModule,
-    SaveButtonComponent
+    SaveButtonComponent,
+    AutoCompleteSearchComponent
   ],
   declarations: [
     DialogErrorComponent,
