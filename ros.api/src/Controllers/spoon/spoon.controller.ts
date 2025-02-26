@@ -1,6 +1,7 @@
 import { CMessage } from '@base/message.class';
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Ingredient } from '../ingredient/ingredient.entity';
 import { MeasurementService } from '../measurement/measurement.service';
 import { Recipe } from '../recipe/recipe.entity';
@@ -9,6 +10,8 @@ import { ISpoonSuggestions } from './models/spoon-suggestions.dto';
 import { SpoonService } from './spoon.service';
 
 @ApiTags('Spoonfed')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('JWT-auth')
 @Controller('spoon')
 export class SpoonController {
   constructor(private spoonService: SpoonService, private measureService: MeasurementService) {}

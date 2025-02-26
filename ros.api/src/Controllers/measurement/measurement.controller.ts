@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Measurement } from './measurement.entity';
 import { MeasurementService } from './measurement.service';
 
 @ApiTags('reference')
-// @UseGuards(AuthGuard('jwt'))
-// @ApiBearerAuth('JWT-auth')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('JWT-auth')
 @Controller('measurement')
 export class MeasurementController {
   constructor(private measurementService: MeasurementService) {}
