@@ -131,7 +131,7 @@ b {
 }
 
 // https://www.w3.org/WAI/tutorials/forms/labels/#note-on-hiding-elements
-.visually-hidden {
+.visually-hidden, .cdk-visually-hidden {
 	border: 0;
 	clip: rect(0 0 0 0);
 	height: 1px;
@@ -218,4 +218,13 @@ body .ui-toast .ui-toast-message.ui-toast-message-error {
 .footer {
 	background-color: $primary;
 	color: $dark-text;
+}
+
+.error-message {
+	padding-bottom: 1rem;
+}
+
+button.mdc-button {
+	padding: 0.5rem;
+	height: unset;
 }

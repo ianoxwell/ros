@@ -1,4 +1,4 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { A11yModule, LiveAnnouncer } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -11,7 +11,7 @@ import { map, take } from 'rxjs/operators';
   templateUrl: './loading-indicator.component.html',
   styleUrls: ['./loading-indicator.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule]
+  imports: [A11yModule, CommonModule, MatProgressSpinnerModule]
 })
 export class LoadingIndicatorComponent implements OnDestroy {
   @Input() spinnerClass = 'full-spinner'; // used to determine the spinner class applied
