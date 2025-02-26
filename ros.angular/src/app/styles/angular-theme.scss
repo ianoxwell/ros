@@ -250,9 +250,9 @@ $altTheme: mat.m2-define-light-theme($theme-primary, $theme-accent, $theme-warn)
 }
 
 .material-icons {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-family: 'Material Icons Two Tone', 'Material Icons';
-  line-height: 0.85;
+  line-height: 1;
   
   .mat-badge-content {
     font-family: 'Roboto';

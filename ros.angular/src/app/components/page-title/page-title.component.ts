@@ -1,29 +1,24 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { SiteLogoComponent } from '@components/site-logo/site-logo.component';
 import { PageTitleService } from '@services/page-title.service';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-page-title',
-    templateUrl: './page-title.component.html',
-    styleUrls: ['./page-title.component.scss'],
-    standalone: true,
-    imports: [CommonModule, MatIconModule]
+  selector: 'app-page-title',
+  templateUrl: './page-title.component.html',
+  styleUrls: ['./page-title.component.scss'],
+  imports: [A11yModule, CommonModule, MatIconModule, SiteLogoComponent]
 })
-export class PageTitleComponent implements OnInit {
+export class PageTitleComponent {
+  @Input() isLoginPage = false;
   pageTitle$: Observable<string>;
   pageSymbol$: Observable<string>;
-  isLoginPage = false;
 
-  constructor(private pageTitleService: PageTitleService, private router: Router) {
+  constructor(private pageTitleService: PageTitleService) {
     this.pageTitle$ = this.pageTitleService.pageTitle$;
     this.pageSymbol$ = this.pageTitleService.pageSymbol$;
-  }
-
-  ngOnInit() {
-    const currentUrl: string = this.router.url;
-    this.isLoginPage = currentUrl.includes('account') || this.router.url === '/';
   }
 }

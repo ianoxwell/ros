@@ -1,7 +1,10 @@
-@if (!isGettingJwt) {
-  <mat-card>
-    <router-outlet></router-outlet>
-  </mat-card>
-} @else {
+@if (isGettingJwt) {
   <app-loading-indicator></app-loading-indicator>
+} @else {
+  <app-page-title [isLoginPage]="true"></app-page-title>
+  <main role="main">
+    <mat-card class="login-boxes">
+      <router-outlet></router-outlet>
+    </mat-card>
+  </main>
 }
