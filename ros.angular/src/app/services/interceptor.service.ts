@@ -20,7 +20,7 @@ export class InterceptorService implements HttpInterceptor {
     // if the token exists and the connections file has been read and the url being accessed is the api - add the Token
     if (
       (req.url.startsWith(this.apiURL) && req.url.indexOf('account') === -1) ||
-      req.url.indexOf('/api/v1/account/get-account') > -1
+      req.url.includes('/api/v1/account/profile')
     ) {
       if (this.loginService.getJwt()) {
         req = req.clone({ headers: req.headers.set('Authorization', `Bearer ${this.loginService.getJwt()}`) });

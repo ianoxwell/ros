@@ -1,9 +1,10 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IUserSummary } from '@DomainModels/user.dto';
 import { MessageResult } from '@models/common.model';
 import { ITokenState } from '@models/logout.models';
 import { IResponseToken } from '@models/security.models';
-import { IUser } from '@models/user';
 import { JwtHelperService } from '@services/jwt/jwt-helper.service';
 import { ILocalUserJwt } from '@services/jwt/local-user-jwt.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -12,7 +13,6 @@ import { environment } from 'src/environments/environment';
 import { CStorageKeys } from '../storage/storage-keys.const';
 import { StorageService } from '../storage/storage.service';
 import { UserProfileService } from '../user-profile.service';
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
@@ -128,15 +128,15 @@ export class LoginService {
     );
   }
 
-  getSingleUserProfile(): Observable<IUser | null> {
+  getSingleUserProfile(): Observable<IUserSummary | null> {
     const jwtToken = this.getJwt();
     if (jwtToken === null) {
       return of(null);
     }
 
     const userId = this.jwtHelperService.decodeToken<ILocalUserJwt>(this.getJwt())?.sub;
-    return this.http.get<IUser>(`${environment.apiUrl}${environment.apiVersion}account/get-account?id=${userId}`).pipe(
-      tap((user: IUser) => {
+    return this.http.get<IUserSummary>(`${environment.apiUrl}${environment.apiVersion}account/profile`).pipe(
+      tap((user: IUserSummary) => {
         this.userProfileService.setUserProfile(user);
       })
     );

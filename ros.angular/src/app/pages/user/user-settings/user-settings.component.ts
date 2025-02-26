@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser } from '../../../models/user';
-import { UserProfileService } from '../../../services/user-profile.service';
 import { PageTitleComponent } from '@components/page-title/page-title.component';
+import { IUserSummary } from '@DomainModels/user.dto';
+import { UserProfileService } from '../../../services/user-profile.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -10,7 +10,7 @@ import { PageTitleComponent } from '@components/page-title/page-title.component'
   imports: [PageTitleComponent]
 })
 export class UserSettingsComponent implements OnInit {
-  cookBookUserProfile: IUser | null = null;
+  cookBookUserProfile: IUserSummary | null = null;
 
   constructor(private userProfileService: UserProfileService) {}
 

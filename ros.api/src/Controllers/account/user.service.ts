@@ -63,6 +63,7 @@ export class UserService {
     return {
       familyName: user.familyName,
       givenNames: user.givenNames,
+      fullName: `${user.givenNames} ${user.familyName}`,
       email: user.email,
       photoUrl: user.photoUrl,
       isActive: user.isActive,

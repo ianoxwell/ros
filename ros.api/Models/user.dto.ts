@@ -7,6 +7,7 @@ export interface IUserProfile extends IBaseDto {
 }
 
 export interface IUserSummary extends IUserProfile {
+  fullName?: string;
   photoUrl: string[];
   isActive: boolean;
   phoneNumber?: string;

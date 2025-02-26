@@ -38,24 +38,3 @@ export interface IUserRole extends BaseDbModel {
   role: IRole;
   school: ISchool;
 }
-
-export interface IUser extends BaseDbModel {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  photoUrl?: string;
-  isVerified?: boolean;
-  isStudent?: boolean;
-  isActive?: boolean;
-  timesLoggedIn?: number;
-  firstLogon?: Date;
-  lastLogon?: number | Date;
-  loginProvider: string;
-  loginProviderId?: string;
-  /** calculated / constructed field. */
-  fullName?: string;
-  /** Role taken by user - student, teacher, admin, assistant. */
-  userRole?: IUserRole[];
-
-  updated: Date;
-}
