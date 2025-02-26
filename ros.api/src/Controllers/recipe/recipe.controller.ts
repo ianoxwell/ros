@@ -8,21 +8,19 @@ import { IRecipe, IRecipeShort } from '../../../Models/recipe.dto';
 import { RecipeService } from './recipe.service';
 
 @ApiTags('Recipe')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('JWT-auth')
 @Controller('recipe')
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
 
   /** Quick and dirty get */
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('JWT-auth')
   @Get()
   async findAll(): Promise<PaginatedDto<IRecipeShort>> {
     return await this.recipeService.findAll();
   }
 
   /** Gets a specific recipe by Id */
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('JWT-auth')
   @Get(':id')
   @ApiOkResponse({
     description: 'Single Recipe'
@@ -32,8 +30,6 @@ export class RecipeController {
   }
 
   /** Deletes a single recipe. */
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('JWT-auth')
   @Delete(':id')
   async deleteRecipe(@Param('id') id: string): Promise<any> {
     return this.recipeService.deleteById(parseInt(id));
