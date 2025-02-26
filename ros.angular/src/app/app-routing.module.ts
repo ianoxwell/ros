@@ -7,9 +7,8 @@ import { RegisterFormComponent } from 'src/app/pages/account/register-form/regis
 import { ResetPasswordFormComponent } from 'src/app/pages/account/reset-password-form/reset-password-form.component';
 import { VerifyEmailComponent } from 'src/app/pages/account/verify-email/verify-email.component';
 import { AuthGuard } from './guards/auth.guard';
-import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { InterceptorService } from './services/interceptor.service';
-
+import { LoginComponent } from './pages/account/login.component';
 
 const routes: Routes = [
   {
@@ -18,24 +17,19 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: '',
-    component: WelcomeComponent,
+    path: 'account',
+    component: LoginComponent,
     children: [
-      {
-        path: 'account',
-        children: [
-          { path: 'login', component: LoginFormComponent },
-          { path: 'register', component: RegisterFormComponent },
-          { path: 'verify-email', component: VerifyEmailComponent },
-          { path: 'forgot-password', component: ForgotPasswordComponent },
-          { path: 'reset-password', component: ResetPasswordFormComponent }
-        ]
-      }
+      { path: 'login', component: LoginFormComponent },
+      { path: 'register', component: RegisterFormComponent },
+      { path: 'verify-email', component: VerifyEmailComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordFormComponent }
     ]
   },
   {
     path: 'savoury',
-    loadChildren: () => import('./pages/main/main.component').then(m => m.MainComponent),
+    loadChildren: () => import('./pages/main/main.module').then((m) => m.MainModule),
     canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '' }
