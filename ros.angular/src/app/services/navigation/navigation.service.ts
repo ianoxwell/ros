@@ -15,8 +15,6 @@ export class NavigationService {
   readonly routes = CRouteList;
   defaultUrl: string = this.routes.login;
 
-  productDetailsContext = this.routes.products;
-
   constructor(private router: Router) {}
 
   /**
