@@ -1,58 +1,69 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceAll } from '@models/reference.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { RefDataService } from './ref-data.service';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReferenceService {
-  private refAllSubject$ = new BehaviorSubject<IReferenceAll | undefined>(undefined);
+  private _referenceAll: IReferenceAll | undefined;
 
-  private measurementSubject$ = new BehaviorSubject<IMeasurement[]>([]);
+  private _measurements: IMeasurement[] = [];
 
-  constructor(private refDataService: RefDataService) {}
+  private defaultHeader = new HttpHeaders()
+    .set('Content-Type', 'application/json;odata=verbose')
+    .set('Accept', 'application/json;odata=verbose');
+  private apiUrl = environment.apiUrl + environment.apiVersion;
 
-  getAllReferences(): Observable<IReferenceAll> {
-    return this.refAllSubject$.pipe(
-      switchMap((refAll: IReferenceAll | undefined) => {
-        return !!refAll ? of(refAll) : this.setRefAll();
-      })
-    );
+  constructor(private httpClient: HttpClient) {}
+
+  getAllReferences(): IReferenceAll {
+    if (!this._referenceAll) {
+      throw 'References not yet loaded - unexpected error';
+    }
+
+    return this._referenceAll;
   }
 
-  setRefAll(): Observable<IReferenceAll> {
-    return this.refDataService.getAllReferences().pipe(
-      map((result: IReferenceAll) => {
-        this.refAllSubject$.next(result);
-        return result;
+  getMeasurements(): IMeasurement[] {
+    if (!this._measurements.length) {
+      throw 'Measurements not yet loaded - unexpected error';
+    }
+
+    return this._measurements;
+  }
+
+  getAllReferencesAsync(): Observable<IReferenceAll> {
+    return this.httpClient.get<IReferenceAll>(`${this.apiUrl}reference`, { headers: this.defaultHeader }).pipe(
+      tap((ref: IReferenceAll) => {
+        this._referenceAll = ref;
       }),
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
-        console.log('Error getting all reference Data', err);
+        console.log('Error getting reference Data', err);
         return of({});
       })
     );
   }
 
-  getMeasurements(): Observable<Array<IMeasurement>> {
-    return !!this.measurementSubject$.value ? this.measurementSubject$.asObservable() : this.setMeasurements();
-  }
-
-  setMeasurements(): Observable<Array<IMeasurement>> {
-    return this.refDataService.getMeasurements().pipe(
-      map((result: IMeasurement[]) => {
-        this.measurementSubject$.next(result);
-        return result;
-      }),
-      catchError((error: unknown) => {
-        const err = error as HttpErrorResponse;
-        console.log('Error getting measurement Data', err);
-        return of([]);
+  getMeasurementsAsync(): Observable<Array<IMeasurement>> {
+    return this.httpClient
+      .get<Array<IMeasurement>>(`${this.apiUrl}measurement`, {
+        headers: this.defaultHeader
       })
-    );
+      .pipe(
+        tap((m: IMeasurement[]) => {
+          this._measurements = m;
+        }),
+        catchError((error: unknown) => {
+          const err = error as HttpErrorResponse;
+          console.log('Error getting measurement Data', err);
+          return of([]);
+        })
+      );
   }
 }

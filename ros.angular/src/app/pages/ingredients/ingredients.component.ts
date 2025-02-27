@@ -52,28 +52,13 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
     super();
     this.data$ = this.listenStateService();
     this.cookBookUserProfile$ = this.userProfileService.getUserProfile();
+    this.refData = this.referenceService.getAllReferences();
+    this.measurements = this.referenceService.getMeasurements();
   }
 
   ngOnInit() {
-    this.getAllReferences();
   }
 
-  getAllReferences(): void {
-    combineLatest([this.referenceService.getAllReferences(), this.referenceService.getMeasurements()])
-      .pipe(
-        first(),
-        switchMap(([refData, measurements]: [IReferenceAll, IMeasurement[]]) => {
-          this.refData = refData;
-          this.measurements = measurements;
-          return this.routeParamSubscribe();
-        }),
-        catchError((error: unknown) => {
-          const err = error as HttpErrorResponse;
-          return this.dialogService.alert('Http error while attempting to getting references', err);
-        })
-      )
-      .subscribe();
-  }
 
   routeParamSubscribe(): Observable<number> {
     return this.route.params.pipe(

@@ -3,22 +3,22 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
 import { CBlankPagedMeta, PagedResult } from '@models/common.model';
-import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
+import { RecipeFilterQuery } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceAll } from '@models/reference.model';
 import { DialogService } from '@services/dialog.service';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { CRouteList } from '@services/navigation/route-list.const';
-import { RecipeService } from 'src/app/pages/recipe/recipe.service';
-import { RefDataService } from '@services/ref-data.service';
+import { ReferenceService } from '@services/reference.service';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
-import { combineLatest, Observable, of } from 'rxjs';
-import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
+import { Observable, of } from 'rxjs';
+import { catchError, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 
 @Component({
   selector: 'app-recipes',
@@ -52,11 +52,12 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     private userProfileService: UserProfileService,
     private dialogService: DialogService,
     private stateService: StateService,
-    private refDataService: RefDataService,
+    private referenceService: ReferenceService,
     private navigationService: NavigationService
   ) {
     super();
-    this.getAllReferences();
+    this.refDataAll = this.referenceService.getAllReferences();
+    this.measurementRef = this.referenceService.getMeasurements();
   }
 
   ngOnInit(): void {
@@ -86,19 +87,6 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       }),
       takeUntil(this.ngUnsubscribe)
     );
-  }
-
-  /** listens to refDataService to populate the referenceData, called from init, disposed off after first response */
-  getAllReferences(): void {
-    combineLatest([this.refDataService.getAllReferences(), this.refDataService.getMeasurements()])
-      .pipe(
-        first(),
-        tap(([refAll, measure]: [IReferenceAll, IMeasurement[]]) => {
-          this.refDataAll = refAll;
-          this.measurementRef = measure;
-        })
-      )
-      .subscribe();
   }
 
   loadRecipeSelect(itemId: number | undefined): Observable<null | IRecipe> {

@@ -4,36 +4,35 @@ import { PageEvent } from '@angular/material/paginator';
 import { ComponentBase } from '@components/base/base.component.base';
 import { EOrder } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
-import { IReferenceAll, IReferenceItemFull } from '@models/reference.model';
+import { RecipeFilterQuery } from '@models/filter-queries.model';
+import { IReferenceItemFull } from '@models/reference.model';
 import { OrderRecipesBy } from '@models/static-variables';
 import { ReferenceService } from '@services/reference.service';
 import { StateService } from '@services/state.service';
-import { Observable } from 'rxjs';
-import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Component({
-    selector: 'app-search-bar',
-    templateUrl: './search-bar.component.html',
-    styleUrls: ['./search-bar.component.scss'],
-    standalone: false
+  selector: 'app-search-bar',
+  templateUrl: './search-bar.component.html',
+  styleUrls: ['./search-bar.component.scss'],
+  standalone: false
 })
 export class SearchBarComponent extends ComponentBase implements OnInit, OnChanges {
   searchForm: UntypedFormGroup;
   @Input() filterQuery: IFilter = CBlankFilter;
   @Input() dataLength = 0;
   orderRecipesBy = OrderRecipesBy;
-  allergyArray$: Observable<IReferenceItemFull[]>;
+  allergies: IReferenceItemFull[];
 
-  constructor(private fb: UntypedFormBuilder, private referenceService: ReferenceService, private stateService: StateService) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private referenceService: ReferenceService,
+    private stateService: StateService
+  ) {
     super();
     this.searchForm = this.createForm();
-    this.allergyArray$ = this.referenceService.getAllReferences().pipe(
-      map((allRef: IReferenceAll) => {
-        return allRef.AllergyWarning || [];
-      })
-    );
+    this.allergies = this.referenceService.getAllReferences().AllergyWarning || [];
   }
 
   ngOnInit(): void {
