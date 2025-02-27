@@ -16,8 +16,8 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { IUserSummary } from '@DomainModels/user.dto';
 import { ToTitleCasePipe } from '@pipes/title-case.pipe';
 import { MessageService } from '@services/message.service';
-import { RestIngredientService } from '@services/rest-ingredient.service';
-import { RestRecipeService } from '@services/rest-recipe.service';
+import { IngredientService } from 'src/app/pages/ingredients/ingredient.service';
+import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { autoSpy, Spy } from 'autospy';
 import { MockComponent } from 'ng-mocks';
@@ -30,7 +30,7 @@ describe('RecipesComponent', () => {
   let component: RecipesComponent;
   let fixture: ComponentFixture<RecipesComponent>;
 
-  const restRecipeServiceSpy: Spy<RestRecipeService> = autoSpy(RestRecipeService);
+  const restRecipeServiceSpy: Spy<RecipeService> = autoSpy(RecipeService);
   const activatedRouteSpy: Spy<ActivatedRoute> = autoSpy(ActivatedRoute);
   activatedRouteSpy.snapshot = { routeConfig: { url: '', path: '' } } as unknown as ActivatedRouteSnapshot;
   activatedRouteSpy.params = of({});
@@ -45,7 +45,7 @@ describe('RecipesComponent', () => {
     }
   } as unknown as ActivatedRoute;
 
-  const restIngredientServiceSpy: Spy<RestIngredientService> = autoSpy(RestIngredientService);
+  const ingredientServiceSpy: Spy<IngredientService> = autoSpy(IngredientService);
   const locationSpy: Spy<Location> = autoSpy(Location);
   const userProfileServiceSpy: Spy<UserProfileService> = autoSpy(UserProfileService);
   userProfileServiceSpy.getUserProfile.and.returnValue(of({} as IUserSummary));
@@ -58,9 +58,9 @@ describe('RecipesComponent', () => {
         imports: [MatIconModule, MatToolbarModule, MatTabsModule, MatButtonModule, NoopAnimationsModule],
         declarations: [RecipesComponent, MockComponent(RecipeViewComponent), MockComponent(SearchBarComponent)],
         providers: [
-          { provide: RestRecipeService, useValue: restRecipeServiceSpy },
+          { provide: RecipeService, useValue: restRecipeServiceSpy },
           { provide: ActivatedRoute, useValue: fakeActivatedRoute },
-          { provide: RestIngredientService, useValue: restIngredientServiceSpy },
+          { provide: IngredientService, useValue: ingredientServiceSpy },
           { provide: Location, useValue: locationSpy },
           { provide: UserProfileService, useValue: userProfileServiceSpy },
           { provide: ToTitleCasePipe, useValue: toTitleCasePipeSpy },
