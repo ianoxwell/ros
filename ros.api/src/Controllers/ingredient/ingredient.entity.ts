@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { RosBaseEntity } from '@base/base.entity';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
-import { EPurchasedBy, IIngredient } from '../../../Models/ingredient.dto';
+import { EPurchasedBy } from '../../../Models/ingredient.dto';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
 import { Reference } from '../reference/reference.entity';
@@ -71,7 +71,7 @@ export class Ingredient extends RosBaseEntity {
   @OneToMany(() => Conversion, (conversion) => conversion.ingredient, { cascade: true })
   conversions?: Conversion[];
 
-  @OneToMany(() => RecipeIngredient, (recipeIngredient) => recipeIngredient.ingredient, { cascade: true })
+  @OneToMany(() => RecipeIngredient, (recipeIngredient) => recipeIngredient.ingredientId, { cascade: true })
   recipeIngredientList: RecipeIngredient[];
 
   /** Nutrient breakdown - note nutrition is always 100 of base units (e.g. 100 grams, or 100 mls)*/

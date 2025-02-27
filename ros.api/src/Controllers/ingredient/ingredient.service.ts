@@ -1,4 +1,10 @@
 import { EOrder, PageMetaDto, PaginatedDto } from '@base//paginated.entity';
+import { CPageOptionsDto } from '@base/filter.const';
+import { IFilterBase } from '@base/filter.entity';
+import { CMessage } from '@base/message.class';
+import { Injectable } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common/enums';
+import { InjectRepository } from '@nestjs/typeorm';
 import { IConversion } from 'Models/conversion.dto';
 import {
   EPurchasedBy,
@@ -10,14 +16,8 @@ import {
   IReferenceShort
 } from 'Models/ingredient.dto';
 import { IMeasurement } from 'Models/measurement.dto';
-import { CMessage } from '@base/message.class';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
-import { Injectable } from '@nestjs/common';
-import { HttpStatus } from '@nestjs/common/enums';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CPageOptionsDto } from '@base/filter.const';
-import { IFilterBase } from '@base/filter.entity';
-import { ILike, Like, Repository, UpdateResult } from 'typeorm';
+import { ILike, In, Like, Repository, UpdateResult } from 'typeorm';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
 import { Reference } from '../reference/reference.entity';
@@ -77,6 +77,11 @@ export class IngredientService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     return new PaginatedDto(result, pageMetaDto);
+  }
+
+  /** Given an array of ingredient id's return the ingredient */
+  async getIngredientFromIdList(ingredientIds: number[]): Promise<Ingredient[]> {
+    return await this.repository.find({ where: { id: In(ingredientIds) } });
   }
 
   /** Returns true IF the ingredient is NOT found. */
@@ -209,7 +214,7 @@ export class IngredientService {
     return ing;
   }
 
-  mapRecipeIngredientToIRecipeIngredient(
+  mapRecipeIngredientToIRecipeIngredientDto(
     iL: RecipeIngredient,
     recipeId: number,
     measures: Measurement[],
@@ -217,7 +222,7 @@ export class IngredientService {
   ): IRecipeIngredient {
     return {
       id: iL.id,
-      ingredientId: iL.ingredient.id,
+      ingredientId: iL.ingredientId,
       recipeId,
       amount: iL.amount,
       unit: iL.measure.title,
@@ -323,7 +328,7 @@ export class IngredientService {
   }
 
   /** Mapping from the FE ingredient DTO through to ingredient object. */
-  private mapIIngredientDtoIngredient(i: IIngredient): Ingredient {
+  mapIIngredientDtoIngredient(i: IIngredient): Ingredient {
     const ing: Ingredient = {
       name: i.name,
       originalName: i.originalName,

@@ -24,7 +24,7 @@ export class CRecipeTease implements IRecipeTease {
       this.dishType = recipe.dishType.map((dType: DishType) => dType.name);
       this.cuisineType = recipe.cuisineType.map((cType: CuisineType) => cType.name);
       this.equipment = recipe.equipment.map((equip: Equipment) => equip.name);
-      this.ingredientList = recipe.ingredientList.map((ing: RecipeIngredient) => ing.ingredient.name);
+      this.ingredientList = recipe.ingredientList.map((ing: RecipeIngredient) => ing.id.toString()); // TODO something smarter here - should be an array of ingredients
     }
   }
 }

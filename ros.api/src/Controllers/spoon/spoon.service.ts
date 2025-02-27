@@ -217,7 +217,7 @@ export class SpoonService {
     newRecipe.dishType = dishType;
     newRecipe.diets = diets;
 
-    const createdRecipe = await this.recipeService.createRecipe(newRecipe);
+    const createdRecipe = await this.recipeService.createRecipeFromEntity(newRecipe);
 
     const allSteppedInstructEquip = await this.mapSteppedInstructions(spoonRecipe.analyzedInstructions, ingredients, createdRecipe.id);
     const ingredientList: RecipeIngredient[] = await this.mapRecipeIngredientList(
@@ -231,7 +231,7 @@ export class SpoonService {
     createdRecipe.steppedInstructions = allSteppedInstructEquip.steppedInstructions;
     createdRecipe.ingredientList = ingredientList;
 
-    const updatedRecipe = await this.recipeService.updateRecipe(createdRecipe);
+    const updatedRecipe = await this.recipeService.updateRecipeFromEntity(createdRecipe);
 
     if (updatedRecipe) {
       return new CMessage('Successful save, ' + createdRecipe.id, HttpStatus.OK);

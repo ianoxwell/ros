@@ -1,6 +1,6 @@
+import { RosBaseEntity } from '@base/base.entity';
 import { Ingredient } from '@controllers/ingredient/ingredient.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Recipe } from '../recipe.entity';
 import { EquipmentSteppedInstruction } from './equipment-stepped-instruction.entity';
@@ -28,7 +28,7 @@ export class RecipeSteppedInstruction extends RosBaseEntity {
   @JoinTable()
   ingredients: Ingredient[];
 
-  @OneToMany(() => EquipmentSteppedInstruction, (steppedEquip) => steppedEquip.recipeSteppedInstruction, { cascade: true })
+  @OneToMany(() => EquipmentSteppedInstruction, (steppedEquip) => steppedEquip.recipeSteppedInstructionId, { cascade: true })
   equipment: EquipmentSteppedInstruction[];
 
   @ManyToOne(() => Recipe, (recipe) => recipe.steppedInstructions, { onDelete: 'CASCADE' })
