@@ -1,7 +1,8 @@
 import { CPageOptionsDto } from '@base/filter.const';
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
-import { EOrder, PageMetaDto, PaginatedDto } from '@base/paginated.entity';
+import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
+import { EOrder } from '@models/base.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IEquipmentSteppedInstruction } from 'Models/equipment-stepped-instruction.dto';
@@ -73,6 +74,7 @@ export class RecipeService {
 
   /** Filter ingredients and paginate the results. */
   async getRecipes(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
+    console.log('page options', pageOptionsDto, pageOptionsDto.keyword);
     const [result, itemCount] = await this.repository.findAndCount({
       where: { name: Like(`%${pageOptionsDto.keyword}%`) },
       order: { name: pageOptionsDto.order || EOrder.DESC },
@@ -320,9 +322,9 @@ export class RecipeService {
   }
 
   private mapRecipeToShortRecipeDto(recipe: Recipe): IRecipeShort {
-    const cuisineType: string[] = recipe.cuisineType.map((item: CuisineType) => item.name);
-    const dishType: string[] = recipe.dishType.map((item: DishType) => item.name);
-    const diets: string[] = recipe.diets.map((item: HealthLabel) => item.name);
+    const cuisineType: string[] = recipe.cuisineType?.map((item: CuisineType) => item.name);
+    const dishType: string[] = recipe.dishType?.map((item: DishType) => item.name);
+    const diets: string[] = recipe.diets?.map((item: HealthLabel) => item.name);
     const healthLabels: THealthBooleanLabels[] = this.healthLabelKeys.filter((key: THealthBooleanLabels) => recipe[key]);
 
     return {

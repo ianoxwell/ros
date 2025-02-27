@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ComponentBase } from '@components/base/base.component.base';
+import { EOrder } from '@DomainModels/base.dto';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
 import { IReferenceAll, IReferenceItemFull } from '@models/reference.model';
 import { OrderRecipesBy } from '@models/static-variables';
@@ -19,7 +21,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SearchBarComponent extends ComponentBase implements OnInit, OnChanges {
   searchForm: UntypedFormGroup;
-  @Input() filterQuery: IRecipeFilterQuery = new RecipeFilterQuery();
+  @Input() filterQuery: IFilter = CBlankFilter;
   @Input() dataLength = 0;
   orderRecipesBy = OrderRecipesBy;
   allergyArray$: Observable<IReferenceItemFull[]>;
@@ -88,7 +90,7 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
       this.filterQuery.page = ev.pageIndex;
     } else {
       this.filterQuery.page = 0;
-      this.filterQuery.perPage = ev.pageSize;
+      this.filterQuery.take = ev.pageSize;
     }
     this.stateService.setRecipeFilterQuery(this.filterQuery);
   }
@@ -97,25 +99,26 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
    * Patches the form with external values.
    * @param item Any external values to hydrate the form.
    */
-  patchForm(item: IRecipeFilterQuery) {
+  patchForm(item: IFilter) {
     if (!item) {
-      item = new RecipeFilterQuery();
+      item = CBlankFilter;
     }
     this.searchForm.patchValue({
-      name: item.name,
-      ingredient: item.ingredient,
-      author: item.author,
-      totalTime: item.totalTime,
-      servingPrice: item.servingPrice, // search priceServing {$le: servingTime}
-      recipeCreated: item.recipeCreated, // date number greater than the number set ie today - 7 days
-      equipment: item.equipment, // {favouriteFoods: {"$in": ["sushi", "hotdog"]}}
-      recipeType: item.recipeType,
-      healthLabels: item.healthLabels,
-      cuisineType: item.cuisineType,
-      allergyWarning: item.allergyWarning, // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }
-      orderby: item.orderby || 'name',
-      perPage: item.perPage || 10,
-      page: item.page || 0
+      ...item
+      // keyword: item.keyword,
+      // ingredient: item.ingredient,
+      // author: item.author,
+      // totalTime: item.totalTime,
+      // servingPrice: item.servingPrice, // search priceServing {$le: servingTime}
+      // recipeCreated: item.recipeCreated, // date number greater than the number set ie today - 7 days
+      // equipment: item.equipment, // {favouriteFoods: {"$in": ["sushi", "hotdog"]}}
+      // recipeType: item.recipeType,
+      // healthLabels: item.healthLabels,
+      // cuisineType: item.cuisineType,
+      // allergyWarning: item.allergyWarning, // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }
+      // orderby: item.orderby || 'name',
+      // perPage: item.perPage || 10,
+      // page: item.page || 0
     });
   }
 
@@ -132,19 +135,20 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
    */
   createForm(): UntypedFormGroup {
     return this.fb.group({
-      name: '',
-      ingredient: '',
-      author: '',
-      totalTime: 0,
-      servingPrice: 0, // search priceServing {$le: servingTime}
-      recipeCreated: 0, // date number greater than the number set ie today - 7 days
-      equipment: [], // {favouriteFoods: {"$in": ["sushi", "hotdog"]}}
-      recipeType: [],
-      healthLabels: [],
-      cuisineType: [],
-      allergyWarning: [], // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }
-      orderby: 'name',
-      perPage: environment.resultsPerPage,
+      keyword: '',
+      // ingredient: '',
+      // author: '',
+      // totalTime: 0,
+      // servingPrice: 0, // search priceServing {$le: servingTime}
+      // recipeCreated: 0, // date number greater than the number set ie today - 7 days
+      // equipment: [], // {favouriteFoods: {"$in": ["sushi", "hotdog"]}}
+      // recipeType: [],
+      // healthLabels: [],
+      // cuisineType: [],
+      // allergyWarning: [], // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }
+      order: EOrder.ASC,
+      sort: 'name',
+      take: environment.resultsPerPage,
       page: 0
     });
   }

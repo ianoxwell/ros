@@ -1,4 +1,4 @@
-import { EOrder, PageMetaDto, PaginatedDto } from '@base//paginated.entity';
+import { PageMetaDto, PaginatedDto } from '@base//paginated.entity';
 import { CPageOptionsDto } from '@base/filter.const';
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
@@ -25,6 +25,7 @@ import { ISpoonIngredient } from '../spoon/models/spoon-ingredient.dto';
 import { Conversion } from './conversion/conversion.entity';
 import { CIngredientShort } from './ingredient-short.dto';
 import { Ingredient } from './ingredient.entity';
+import { EOrder } from '@models/base.dto';
 
 @Injectable()
 export class IngredientService {

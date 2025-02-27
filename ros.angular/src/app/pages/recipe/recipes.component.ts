@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
-import { IRecipe } from '@DomainModels/recipe.dto';
+import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
 import { CBlankPagedMeta, PagedResult } from '@models/common.model';
 import { IRecipeFilterQuery, RecipeFilterQuery } from '@models/filter-queries.model';
@@ -12,13 +12,13 @@ import { IReferenceAll } from '@models/reference.model';
 import { DialogService } from '@services/dialog.service';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { CRouteList } from '@services/navigation/route-list.const';
-import { PageTitleService } from '@services/page-title.service';
+import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 import { RefDataService } from '@services/ref-data.service';
-import { RestRecipeService } from '@services/rest-recipe.service';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 
 @Component({
   selector: 'app-recipes',
@@ -27,22 +27,26 @@ import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/opera
   standalone: false
 })
 export class RecipesComponent extends ComponentBase implements OnInit {
-  recipes: IRecipe[] = [];
+  recipes: IRecipeShort[] = [];
   refDataAll: IReferenceAll | undefined;
   measurementRef: IMeasurement[] = [];
   isLoading = false;
+  /** Full recipe loaded from the API */
   selectedRecipe: IRecipe | undefined;
+  /** if this has value it will be the index of the selected recipe */
   selectedIndex = 0;
+  selectedRecipeId: number | undefined;
+
   selectedTab = 0; // controls the selectedIndex of the mat-tab-group
   isNew = true; // edit or new ingredient;
 
   currentPath: string | undefined = '';
-  filterQuery: IRecipeFilterQuery = new RecipeFilterQuery();
+  filterQuery: IFilter = CBlankFilter;
   dataLength = 0;
   cookBookUserProfile: IUserSummary | null = null;
 
   constructor(
-    private restRecipeService: RestRecipeService,
+    private recipeService: RecipeService,
     private route: ActivatedRoute,
     private location: Location,
     private userProfileService: UserProfileService,
@@ -57,37 +61,31 @@ export class RecipesComponent extends ComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.userProfileService.getUserProfile().subscribe((profile) => (this.cookBookUserProfile = profile));
-    this.routeParamSubscribe();
-    this.listenFilterQueryChanges();
+    this.routeParamSubscribe().subscribe();
+    this.listenFilterQueryChanges().subscribe();
   }
 
-  listenFilterQueryChanges(): void {
-    this.stateService
-      .getRecipeFilterQuery()
-      .pipe(
-        switchMap((result: IRecipeFilterQuery) => {
-          console.log('filter result', result);
-          this.filterQuery = result;
-          return this.getRecipes();
-        }),
-        takeUntil(this.ngUnsubscribe)
-      )
-      .subscribe();
+  listenFilterQueryChanges(): Observable<PagedResult<IRecipeShort>> {
+    return this.stateService.getRecipeFilterQuery().pipe(
+      switchMap((result: IFilter) => {
+        console.log('filter result', result);
+        this.filterQuery = result;
+        return this.getRecipes();
+      }),
+      takeUntil(this.ngUnsubscribe)
+    );
   }
-  // paused at the moment till the filtering is sorted
-  routeParamSubscribe(): void {
-    this.route.params
-      .pipe(
-        tap((params) => {
-          this.currentPath = this.route.snapshot.routeConfig?.path;
-          console.log('route param', params, this.currentPath);
-          if (params.recipeId) {
-            this.loadRecipeSelect(Number(params.recipeId));
-          }
-        }),
-        takeUntil(this.ngUnsubscribe)
-      )
-      .subscribe();
+
+  routeParamSubscribe(): Observable<null | IRecipe> {
+    return this.route.params.pipe(
+      filter((params) => params.recipeId),
+      switchMap((params) => {
+        this.currentPath = this.route.snapshot.routeConfig?.path;
+        console.log('route param', params, this.currentPath);
+        return this.loadRecipeSelect(Number(params.recipeId));
+      }),
+      takeUntil(this.ngUnsubscribe)
+    );
   }
 
   /** listens to refDataService to populate the referenceData, called from init, disposed off after first response */
@@ -103,27 +101,22 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       .subscribe();
   }
 
-  loadRecipeSelect(itemId: number | undefined): void {
+  loadRecipeSelect(itemId: number | undefined): Observable<null | IRecipe> {
     if (!itemId) {
-      return;
+      return of(null);
     }
 
-    this.restRecipeService
-      .getRecipeById(itemId)
-      .pipe(
-        tap((singleRecipe) => {
-          this.selectedRecipe = singleRecipe;
-          this.changeTab(1);
-          return this.getRecipes();
-        }),
-        catchError((error: unknown) => {
-          const err = error as HttpErrorResponse;
-          console.log('Error', err);
-          return [];
-        }),
-        takeUntil(this.ngUnsubscribe)
-      )
-      .subscribe();
+    return this.recipeService.getRecipeById(itemId).pipe(
+      tap((singleRecipe: IRecipe) => {
+        this.selectedRecipe = singleRecipe;
+      }),
+      catchError((error: unknown) => {
+        const err = error as HttpErrorResponse;
+        console.log('Error', err);
+        return [];
+      }),
+      takeUntil(this.ngUnsubscribe)
+    );
   }
 
   changeRecipe(event: { direction: string; id: number | undefined }): void {
@@ -140,18 +133,19 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     } else {
       this.selectedIndex++;
     }
-    this.selectedRecipe = this.recipes[this.selectedIndex];
-    this.location.replaceState(`savoury/recipes/item/${this.selectedRecipe.id}`);
+
+    this.selectedRecipeId = this.recipes[this.selectedIndex].id;
+    this.navigationService.navigateToUrl(`savoury/recipes/item/${this.selectedRecipeId}`);
   }
 
   onFilterChange(ev: RecipeFilterQuery) {
     console.log('here is the filter change', ev);
   }
 
-  getRecipes(): Observable<PagedResult<IRecipe>> {
+  getRecipes(): Observable<PagedResult<IRecipeShort>> {
     this.isLoading = true;
     this.dataLength = 0;
-    return this.restRecipeService.getRecipe(this.filterQuery).pipe(
+    return this.recipeService.getRecipe(this.filterQuery).pipe(
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
         this.dialogService.alert('Error getting recipes', err);
@@ -165,8 +159,8 @@ export class RecipesComponent extends ComponentBase implements OnInit {
         console.log('stop loading');
         this.isLoading = false;
       }),
-      filter((result: PagedResult<IRecipe>) => result.meta.itemCount > 0),
-      tap((recipeResults: PagedResult<IRecipe>) => {
+      filter((result: PagedResult<IRecipeShort>) => result.meta.itemCount > 0),
+      tap((recipeResults: PagedResult<IRecipeShort>) => {
         this.dataLength = recipeResults.meta.itemCount;
         this.recipes = recipeResults.results;
         console.log('setting the recipe results', recipeResults, this.dataLength);
@@ -178,12 +172,12 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     console.log('new maybe', action);
   }
 
-  selectThisRecipe(recipe: IRecipe, i: number) {
-    // set the selectedRecipe and the selectedIndex
-    this.loadRecipeSelect(recipe.id);
+  selectThisRecipe(recipe: IRecipeShort, i: number) {
+    this.changeTab(1);
+    this.selectedRecipeId = recipe.id;
     this.selectedIndex = i;
-    // change the tab to the recipe
-    // this.changeTab(1);
+
+    this.loadRecipeSelect(this.selectedRecipeId);
   }
 
   changeTab(event: any) {

@@ -1,7 +1,8 @@
+import { EOrder } from '@models/base.dto';
+import { IFilter } from '@models/filter.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { EOrder } from './paginated.entity';
 
-export class IFilterBase {
+export class IFilterBase implements IFilter {
   @ApiProperty({ default: 25, maximum: 100, minimum: 1, required: true })
   take: number;
 

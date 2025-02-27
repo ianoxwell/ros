@@ -1,3 +1,4 @@
+import { EOrder } from '@models/base.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PageMetaDto {
@@ -45,11 +46,6 @@ export class PaginatedDto<TData> {
 export interface PageMetaDtoParameters {
   pageOptionsDto: PageOptionsDto;
   itemCount: number;
-}
-
-export enum EOrder {
-  ASC = 'ASC',
-  DESC = 'DESC'
 }
 
 export class PageOptionsDto {

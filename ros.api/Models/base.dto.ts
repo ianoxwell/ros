@@ -3,3 +3,8 @@ export class IBaseDto {
   updatedAt?: Date;
   createdAt?: Date;
 }
+
+export enum EOrder {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}
