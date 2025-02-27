@@ -18,7 +18,7 @@ import { Suggestion } from '@models/suggestion';
 @Injectable({
   providedIn: 'root'
 })
-export class RestIngredientService {
+export class IngredientService {
   private defaultHeader = new HttpHeaders()
     .set('Content-Type', 'application/json;odata=verbose')
     .set('Accept', 'application/json;odata=verbose');

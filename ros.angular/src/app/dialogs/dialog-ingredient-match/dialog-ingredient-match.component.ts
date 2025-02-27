@@ -9,7 +9,7 @@ import { IRawFoodIngredient, IRawFoodSuggestion } from '@models/raw-food-ingredi
 import { IReferenceItemFull } from '@models/reference.model';
 import { ConstructIngredientService } from '@services/construct-ingredient.service';
 import { MessageService } from '@services/message.service';
-import { RestIngredientService } from '@services/rest-ingredient.service';
+import { IngredientService } from 'src/app/pages/ingredients/ingredient.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, first, switchMap, tap } from 'rxjs/operators';
 
@@ -33,7 +33,7 @@ export class DialogIngredientMatchComponent extends ComponentBase implements OnI
     },
     private fb: UntypedFormBuilder,
     private constructIngredientService: ConstructIngredientService,
-    private restIngredientService: RestIngredientService,
+    private ingredientService: IngredientService,
     private messageService: MessageService
   ) {
     super();
@@ -95,8 +95,8 @@ export class DialogIngredientMatchComponent extends ComponentBase implements OnI
           (group: IReferenceItemFull) => group.id === formRaw.foodGroup
         );
         return this.data.ingredient.foodGroup?.title === 'NULL'
-          ? this.restIngredientService.getRawFoodSuggestion(rawFood, 20)
-          : this.restIngredientService.getRawFoodSuggestion(rawFood, 20, foodGroupId);
+          ? this.ingredientService.getRawFoodSuggestion(rawFood, 20)
+          : this.ingredientService.getRawFoodSuggestion(rawFood, 20, foodGroupId);
       })
     );
   }
@@ -118,7 +118,7 @@ export class DialogIngredientMatchComponent extends ComponentBase implements OnI
       this.data.ingredient.name = item.name;
       this.patchForm(this.data.ingredient, false);
     }
-    this.restIngredientService
+    this.ingredientService
       .getRawFoodById(item.usdaId)
       .pipe(
         first(),

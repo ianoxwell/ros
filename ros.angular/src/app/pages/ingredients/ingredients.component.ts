@@ -12,12 +12,12 @@ import { DialogService } from '@services/dialog.service';
 import { ReferenceService } from '@services/reference.service';
 // import {ConversionModel, EditedFieldModel, IngredientModel, PriceModel} from '../models/ingredient-model';
 import { IUserSummary } from '@DomainModels/user.dto';
-import { RestIngredientService } from '@services/rest-ingredient.service';
-import { RestRecipeService } from '@services/rest-recipe.service';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IngredientService } from 'src/app/pages/ingredients/ingredient.service';
+import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 import { ComponentBase } from '../../components/base/base.component.base';
 
 @Component({
@@ -40,8 +40,8 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   measurements: IMeasurement[] = [];
 
   constructor(
-    private restIngredientService: RestIngredientService,
-    private restRecipeService: RestRecipeService,
+    private ingredientService: IngredientService,
+    private restRecipeService: RecipeService,
     private dialogService: DialogService,
     private userProfileService: UserProfileService,
     private location: Location,
@@ -104,7 +104,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
 
   getSingleIngredient(itemId: number): Observable<IIngredient> {
     this.isNew = false;
-    return this.restIngredientService.getIngredientById(itemId).pipe(
+    return this.ingredientService.getIngredientById(itemId).pipe(
       tap((ing: IIngredient) => {
         this.selectedTab = 1;
       }),
@@ -122,7 +122,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
    * @returns Observable of Paged Result with Ingredient
    */
   getIngredientList(): Observable<PagedResult<IIngredient>> {
-    return this.restIngredientService.getIngredientList(this.filterObject).pipe(
+    return this.ingredientService.getIngredientList(this.filterObject).pipe(
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;
         this.dialogService.confirm(MessageStatus.Critical, 'Error getting ingredients', err.message);
@@ -154,7 +154,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
         .newIngredientDialog(this.refData.IngredientFoodGroup, this.measurements, this.refData.IngredientState)
         .pipe(
           first(),
-          switchMap((result: IIngredient) => this.restIngredientService.createIngredient(result)),
+          switchMap((result: IIngredient) => this.ingredientService.createIngredient(result)),
           tap((savedResult: IIngredient) => {
             this.isNew = false; // ingredient is no longer "new"
             this.selectedIngredient$ = of(savedResult);
@@ -204,14 +204,14 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   // 		console.log('ingred', ingred.ingredientId);
   // 		if (this.filterInt(ingred.ingredientId.toString()) && checkForIngredient.length === 0) {
   // 			// fetch ingredients from spoonacular
-  // 			return await this.restIngredientService.getSpoonacularIngredient(ingred.ingredientId)
+  // 			return await this.ingredientService.getSpoonacularIngredient(ingred.ingredientId)
   // 			.subscribe(async result => {
   // 			console.log('ingredient result', result);
   // 			// chart out the newIngredient
   // 			const newIngredient: Ingredient = this.createNewIngredient(result);
   // 			// with each return create the ingredient in CookBook and add to the current ingredientList
   // 			console.log('newIngredient to be written', newIngredient);
-  // 			return await this.restIngredientService.createIngredient(newIngredient)
+  // 			return await this.ingredientService.createIngredient(newIngredient)
   // 				.subscribe(async returnedIngredient => {
   // 				return await this.restRecipeService
   // 				.updateSubRecipe(recipe._id, 'ingredientLists', ingred._id, {ingredientID: returnedIngredient._id})

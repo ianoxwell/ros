@@ -5,18 +5,18 @@ import { MatSelect } from '@angular/material/select';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IScrollPositions } from '@models/common.model';
 import { Conversion } from '@models/conversion';
-import { IIngredient } from '@models/ingredient/ingredient.model';
 import { IEditedField, IMeasurement } from '@models/ingredient/ingredient-model';
+import { IIngredient } from '@models/ingredient/ingredient.model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceAll, IReferenceItemFull } from '@models/reference.model';
 import { ValidationMessages } from '@models/static-variables';
 import { DialogService } from '@services/dialog.service';
 import { IngredientEditFormService } from '@services/ingredient-edit-form.service';
 import { MessageService } from '@services/message.service';
-import { RestIngredientService } from '@services/rest-ingredient.service';
 import { ScrollService } from '@services/scroll.service';
 import { of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IngredientService } from 'src/app/pages/ingredients/ingredient.service';
 
 @Component({
     selector: 'app-ingredient-edit',
@@ -73,7 +73,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
 
   constructor(
     private fb: UntypedFormBuilder,
-    private restIngredientService: RestIngredientService,
+    private ingredientService: IngredientService,
     private dialogService: DialogService,
     private messageService: MessageService,
     private ingredientEditFormService: IngredientEditFormService,
@@ -170,8 +170,8 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
       saveObject.allergies = [];
     }
     const ingredientAPI$ = this.isNew
-      ? this.restIngredientService.createIngredient(saveObject)
-      : this.restIngredientService.updateIngredient(this.selected.id as number, saveObject);
+      ? this.ingredientService.createIngredient(saveObject)
+      : this.ingredientService.updateIngredient(this.selected.id as number, saveObject);
     ingredientAPI$
       .pipe(
         tap((item: IIngredient) => {
@@ -198,7 +198,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
 
   refreshData() {
     console.log('get data online');
-    this.restIngredientService
+    this.ingredientService
       .getSpoonacularIngredient(this.linkUrl.value)
       .pipe(
         tap((returnItem) => console.log('not sure what to do yet', returnItem)),
@@ -246,7 +246,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
   }
 
   // createSubDocument(ingredientId: string, subDocumentName: string, subDocument: Price | Conversion) {
-  // 	this.restIngredientService.createSubDocument('ingredient', ingredientId, subDocumentName, subDocument).pipe(
+  // 	this.ingredientService.createSubDocument('ingredient', ingredientId, subDocumentName, subDocument).pipe(
   // 		tap((newSubIngredient: Ingredient) => {
   // 			// this.dataTableComponent.modifyIngredient(newSubIngredient, 'edit');
   // 		}),
@@ -274,7 +274,7 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
       .pipe(
         first(),
         filter((result: boolean) => !!result),
-        switchMap(() => this.restIngredientService.deleteItem(this.selected?.id as number)),
+        switchMap(() => this.ingredientService.deleteItem(this.selected?.id as number)),
         tap((deletedIngredient: IIngredient) => {
           console.log('Deleted Ingredient', deletedIngredient);
           // is there anyway to make this refresh the list?

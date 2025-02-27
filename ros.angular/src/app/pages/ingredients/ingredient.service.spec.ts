@@ -1,8 +1,8 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { RestIngredientService } from './rest-ingredient.service';
+import { IngredientService } from './ingredient.service';
 
-describe('RestIngredientService', () => {
+describe('ingredientService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
     imports: [],
@@ -11,7 +11,7 @@ describe('RestIngredientService', () => {
   );
 
   it('should be created', () => {
-    const service: RestIngredientService = TestBed.inject(RestIngredientService);
+    const service: IngredientService = TestBed.inject(IngredientService);
     expect(service).toBeTruthy();
   });
 });

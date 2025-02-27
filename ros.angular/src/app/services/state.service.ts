@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import {
   IIngredientFilterObject,
   IngredientFilterObject,
@@ -11,14 +12,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StateService {
-  private recipeFilterQuery$ = new BehaviorSubject<IRecipeFilterQuery>(new RecipeFilterQuery());
+  private recipeFilterQuery$ = new BehaviorSubject<IFilter>(CBlankFilter);
   private ingredientFilterQuery$ = new BehaviorSubject<IIngredientFilterObject>(new IngredientFilterObject());
 
-  getRecipeFilterQuery(): Observable<IRecipeFilterQuery> {
+  getRecipeFilterQuery(): Observable<IFilter> {
     return this.recipeFilterQuery$.asObservable();
   }
 
-  setRecipeFilterQuery(query: IRecipeFilterQuery): void {
+  setRecipeFilterQuery(query: IFilter): void {
     this.recipeFilterQuery$.next(query);
   }
 
