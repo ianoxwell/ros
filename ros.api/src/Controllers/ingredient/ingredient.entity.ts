@@ -71,7 +71,7 @@ export class Ingredient extends RosBaseEntity {
   @OneToMany(() => Conversion, (conversion) => conversion.ingredient, { cascade: true })
   conversions?: Conversion[];
 
-  @OneToMany(() => RecipeIngredient, (recipeIngredient) => recipeIngredient.ingredientId, { cascade: true })
+  @OneToMany(() => RecipeIngredient, (recipeIngredient) => recipeIngredient.ingredient, { cascade: true })
   recipeIngredientList: RecipeIngredient[];
 
   /** Nutrient breakdown - note nutrition is always 100 of base units (e.g. 100 grams, or 100 mls)*/
