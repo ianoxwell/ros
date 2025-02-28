@@ -28,7 +28,7 @@ export class RecipeSteppedInstruction extends RosBaseEntity {
   @JoinTable()
   ingredients: Ingredient[];
 
-  @OneToMany(() => EquipmentSteppedInstruction, (steppedEquip) => steppedEquip.recipeSteppedInstructionId, { cascade: true })
+  @OneToMany(() => EquipmentSteppedInstruction, (steppedEquip) => steppedEquip.recipeSteppedInstruction, { cascade: true })
   equipment: EquipmentSteppedInstruction[];
 
   @ManyToOne(() => Recipe, (recipe) => recipe.steppedInstructions, { onDelete: 'CASCADE' })

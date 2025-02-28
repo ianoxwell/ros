@@ -82,7 +82,7 @@ export class IngredientService {
 
   /** Given an array of ingredient id's return the ingredient */
   async getIngredientFromIdList(ingredientIds: number[]): Promise<Ingredient[]> {
-    return await this.repository.find({ where: { id: In(ingredientIds) } });
+    return await this.repository.find({ where: { id: In(ingredientIds) }, loadRelationIds: true });
   }
 
   /** Returns true IF the ingredient is NOT found. */
