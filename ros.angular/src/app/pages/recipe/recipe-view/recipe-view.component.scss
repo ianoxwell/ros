@@ -1,35 +1,57 @@
+@use '../../../styles/mixins.scss';
+
 article {
-	width: 80em;
-	margin-right: auto;
-	margin-left: auto;
+  max-width: 80em;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0 1.5rem;
 }
 
 .mat-list-item {
-    height: auto !important;   
+  height: auto !important;
+}
+
+.top-section {
+  display: flex;
+  flex-flow: column-reverse;
+  @include mixins.breakpoint(md) {
+    flex-flow: row;
+  }
+  .description-ingredients,
+  .image-stats {
+    @include mixins.breakpoint(md) {
+      width: 49%;
+    }
+  }
+  // .image-stats {
+
+  // }
+}
+.ingredient-list {
+	list-style: circle;
 }
 
 .w- {
-	&50 {
-		width: 49%;
-	}
-	&full {
-		width: 100%;
-	}
-	&7 {
-		min-width: 5em;
-	}
-	&40 {
-		width: 39%;
-	}
-
+  &50 {
+    width: 49%;
+  }
+  &full {
+    width: 100%;
+  }
+  &7 {
+    min-width: 5em;
+  }
+  &40 {
+    width: 39%;
+  }
 }
 
 .recipe-descriptions > * {
-	padding-right: 1em;
+  padding-right: 1em;
 }
 
 img.w-full {
-	border-radius: 4px;
-	padding: 4px;
-	border: 1px solid #333;
+  border-radius: 4px;
+  padding: 4px;
+  border: 1px solid #333;
 }

@@ -3,7 +3,7 @@
     <!-- Order/sort by -->
     <mat-form-field>
       <mat-label>Sort By</mat-label>
-      <mat-select formControlName="orderby">
+      <mat-select formControlName="sort">
         @for (item of orderRecipesBy; track item) {
           <mat-option [value]="item.value">
             {{ item.key }}

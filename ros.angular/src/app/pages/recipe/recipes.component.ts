@@ -37,7 +37,6 @@ export class RecipesComponent extends ComponentBase implements OnInit {
   selectedIndex = 0;
   selectedRecipeId: number | undefined;
 
-  selectedTab = 0; // controls the selectedIndex of the mat-tab-group
   isNew = true; // edit or new ingredient;
 
   currentPath: string | undefined = '';
@@ -48,7 +47,6 @@ export class RecipesComponent extends ComponentBase implements OnInit {
   constructor(
     private recipeService: RecipeService,
     private route: ActivatedRoute,
-    private location: Location,
     private userProfileService: UserProfileService,
     private dialogService: DialogService,
     private stateService: StateService,
@@ -61,7 +59,13 @@ export class RecipesComponent extends ComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userProfileService.getUserProfile().subscribe((profile) => (this.cookBookUserProfile = profile));
+    this.userProfileService
+      .getUserProfile()
+      .pipe(
+        tap((profile) => (this.cookBookUserProfile = profile)),
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe();
     this.routeParamSubscribe().subscribe();
     this.listenFilterQueryChanges().subscribe();
   }
@@ -79,11 +83,21 @@ export class RecipesComponent extends ComponentBase implements OnInit {
 
   routeParamSubscribe(): Observable<null | IRecipe> {
     return this.route.params.pipe(
-      filter((params) => params.recipeId),
+      filter((params) => {
+        if (!params.recipeId) {
+          this.selectedRecipeId = undefined;
+          this.selectedRecipe = undefined;
+        }
+
+        return params.recipeId;
+      }),
       switchMap((params) => {
         this.currentPath = this.route.snapshot.routeConfig?.path;
-        console.log('route param', params, this.currentPath);
-        return this.loadRecipeSelect(Number(params.recipeId));
+        if (!this.selectedRecipeId) {
+          this.selectedRecipeId = Number(params.recipeId);
+        }
+
+        return this.loadRecipeSelect(this.selectedRecipeId);
       }),
       takeUntil(this.ngUnsubscribe)
     );
@@ -122,8 +136,8 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       this.selectedIndex++;
     }
 
-    this.selectedRecipeId = this.recipes[this.selectedIndex].id;
-    this.navigationService.navigateToUrl(`savoury/recipes/item/${this.selectedRecipeId}`);
+    this.selectThisRecipe(this.recipes[this.selectedIndex]);
+    // todo navigate to new url
   }
 
   onFilterChange(ev: RecipeFilterQuery) {
@@ -160,21 +174,12 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     console.log('new maybe', action);
   }
 
-  selectThisRecipe(recipe: IRecipeShort, i: number) {
-    this.changeTab(1);
+  selectThisRecipe(recipe: IRecipeShort) {
     this.selectedRecipeId = recipe.id;
-    this.selectedIndex = i;
-
-    this.loadRecipeSelect(this.selectedRecipeId);
+    this.navigationService.navigateToUrl(`savoury/recipes/item/${this.selectedRecipeId}`);
   }
 
-  changeTab(event: any) {
-    this.selectedTab = event;
-    if (this.selectedTab === 0) {
-      this.selectedRecipe = undefined;
-      this.navigationService.navigateToUrl(CRouteList.recipes);
-    } else if (!!this.selectedRecipe) {
-      this.navigationService.navigateToUrl(`${CRouteList.recipe}/${this.selectedRecipe.id}`);
-    }
+  backToRecipeView() {
+    this.navigationService.navigateToUrl(`${CRouteList.recipes}`);
   }
 }

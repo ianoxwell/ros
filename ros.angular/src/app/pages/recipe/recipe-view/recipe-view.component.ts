@@ -14,7 +14,7 @@ export class RecipeViewComponent implements OnInit {
   @Input({ required: true }) selectedRecipe!: IRecipe;
   @Input() measurements: IMeasurement[] = [];
 
-  constructor(private sentenceCase: SentenceCasePipe) {}
+  constructor() {}
 
   ngOnInit() {
     console.log('recipe view', this.selectedRecipe);
@@ -25,22 +25,4 @@ export class RecipeViewComponent implements OnInit {
     console.log('go and print');
   }
 
-  englishIngredientItem(ingredient: IRecipeIngredient): string {
-    const unit = ingredient.measurementUnit?.title;
-    if (!unit) {
-      console.log('no unit', ingredient);
-    }
-    // TODO re-establish the below
-    // if (unit.length < 5 || unit === 'tbsps') {
-    // 	const newUnit = this.measurements.find(measure => (measure.shortName === unit || measure.altShortName === unit));
-    // 	if (!!newUnit) {
-    // 		unit = newUnit.title;
-    // 	}
-    // }
-    return `${ingredient.quantity} ${unit} ${this.sentenceCase.transform(ingredient.ingredient?.name)}`;
-  }
-
-  routerLinkURL(ingredient: IRecipeIngredient): string {
-    return `/savoury/ingredients/item/${ingredient.ingredientId}`;
-  }
 }
