@@ -1,26 +1,38 @@
 @use '../../styles/mixins.scss';
 
-.container{
-    margin: 20px;
-    padding: 0 ;
-  }
+.action-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
 
-  .filter-side-bar {
-    max-width: 250px;
+.recipes-view {
+	display: flex;
+	flex-direction: row;
+}
+.container {
+  margin-left: 1rem;
+  padding: 0;
+}
+
+.filter-side-bar {
+  max-width: 16rem;
+}
+.grid-parent {
+  @include mixins.display-grid;
+  @include mixins.flex-grow(1);
+  @include mixins.grid-template-columns(repeat(1, 99%));
+
+  @include mixins.breakpoint(md) {
+    @include mixins.grid-template-columns(repeat(2, 49.5%));
   }
-  .grid-parent {
-	@include mixins.display-grid;
-	@include mixins.flex-grow(1);
-	@include mixins.breakpoint(xs) {
-		@include mixins.grid-template-columns(repeat(1,100%));
-	}
-	@include mixins.breakpoint(sm) {
-		@include mixins.grid-template-columns(repeat(2,49%));
-	}
-	@include mixins.breakpoint(md) {
-		@include mixins.grid-template-columns(repeat(3,32%));
-	}
-	@include mixins.breakpoint(lg) {
-		@include mixins.grid-template-columns(repeat(4,24%));
-	}
+  @include mixins.breakpoint(lg) {
+    @include mixins.grid-template-columns(repeat(4, 24.5%));
   }
+  @include mixins.breakpoint(xl) {
+    @include mixins.grid-template-columns(repeat(5, 19.75%));
+  }
+}

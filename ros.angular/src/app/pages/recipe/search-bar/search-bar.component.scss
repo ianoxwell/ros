@@ -1,16 +1,27 @@
+form {
+  max-width: 100%;
+  padding: 0 0 0 1rem;
+}
 .refine-text {
-	font-weight: 400;
-	font-size: 1rem;
+  font-weight: 400;
+  font-size: 1rem;
 }
-.clear-all-text{
-	font-weight: 200;
-	font-size: 0.7rem;
+.refines-section {
+  mat-form-field {
+    margin-bottom: 1rem;
+  }
+}
+.clear-all-text {
+  font-weight: 200;
+  font-size: 0.7rem;
 }
 
-
-.w-14em {
-	width: 14em;
+mat-form-field,
+mat-toolbar {
+  width: 100%;
 }
-mat-paginator {
-	margin-left: -1rem;
+
+mat-toolbar {
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }

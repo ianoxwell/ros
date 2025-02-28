@@ -1,27 +1,44 @@
 @if (filterQuery) {
   <form [formGroup]="searchForm">
-    <div>
-      <mat-form-field class="ml-2 w-14em">
-        <mat-label>Sort By</mat-label>
-        <mat-select formControlName="orderby">
-          @for (item of orderRecipesBy; track item) {
-            <mat-option [value]="item.value">
-              {{ item.key }}
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-toolbar class="flex-justify-space-between">
-        <span class="refine-text">Refine</span>
-        <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
-          <span class="clear-all-text">Clear all</span>
-        </button>
-      </mat-toolbar>
-      <mat-form-field class="ml-2 mt-1 w-14em">
+    <!-- Order/sort by -->
+    <mat-form-field>
+      <mat-label>Sort By</mat-label>
+      <mat-select formControlName="orderby">
+        @for (item of orderRecipesBy; track item) {
+          <mat-option [value]="item.value">
+            {{ item.key }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <!-- Refine section -->
+    <mat-toolbar>
+      <span class="refine-text">Refine</span>
+      <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
+        <span class="clear-all-text">Clear all</span>
+      </button>
+    </mat-toolbar>
+    <div class="refine-section">
+      <mat-form-field>
         <!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
         <input matInput type="text" placeholder="Name" Title="Name" formControlName="keyword" />
       </mat-form-field>
-      <!-- <mat-form-field class="ml-2">
+
+      <app-paginator
+        class="bottom-sticky"
+        class="recipe-filter-paginator"
+        [length]="dataLength"
+        [horizontalLayout]="false"
+        [pageSize]="filterQuery.take"
+        [pageIndex]="filterQuery.page"
+        [showFirstLastButtons]="true"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="pageChange($event)"
+      >
+      </app-paginator>
+    </div>
+
+    <!-- <mat-form-field class="ml-2">
 		<mat-icon matPrefix class="pr-1">beach_access</mat-icon>
 		<input matInput type="text" placeholder="Ingredient" Title="Ingredient" formControlName="ingredient" >
 		</mat-form-field>
@@ -29,7 +46,6 @@
 		<mat-icon matPrefix class="pr-1">person</mat-icon>
 		<input matInput type="text" placeholder="Author" Title="Author" formControlName="author" >
 		</mat-form-field> -->
-    </div>
     <div class="ml-2">
       <!-- <div>
         <label>Cooking Time </label>
@@ -61,18 +77,7 @@
 			</mat-option>
 			</mat-select>
 		</mat-form-field> -->
-      <app-paginator
-        class="bottom-sticky"
-        class="recipe-filter-paginator"
-        [length]="dataLength"
-        [horizontalLayout]="false"
-        [pageSize]="filterQuery.take"
-        [pageIndex]="filterQuery.page"
-        [showFirstLastButtons]="true"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="pageChange($event)"
-      >
-      </app-paginator>
+
       <div>&nbsp;</div>
     </div>
   </form>

@@ -1,7 +1,7 @@
-<app-page-title></app-page-title>
-<!-- action bar -->
+<!-- <app-page-title></app-page-title> -->
 <div class="mt-2 mb-2">
-  <div class="flex-box flex-justify-space-between mt-2 mb-2 pl-2 pr-2">
+  <!-- action bar -->
+  <div class="action-bar">
     <span class="ml-12"></span>
     @if (selectedTab === 1 && !!selectedRecipe) {
       <span>
@@ -44,17 +44,14 @@
   </div>
   <mat-tab-group dynamicHeight="true" [selectedIndex]="selectedTab" class="ingredients-list-tabs">
     <mat-tab>
-      <div class="flex-box flex-row mt-1">
+      <div class="recipes-view">
         <div class="filter-side-bar">
           <app-search-bar [filterQuery]="filterQuery" [dataLength]="dataLength"></app-search-bar>
         </div>
         @if (!isLoading) {
-          <div class="container mt-1 grid-parent">
+          <div class="container grid-parent">
             @for (recipe of recipes; track recipe; let i = $index) {
-              <div class="recipeCard">
-                <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event, i)">
-                </app-recipe-card>
-              </div>
+              <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event, i)"> </app-recipe-card>
             }
             @if (recipes.length === 0) {
               <div>Sorry I can't find any recipes that match the filters</div>
