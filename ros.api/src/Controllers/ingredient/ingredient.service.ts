@@ -313,7 +313,7 @@ export class IngredientService {
   }
 
   private findMeasure(id: number, measures: Measurement[]): Measurement {
-    return measures.find((m: Measurement) => m.id === id);
+    return measures.find((m: Measurement) => m.id === id) || measures[0];
   }
 
   private mapMeasurementToIMeasurement(measure: Measurement): IMeasurement {
