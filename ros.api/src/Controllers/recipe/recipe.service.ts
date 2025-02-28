@@ -148,11 +148,8 @@ export class RecipeService {
       })
     );
 
-    const ingredients: Ingredient[] = await Promise.all(
-      (getRecipe.ingredients as unknown as number[]).map(async (id: number) => {
-        return await this.ingredientService.getIngredientByIdForRecipe(id);
-      })
-    );
+    const ingredientIds = (getRecipe.ingredients as unknown as number[]).map((il) => il);
+    const ingredients = await this.ingredientService.getIngredientFromIdList(ingredientIds);
 
     const steppedInstructions: RecipeSteppedInstruction[] = await this.steppedInstructionRepository.find({
       where: { recipeId: id },
@@ -161,7 +158,8 @@ export class RecipeService {
           equipment: true
         },
         ingredients: true
-      }
+      },
+      order: { stepNumber: EOrder.ASC }
     });
 
     const ingredientList: RecipeIngredient[] = await this.recipeIngredientRepository.find({
@@ -412,14 +410,20 @@ export class RecipeService {
       equipment,
       diets,
       ingredients,
-      ingredientList: r.ingredientList.map((iL) => this.mapRecipeIngredientDtoToRecipeIngredient(recipe, iL, measures)),
+      ingredientList: r.ingredientList.map((iL) => this.mapRecipeIngredientDtoToRecipeIngredient(recipe, iL, ingredients, measures)),
       steppedInstructions: r.steppedInstructions.map((si) => this.mapSteppedInstructionsDtoToEntity(recipe, si, ingredients, equipment))
     };
     return recipe;
   }
 
-  private mapRecipeIngredientDtoToRecipeIngredient(recipe: Recipe, ri: IRecipeIngredient, measures: Measurement[]): RecipeIngredient {
+  private mapRecipeIngredientDtoToRecipeIngredient(
+    recipe: Recipe,
+    ri: IRecipeIngredient,
+    ingredients: Ingredient[],
+    measures: Measurement[]
+  ): RecipeIngredient {
     const measure = measures.find((m) => m.id === ri.measure.id);
+    const ingredient = ingredients.find((i) => i.id === ri.ingredientId);
     return {
       id: ri.id,
       amount: ri.amount,
@@ -427,6 +431,7 @@ export class RecipeService {
       meta: ri.meta,
       recipeId: recipe.id,
       ingredientId: ri.ingredientId,
+      ingredient,
       measure,
       recipe,
       measureId: measure.id
@@ -449,7 +454,7 @@ export class RecipeService {
       lengthTimeUnit: si.lengthTimeUnit,
       recipe,
       recipeId: recipe.id,
-      equipment: si.equipment.map((e) => this.mapEquipmentSteppedInstructionToEntity(recipeSteppedInstruction.id, e, equipments)),
+      equipment: si.equipment.map((e) => this.mapEquipmentSteppedInstructionToEntity(recipeSteppedInstruction, e, equipments)),
       ingredients: recipeIngredients.filter((i) => stepIngredientIds.includes(i.id))
     };
 
@@ -457,13 +462,14 @@ export class RecipeService {
   }
 
   private mapEquipmentSteppedInstructionToEntity(
-    recipeSteppedInstructionId: number,
+    recipeSteppedInstruction: RecipeSteppedInstruction,
     e: IEquipmentSteppedInstruction,
     equipments: Equipment[]
   ): EquipmentSteppedInstruction {
     return {
       equipment: equipments.find((eq) => eq.id === e.equipmentId),
-      recipeSteppedInstructionId,
+      recipeSteppedInstruction,
+      recipeSteppedInstructionId: recipeSteppedInstruction.id,
       temperature: e.temperature,
       temperatureUnit: e.temperatureUnit
     };
