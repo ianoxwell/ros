@@ -1,14 +1,14 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ComponentBase } from '@components/base/base.component.base';
 import { EOrder } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { RecipeFilterQuery } from '@models/filter-queries.model';
 import { IReferenceItemFull } from '@models/reference.model';
 import { OrderRecipesBy } from '@models/static-variables';
 import { ReferenceService } from '@services/reference.service';
 import { StateService } from '@services/state.service';
+import { firstValueFrom } from 'rxjs';
 import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
@@ -18,9 +18,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./search-bar.component.scss'],
   standalone: false
 })
-export class SearchBarComponent extends ComponentBase implements OnInit, OnChanges {
-  searchForm: UntypedFormGroup;
-  @Input() filterQuery: IFilter = CBlankFilter;
+export class SearchBarComponent extends ComponentBase implements OnInit {
+  searchForm: UntypedFormGroup | undefined;
+  filterQuery: IFilter = CBlankFilter;
   @Input() dataLength = 0;
   orderRecipesBy = OrderRecipesBy;
   allergies: IReferenceItemFull[];
@@ -31,11 +31,13 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
     private stateService: StateService
   ) {
     super();
-    this.searchForm = this.createForm();
+
     this.allergies = this.referenceService.getAllReferences().AllergyWarning || [];
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    const getExistingForm = await firstValueFrom(this.stateService.getRecipeFilterQuery());
+    this.searchForm = this.createForm(getExistingForm);
     this.listenToFormChanges();
   }
 
@@ -43,10 +45,10 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
    * Listens to form changes to trigger changes in the recipe Filter State, debounced for keystrokes.
    */
   listenToFormChanges(): void {
-    this.searchForm.valueChanges
+    this.searchForm?.valueChanges
       .pipe(
         debounceTime(500),
-        tap((values: RecipeFilterQuery) => this.changeRecipeFilterState(values)),
+        tap((values: IFilter) => this.changeRecipeFilterState(values)),
         takeUntil(this.ngUnsubscribe)
       )
       .subscribe();
@@ -56,27 +58,12 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
    * Updates the filterQuery along with the recipeFilterQuery in stateService.
    * @param values from the form change.
    */
-  changeRecipeFilterState(values: RecipeFilterQuery): void {
-    // Object.keys(this.searchForm.getRawValue()).forEach((key) => {
-    // 	if (values[key]) {
-    // 		this.filterQuery[key] = values[key];
-    // 	}
-    // });
+  changeRecipeFilterState(values: IFilter): void {
+    this.filterQuery = values;
     this.filterQuery.page = 0;
-    console.log('new value', values, this.filterQuery);
     this.stateService.setRecipeFilterQuery(this.filterQuery);
   }
 
-  // TODO: change to a getter/setter pattern.
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.filterQuery) {
-      return;
-    }
-
-    if (!!changes.filterQuery && changes.filterQuery.firstChange) {
-      this.patchForm(this.filterQuery);
-    }
-  }
 
   // triggers from the MatPaginator - emits the filterQuery object
   pageChange(ev: PageEvent): void {
@@ -102,6 +89,11 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
     if (!item) {
       item = CBlankFilter;
     }
+
+    if (!this.searchForm) {
+      this.searchForm = this.createForm(CBlankFilter);
+    }
+
     this.searchForm.patchValue({
       ...item
       // keyword: item.keyword,
@@ -122,19 +114,19 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
   }
 
   get totalTime(): UntypedFormControl {
-    return this.searchForm.get('totalTime') as UntypedFormControl;
+    return this.searchForm?.get('totalTime') as UntypedFormControl;
   }
   get servingPrice(): UntypedFormControl {
-    return this.searchForm.get('servingPrice') as UntypedFormControl;
+    return this.searchForm?.get('servingPrice') as UntypedFormControl;
   }
 
   /**
    * Creates the initial form with blank values.
    * @returns the initial blank form.
    */
-  createForm(): UntypedFormGroup {
+  createForm(existingForm: IFilter): UntypedFormGroup {
     return this.fb.group({
-      keyword: '',
+      keyword: existingForm.keyword || '',
       // ingredient: '',
       // author: '',
       // totalTime: 0,
@@ -145,10 +137,10 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
       // healthLabels: [],
       // cuisineType: [],
       // allergyWarning: [], // { "allergyWarnings": { "$not": { "$all": [allergyWarning] } } }
-      order: EOrder.ASC,
-      sort: 'name',
-      take: environment.resultsPerPage,
-      page: 0
+      order: existingForm.order || EOrder.ASC,
+      sort: existingForm.sort || 'name',
+      take: existingForm.take || environment.resultsPerPage,
+      page: existingForm.page || 0
     });
   }
 
@@ -156,15 +148,8 @@ export class SearchBarComponent extends ComponentBase implements OnInit, OnChang
    * Triggered from the template - clears out the filter terms and resets the form.
    */
   clearFilterTerms(): void {
-    this.searchForm.reset();
-    this.searchForm.patchValue({
-      orderby: 'name',
-      perPage: environment.resultsPerPage,
-      page: 0
-    });
-    this.filterQuery = this.searchForm.getRawValue();
-    if (!!this.filterQuery) {
-      this.stateService.setRecipeFilterQuery(this.filterQuery);
-    }
+    this.searchForm = this.createForm(CBlankFilter);
+    this.filterQuery = CBlankFilter;
+    this.stateService.setRecipeFilterQuery(this.filterQuery);
   }
 }
