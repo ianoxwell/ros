@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { CPurchasedBy, IIngredient } from '@models/ingredient/ingredient.model';
+import { IIngredient } from '@DomainModels/ingredient.dto';
+import { CPurchasedBy } from '@models/ingredient/ingredient.model';
 import { IReferenceAll } from '@models/reference.model';
 import { ValidationMessages } from '@models/static-variables';
 import { DialogService } from '@services/dialog.service';

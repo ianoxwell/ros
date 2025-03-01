@@ -3,10 +3,9 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { ComponentBase } from '@components/base/base.component.base';
+import { IIngredient } from '@DomainModels/ingredient.dto';
 import { IScrollPositions } from '@models/common.model';
-import { Conversion } from '@models/conversion';
 import { IEditedField, IMeasurement } from '@models/ingredient/ingredient-model';
-import { IIngredient } from '@models/ingredient/ingredient.model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceAll, IReferenceItemFull } from '@models/reference.model';
 import { ValidationMessages } from '@models/static-variables';
@@ -154,16 +153,16 @@ export class IngredientEditComponent extends ComponentBase implements OnInit {
       ...formRaw
     };
     saveObject.allergies = formRaw.allergies.map((id: number) => findReference(id, 'AllergyWarning'));
-    saveObject.foodGroup = findReference(formRaw.foodGroup, 'IngredientFoodGroup');
-    saveObject.ingredientConversions = saveObject.ingredientConversions?.map((convert: Conversion) => {
-      return {
-        ...convert,
-        baseMeasurementUnit: findMeasurement(Number(convert.baseMeasurementUnit)),
-        baseState: findReference(Number(convert.baseState), 'IngredientState'),
-        convertToMeasurementUnit: findMeasurement(Number(convert.convertToMeasurementUnit)),
-        convertToState: findReference(Number(convert.convertToState), 'IngredientState')
-      };
-    });
+    // saveObject.foodGroup = findReference(formRaw.foodGroup, 'IngredientFoodGroup');
+    // saveObject.ingredientConversions = saveObject.ingredientConversions?.map((convert: Conversion) => {
+    //   return {
+    //     ...convert,
+    //     baseMeasurementUnit: findMeasurement(Number(convert.baseMeasurementUnit)),
+    //     baseState: findReference(Number(convert.baseState), 'IngredientState'),
+    //     convertToMeasurementUnit: findMeasurement(Number(convert.convertToMeasurementUnit)),
+    //     convertToState: findReference(Number(convert.convertToState), 'IngredientState')
+    //   };
+    // });
     console.log('ingredient form', this.ingredientForm.getRawValue(), this.selected, saveObject);
     // getRawValue evaluates arrays as null if the array is empty
     if (!saveObject.allergies) {

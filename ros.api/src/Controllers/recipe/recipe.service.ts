@@ -74,7 +74,6 @@ export class RecipeService {
 
   /** Filter ingredients and paginate the results. */
   async getRecipes(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
-    console.log('page options', pageOptionsDto, pageOptionsDto.keyword);
     const [result, itemCount] = await this.repository.findAndCount({
       where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`) },
       order: { name: pageOptionsDto.order || EOrder.DESC },

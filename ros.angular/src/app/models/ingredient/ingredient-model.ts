@@ -20,13 +20,8 @@ export interface IEditedField {
   subId?: string;
 }
 export interface IPrice {
-  brandName: string;
-  price: number;
-  quantity: number;
-  measurement: string;
-  storeName: string;
-  lastChecked: number;
-  apiLink: string;
+  value: number;
+  unit: string;
 }
 
 export interface ICommonMinerals {

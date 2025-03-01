@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComponentBase } from '@components/base/base.component.base';
-import { IIngredient } from '@models/ingredient/ingredient.model';
+import { IIngredient } from '@DomainModels/ingredient.dto';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceItemFull } from '@models/reference.model';
@@ -15,7 +15,10 @@ import { DialogNewIngredientComponent } from '../dialogs/dialog-new-ingredient/d
   providedIn: 'root'
 })
 export class DialogService extends ComponentBase {
-  constructor(private dialog: MatDialog, private matSnackBar: MatSnackBar) {
+  constructor(
+    private dialog: MatDialog,
+    private matSnackBar: MatSnackBar
+  ) {
     super();
   }
 

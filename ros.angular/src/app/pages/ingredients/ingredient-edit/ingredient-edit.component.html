@@ -2,7 +2,7 @@
   <div class="flex-box flex-column">
     @if (!!ingredientForm) {
       <form [formGroup]="ingredientForm" fxLayout="column" class="p-3" style="overflow-y: auto">
-        <section>
+        <!-- <section>
           <div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
             <h3>Basic Details</h3>
           </div>
@@ -35,9 +35,9 @@
             >
             </app-ingredient-prices-form>
           }
-        </section>
+        </section> -->
 
-        <section class="mt-2 mb-2">
+        <!-- <section class="mt-2 mb-2">
           <div class="flex-box flex-justify-space-between background-bar-light-grey pt-2 pl-2 accent-left mb-2">
             <div class="flex-box flex-row flex-align-center">
               <h3>Conversions</h3>
@@ -75,8 +75,8 @@
               </div>
             }
           </div>
-        </section>
-        <section class="mt-2 mb-2">
+        </section> -->
+        <!-- <section class="mt-2 mb-2">
           <div class="flex-box flex-row flex-align-center background-bar-light-grey pt-2 pl-2 accent-left mb-2">
             <h3>Common Vitamins</h3>
             <span class="ml-2 text-muted mb-2">Serving Size - 100grams (100g)</span>
@@ -91,9 +91,9 @@
           </div>
           <app-edit-common-minerals [form]="commonMinerals" (markAsDirty)="commonMinerals.markAsDirty()">
           </app-edit-common-minerals>
-        </section>
+        </section> -->
         <!-- Recipes with this ingredient -->
-        @if (!isNew) {
+        <!-- @if (!isNew) {
           <section class="mt-2 mb-2">
             <h3>Recipes this ingredient is used in: {{ singleIngredient.recipes?.length }}</h3>
             @for (recipe of singleIngredient.recipes; track recipe) {
@@ -101,9 +101,7 @@
                 <span>
                   <a class="recipe-link" [routerLink]="'/savoury/recipes/item/' + recipe.id">{{ recipe.name }}</a>
                 </span>
-                <!-- <span class="ml-2" *ngFor="let recipeType of recipe.recipeType">
-					{{recipeType | sentenceCase}}
-				</span> -->
+
               </div>
             }
           </section>
@@ -113,7 +111,7 @@
             <span>Created: {{ selected.createdAt | date }}</span>
             <span class="ml-2">Last Modified: {{ selected.updatedAt | date }}</span>
           </div>
-        }
+        } -->
       </form>
     }
     <div class="bottom-fixed w-100">
