@@ -11,7 +11,7 @@ import { IIngredient } from 'Models/ingredient.dto';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
 import { IRecipeSteppedInstruction } from 'Models/recipe-stepped-instructions.dto';
 import { IRecipe, IRecipeShort, THealthBooleanLabels } from 'Models/recipe.dto';
-import { ILike, Like, Repository } from 'typeorm';
+import { ILike, Like, Raw, Repository } from 'typeorm';
 import { CIngredientShort } from '../ingredient/ingredient-short.dto';
 import { Ingredient } from '../ingredient/ingredient.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
@@ -76,7 +76,7 @@ export class RecipeService {
   async getRecipes(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
     console.log('page options', pageOptionsDto, pageOptionsDto.keyword);
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Like(`%${pageOptionsDto.keyword}%`) },
+      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`) },
       order: { name: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
       skip: pageOptionsDto.skip
