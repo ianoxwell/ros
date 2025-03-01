@@ -25,6 +25,8 @@ import { IngredientsComponent } from './ingredients.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GraphDoughnutComponent } from '@components/graph-doughnut/graph-doughnut.component';
 import { ToTitleCasePipe } from '@pipes/title-case.pipe';
+import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
+import { PaginatorComponent } from '@components/paginator/paginator.component';
 
 @NgModule({
   imports: [
@@ -43,7 +45,9 @@ import { ToTitleCasePipe } from '@pipes/title-case.pipe';
     MatSelectModule,
     MatSortModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
+    SentenceCasePipe,
+    PaginatorComponent
   ],
   declarations: [
     IngredientsComponent,

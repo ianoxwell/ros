@@ -41,7 +41,7 @@
         <app-ingredient-filter [refData]="refData"></app-ingredient-filter>
         <app-ingredient-table
           [data]="data"
-          [sortPageObj]="sortPageObj"
+          [filter]="filterObject"
           (sortingPageChange)="sortPageChange($event)"
           (editRow)="createOrEdit('edit', $event)"
         >
@@ -62,6 +62,8 @@
       </mat-tab>
     </mat-tab-group>
   } @else {
-    <app-loading-indicator></app-loading-indicator>
+    <div class="loading-wrapper">
+      <app-loading-indicator></app-loading-indicator>
+    </div>
   }
 }

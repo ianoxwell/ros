@@ -3,28 +3,28 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CBlankPagedMeta, ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
-import { IIngredientFilterObject, IngredientFilterObject } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
-import { IIngredient } from '@models/ingredient/ingredient.model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceAll } from '@models/reference.model';
 import { DialogService } from '@services/dialog.service';
 import { ReferenceService } from '@services/reference.service';
 // import {ConversionModel, EditedFieldModel, IngredientModel, PriceModel} from '../models/ingredient-model';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
+import { IIngredient } from '@DomainModels/ingredient.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
-import { combineLatest, Observable, of } from 'rxjs';
-import { catchError, first, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, first, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IngredientService } from 'src/app/pages/ingredients/ingredient.service';
 import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 import { ComponentBase } from '../../components/base/base.component.base';
 
 @Component({
-    selector: 'app-ingredients',
-    templateUrl: './ingredients.component.html',
-    styleUrls: ['./ingredients.component.scss'],
-    standalone: false
+  selector: 'app-ingredients',
+  templateUrl: './ingredients.component.html',
+  styleUrls: ['./ingredients.component.scss'],
+  standalone: false
 })
 export class IngredientsComponent extends ComponentBase implements OnInit {
   selectedIngredient$: Observable<IIngredient> | undefined;
@@ -32,12 +32,13 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   isNew = true; // edit or new ingredient;
   cookBookUserProfile$: Observable<IUserSummary | null>;
   currentPath: string | undefined = '';
-  filterObject: IIngredientFilterObject = new IngredientFilterObject();
+  filterObject: IFilter = CBlankFilter;
+  /** !Temp - is this nEEDED? */
   sortPageObj: SortPageObj = new SortPageObj();
   data$: Observable<PagedResult<IIngredient>>;
   isLoading = false;
-  refData: IReferenceAll | undefined;
-  measurements: IMeasurement[] = [];
+  refData: IReferenceAll;
+  measurements: IMeasurement[];
 
   constructor(
     private ingredientService: IngredientService,
@@ -50,15 +51,13 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
     private stateService: StateService
   ) {
     super();
-    this.data$ = this.listenStateService();
+    this.data$ = this.listenFilterQueryChanges();
     this.cookBookUserProfile$ = this.userProfileService.getUserProfile();
     this.refData = this.referenceService.getAllReferences();
     this.measurements = this.referenceService.getMeasurements();
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 
   routeParamSubscribe(): Observable<number> {
     return this.route.params.pipe(
@@ -68,7 +67,6 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
         if (params.ingredientId) {
           this.selectedIngredient$ = this.getSingleIngredient(params.ingredientId);
         }
-        this.listenStateService();
         return params.ingredientId || 0;
       })
     );
@@ -77,11 +75,12 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   /**
    * Listens to the stateService ingredient filter and updates the data in the table on change.
    */
-  listenStateService(): Observable<PagedResult<IIngredient>> {
+  listenFilterQueryChanges(): Observable<PagedResult<IIngredient>> {
     return this.stateService.getIngredientFilterQuery().pipe(
-      switchMap((ingredientFilterObj: IIngredientFilterObject) => {
+      switchMap((ingredientFilterObj: IFilter) => {
+        console.log('heard a change in the filter obj', ingredientFilterObj);
         this.filterObject = ingredientFilterObj;
-        this.sortPageObj = this.sortPageObj.update(this.filterObject);
+        // this.sortPageObj = this.sortPageObj.update(this.filterObject);
         return this.getIngredientList();
       })
     );
@@ -117,19 +116,21 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
     );
   }
 
-  sortPageChange(pageEvent: ISortPageObj) {
+  sortPageChange(pageEvent: IFilter) {
     console.log('there was a sortPage Change heard in ingredients', pageEvent);
-    this.stateService.setIngredientFilterQuery({ ...this.filterObject, ...pageEvent });
-    this.sortPageObj = this.sortPageObj.update(this.filterObject);
+    this.stateService.setIngredientFilterQuery(pageEvent);
+    // this.stateService.setIngredientFilterQuery({ ...this.filterObject, ...pageEvent });
+    // this.sortPageObj = this.sortPageObj.update(this.filterObject);
   }
   changeTab(event: any) {
-    this.selectedTab = event;
-    this.filterObject.tabNumber = event;
-    if (this.selectedTab === 0) {
-      this.selectedIngredient$ = undefined;
-      this.location.replaceState('/savoury/ingredients');
-    }
-    this.stateService.setIngredientFilterQuery(this.filterObject);
+    console.log('get rid of tabs thanks');
+    // this.selectedTab = event;
+    // this.filterObject.tabNumber = event;
+    // if (this.selectedTab === 0) {
+    //   this.selectedIngredient$ = undefined;
+    //   this.location.replaceState('/savoury/ingredients');
+    // }
+    // this.stateService.setIngredientFilterQuery(this.filterObject);
   }
   createOrEdit(editOrNew: string, row?: IIngredient) {
     console.log('CreateOrEdit', editOrNew, row);
@@ -138,12 +139,12 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
       this.dialogService
         .newIngredientDialog(this.refData.IngredientFoodGroup, this.measurements, this.refData.IngredientState)
         .pipe(
-          first(),
+          take(1),
           switchMap((result: IIngredient) => this.ingredientService.createIngredient(result)),
           tap((savedResult: IIngredient) => {
             this.isNew = false; // ingredient is no longer "new"
             this.selectedIngredient$ = of(savedResult);
-            this.changeTab(1);
+            // this.changeTab(1);
           })
         )
         .subscribe();

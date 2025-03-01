@@ -1,42 +1,65 @@
-<div class="responsive-table flex-box flex-column mat-elevation-z8">
+<div class="responsive-table">
   <table
     mat-table
     [dataSource]="dataSource"
     matSort
-    [matSortActive]="sortPageObj.orderby"
+    [matSortActive]="filter.sort || 'name'"
     matSortDisableClear
-    [matSortDirection]="sortPageObj.order"
+    [matSortDirection]="sortDirection"
     aria-label="Ingredients"
     (matSortChange)="onSortChange($event)"
   >
     <!-- name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.name | sentenceCase }}</td>
     </ng-container>
 
-    <!-- Parent / type Column -->
-    <ng-container matColumnDef="foodGroup">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Food Group</th>
-      <td mat-cell *matCellDef="let row">{{ row.foodGroup.title }}</td>
+    <!-- estimatedCost Column -->
+    <!-- <ng-container matColumnDef="estimatedCost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estimated Cost</th>
+      <td mat-cell *matCellDef="let row">{{ row.estimatedCost.value }} {{ row.estimatedCost.unit }}</td>
+    </ng-container> -->
+
+    <!-- <ng-container matColumnDef="purchasedBy">
+      <th mat-header-cell *matHeaderCellDef>Purchased By</th>
+      <td mat-cell *matCellDef="let row">{{ purchasedBy[row.purchasedBy] }}</td>
+    </ng-container> -->
+
+    <ng-container matColumnDef="aisle">
+      <th mat-header-cell *matHeaderCellDef>Aisle</th>
+      <td mat-cell *matCellDef="let row">{{ row.aisle }}</td>
+    </ng-container>
+
+    <!-- name Column -->
+    <ng-container matColumnDef="carbs">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Carbs</th>
+      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentCarbs }}%</td>
+    </ng-container>
+
+    <!-- name Column -->
+    <ng-container matColumnDef="fats">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fats</th>
+      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentFat }}</td>
+    </ng-container>
+
+    <!-- name Column -->
+    <ng-container matColumnDef="proteins">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Proteins</th>
+      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentProtein }}</td>
     </ng-container>
 
     <!-- Allergies Column -->
-    <ng-container matColumnDef="allergies">
+    <!-- <ng-container matColumnDef="allergies">
       <th mat-header-cell *matHeaderCellDef>Allergies</th>
       <td mat-cell *matCellDef="let row">
         @for (allergy of row.allergies; track allergy) {
           <span>{{ allergy.title }}; </span>
         }
       </td>
-    </ng-container>
+    </ng-container> -->
 
     <!-- Purchased By Column hide on smaller size-->
-    <!--    todo change weight, volume, each to symbols-->
-    <ng-container matColumnDef="purchasedBy">
-      <th mat-header-cell *matHeaderCellDef>Purchased By</th>
-      <td mat-cell *matCellDef="let row">{{ purchasedBy[row.purchasedBy] }}</td>
-    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
@@ -49,13 +72,15 @@
     ></tr>
   </table>
 
-  <!-- !TEMP - add back in when separated into Lazy loaded modules -->
-  <!-- <app-paginator class="bottom-sticky"
-		(page)="onPageChange($event)"
-		[length]="dataLength"
-		[count]="dataCount"
-		[pageSize]="sortPageObj.perPage"
-		[showFirstLastButtons]="true"
-		[pageIndex]="sortPageObj.page">
-	</app-paginator> -->
+  <div class="paginator-container">
+    <app-paginator
+      (page)="onPageChange($event)"
+      [length]="data.meta.itemCount"
+      [count]="dataSource.data.length"
+      [pageSize]="data.meta.take"
+      [showFirstLastButtons]="true"
+      [pageIndex]="data.meta.page"
+    >
+    </app-paginator>
+  </div>
 </div>

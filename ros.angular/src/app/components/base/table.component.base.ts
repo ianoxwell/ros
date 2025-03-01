@@ -1,18 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
+import { EOrder } from '@DomainModels/base.dto';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
+import { PagedResult } from '@models/common.model';
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false
 })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class BaseTableComponent<T = any> implements OnChanges {
-  @Input() data!: PagedResult<T>;
-  @Input() sortPageObj: ISortPageObj = new SortPageObj();
-  @Output() sortingPageChange = new EventEmitter<ISortPageObj>();
+  @Input({ required: true }) data!: PagedResult<T>;
+  @Input({ required: true }) filter: IFilter = CBlankFilter;
+  @Output() sortingPageChange = new EventEmitter<IFilter>();
   @Output() updateTableRequest = new EventEmitter();
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -20,15 +22,12 @@ export abstract class BaseTableComponent<T = any> implements OnChanges {
 
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<T> = new MatTableDataSource();
-  dataLength = 0;
-  dataCount = 0;
+  sortDirection: SortDirection = EOrder.ASC.toLowerCase() as SortDirection;
 
   ngOnChanges(change: SimpleChanges): void {
     if (!!change.data && !change.data.firstChange) {
       const data: PagedResult<T> = change.data.currentValue;
       this.dataSource.data = data.results;
-      this.dataCount = data.results.length;
-      this.dataLength = data.meta.itemCount;
     }
   }
   /** This MUST be implemented in the extending class */
@@ -37,21 +36,23 @@ export abstract class BaseTableComponent<T = any> implements OnChanges {
 
   /** Triggers when there is a sorting change in the template, resets page */
   onSortChange(ev: Sort): void {
-    this.sortPageObj.orderby = ev.active;
-    this.sortPageObj.order = ev.direction;
-    this.sortPageObj.page = 0;
-    this.sortingPageChange.emit(this.sortPageObj);
+    this.filter.sort = ev.active;
+    this.filter.order = ev.direction.toUpperCase() as EOrder;
+    this.filter.page = 0;
+    this.sortDirection = ev.direction.toLowerCase() as SortDirection;
+
+    this.sortingPageChange.emit(this.filter);
   }
 
   /** Triggers from the paginator, resets page when perPage Changes */
   onPageChange(pageEvent: PageEvent): void {
-    if (pageEvent.pageSize !== this.sortPageObj.perPage) {
-      this.sortPageObj.page = 0;
-      this.sortPageObj.perPage = pageEvent.pageSize;
+    if (pageEvent.pageSize !== this.filter.take) {
+      this.filter.page = 0;
+      this.filter.take = pageEvent.pageSize;
     } else {
-      this.sortPageObj.page = pageEvent.pageIndex;
+      this.filter.page = pageEvent.pageIndex;
     }
-    this.sortingPageChange.emit(this.sortPageObj);
+    this.sortingPageChange.emit(this.filter);
   }
 
   /** Sets boolean for mouseRow for the row, for css class rollover effect */

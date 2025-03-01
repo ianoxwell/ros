@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
+import { IIngredient } from '@DomainModels/ingredient.dto';
 import { PagedResult } from '@models/common.model';
-import { IIngredientFilterObject, IngredientFilterObject } from '@models/filter-queries.model';
 import {
   IRawFoodIngredient,
   IRawFoodSuggestion,
@@ -10,10 +11,9 @@ import {
   ISpoonSuggestions
 } from '@models/raw-food-ingredient.model';
 import { IRawReturnedRecipes } from '@models/spoonacular-recipe.model';
+import { Suggestion } from '@models/suggestion';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IIngredient } from '@models/ingredient/ingredient.model';
-import { Suggestion } from '@models/suggestion';
 
 @Injectable({
   providedIn: 'root'
@@ -69,30 +69,12 @@ export class IngredientService {
     );
   }
 
-  getIngredientList(filterQuery: IIngredientFilterObject): Observable<PagedResult<IIngredient>> {
+  getIngredientList(filterQuery: IFilter): Observable<PagedResult<IIngredient>> {
     if (!filterQuery) {
-      filterQuery = new IngredientFilterObject();
-    }
-    // sanity checks
-    if (!filterQuery.perPage || filterQuery.perPage < 1) {
-      filterQuery.perPage = environment.resultsPerPage;
-    }
-    if (filterQuery.page < 0) {
-      filterQuery.page = 0;
-    }
-    let queryString = `?pageSize=${filterQuery.perPage}&page=${filterQuery.page}&sort=${filterQuery.orderby}&`;
-    if (filterQuery.order) {
-      queryString += `order=${filterQuery.order}&`;
+      filterQuery = CBlankFilter;
     }
 
-    if (filterQuery.name) {
-      queryString += `filter=${filterQuery.name}&`;
-    }
-    if (filterQuery.isUsdaFoodIdNull) {
-      queryString += `usdaFoodIdNull=true&`;
-    }
-    queryString = queryString.slice(0, -1);
-    return this.httpClient.get<PagedResult<IIngredient>>(`${this.apiUrl}ingredient/search${queryString}`, {
+    return this.httpClient.post<PagedResult<IIngredient>>(`${this.apiUrl}ingredient/search`, filterQuery, {
       headers: this.defaultHeader
     });
   }

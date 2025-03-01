@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { BaseTableComponent } from '@components/base/table.component.base';
-import { IIngredient, PurchasedBy } from '@models/ingredient/ingredient.model';
+import { IIngredient } from '@DomainModels/ingredient.dto';
+import { PurchasedBy } from '@models/ingredient/ingredient.model';
 
 @Component({
     selector: 'app-ingredient-table',
@@ -11,7 +12,7 @@ import { IIngredient, PurchasedBy } from '@models/ingredient/ingredient.model';
 })
 export class IngredientTableComponent extends BaseTableComponent<IIngredient> implements OnInit {
   @Output() editRow = new EventEmitter<IIngredient>();
-  displayedColumns = ['name', 'foodGroup', 'allergies', 'purchasedBy'];
+  displayedColumns = ['name', 'aisle',  'carbs', 'fats', 'proteins'];
   purchasedBy = PurchasedBy;
 
   constructor() {
@@ -20,8 +21,6 @@ export class IngredientTableComponent extends BaseTableComponent<IIngredient> im
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.data.results);
-    this.dataLength = this.data.meta.itemCount;
-    this.dataCount = this.data.results.length;
   }
 
   /** on row / ingredient clicked emit to parent the row */
