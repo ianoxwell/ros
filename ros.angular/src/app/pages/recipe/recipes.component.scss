@@ -1,5 +1,8 @@
 @use '../../styles/mixins.scss';
-
+.main-wrapper {
+  min-height: 20rem;
+  position: relative;
+}
 .action-bar {
   display: flex;
   flex-direction: row;
@@ -10,8 +13,8 @@
 }
 
 .recipes-view {
-	display: flex;
-	flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 .container {
   margin-left: 1rem;

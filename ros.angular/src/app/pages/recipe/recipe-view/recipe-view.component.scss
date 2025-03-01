@@ -22,6 +22,17 @@ article {
     @include mixins.breakpoint(md) {
       width: 49%;
     }
+    .ratings {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .icon-text {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+    }
   }
   // .image-stats {
 
@@ -51,7 +62,7 @@ article {
 }
 
 img.w-full {
-  border-radius: 4px;
-  padding: 4px;
-  border: 1px solid #333;
+  border-radius: 0.5rem;
+  // padding: 4px;
+  // border: 1px solid #333;
 }

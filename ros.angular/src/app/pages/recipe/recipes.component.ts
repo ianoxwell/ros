@@ -126,6 +126,8 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       return;
     }
 
+    const findIndex = this.recipes.findIndex((r) => r.id === event.id);
+
     if (this.selectedIndex === 0 && event.direction === 'prev') {
       this.selectedIndex = this.recipes.length - 1;
     } else if (this.selectedIndex === this.recipes.length - 1 && event.direction === 'next') {
@@ -137,7 +139,6 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     }
 
     this.selectThisRecipe(this.recipes[this.selectedIndex]);
-    // todo navigate to new url
   }
 
   onFilterChange(ev: RecipeFilterQuery) {
@@ -176,6 +177,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
 
   selectThisRecipe(recipe: IRecipeShort) {
     this.selectedRecipeId = recipe.id;
+    this.selectedRecipe = recipe as IRecipe;
     this.navigationService.navigateToUrl(`savoury/recipes/item/${this.selectedRecipeId}`);
   }
 

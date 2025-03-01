@@ -1,24 +1,19 @@
 @if (!!selectedRecipe) {
   <article>
-    <div class="print-only">
-      <h2>{{ selectedRecipe.name }}</h2>
-    </div>
+    <h2 class="print-only">{{ selectedRecipe.name }}</h2>
     <!-- Additional details -->
-    <section class="flex-box flex-column mt-2">
+    <section class="mt-2">
       <mat-chip-listbox>
         @for (tag of selectedRecipe.dishType; track tag) {
           <mat-chip>{{ tag }}</mat-chip>
         }
       </mat-chip-listbox>
     </section>
-    <section class="mt-2">
-      <h4>Author and link</h4>
-    </section>
     <section class="top-section">
       <section class="description-ingredients">
         @if (selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0) {
           <div>
-            <h4>Description</h4>
+            <h3>Description</h3>
             <blockquote>
               <p [innerHTML]="selectedRecipe.shortSummary | safeHtml"></p>
               <footer>
@@ -32,12 +27,13 @@
           </div>
         }
         <div class="w-full mt-4">
-          <h4>Ingredients</h4>
+          <h3>Ingredients</h3>
           <ul class="ingredient-list">
             @for (item of selectedRecipe.ingredientList; track item) {
               <li class="pb-1">
                 <span class="mr-1"
-                  >{{ item.amount | number: '1.0-0' }} {{ item.measure.shortName }} {{ item.ingredient.name | sentenceCase }}
+                  >{{ item.amount | number: '1.0-0' }} {{ item.measure.shortName }}
+                  {{ item.ingredient.name | sentenceCase }}
                 </span>
                 <!-- <span class="mr-1">{{item.unit}} -</span> -->
                 <span
@@ -59,39 +55,34 @@
           [alt]="selectedRecipe.name"
           class="w-full"
         />
-        <div class="flex-box flex-row flex-justify-center">
+        <div class="ratings">
           <app-icon-text
             icon="favorite"
-            [text]="'Health rating' + selectedRecipe.healthScore + ' / 100'"
-            titleText="Number Servings"
+            [text]="'Health rating ' + selectedRecipe.healthScore + '/100'"
+            titleText="Health rating"
           ></app-icon-text>
           <app-icon-text
             icon="favorite"
+            [iconLeft]="false"
             [text]="selectedRecipe.aggregateLikes + ' Favourites'"
             titleText="Favourites"
           ></app-icon-text>
-          <!-- <app-icon-text
-              icon="restaurant"
-              color="accent"
-              [text]="selectedRecipe.numberOfTimesCooked + '  times Cooked'"
-              titleText="Times cooked"
-            ></app-icon-text> -->
         </div>
-        <div class="flex-box flex-row flex-justify-center">
+        <div class="ratings">
           <app-icon-text
             icon="people_outline"
             [text]="selectedRecipe.servings + ' serving(s)'"
             titleText="Number Servings"
           ></app-icon-text>
-          <span class="flex-box flex-align-center flex-row">
-            <mat-icon class="mr-1">timer</mat-icon>
+          <span class="icon-text">
             @if (selectedRecipe.preparationMinutes > 0) {
-              <span class="pr-1">{{ selectedRecipe.preparationMinutes || 0 }} Prep</span>
+              <span class="pr-1">Prep: {{ selectedRecipe.preparationMinutes || 0 }} min</span>
             }
             @if (selectedRecipe.cookingMinutes > 0) {
-              <span class="pr-1">{{ selectedRecipe.cookingMinutes || 0 }} Cook</span>
+              <span class="pr-1">Cook {{ selectedRecipe.cookingMinutes || 0 }} min</span>
             }
-            <span>{{ selectedRecipe.readyInMinutes || 0 }} Ready in</span>
+            <span>Ready in: {{ selectedRecipe.readyInMinutes || 0 }} min</span>
+            <mat-icon class="ml-1">timer</mat-icon>
           </span>
           <!-- <ng-template *ngIf="selectedRecipe.allergyWarnings?.length">
 					<span *ngFor="let allergy of selectedRecipe.allergyWarnings">
@@ -103,17 +94,19 @@
 					<button mat-icon-button type="button" aria-label="Print" (click)="printView()"><mat-icon>print</mat-icon></button>
 				</div> -->
         </div>
+        <mat-chip-listbox class="mt-2">
+          @for (item of selectedRecipe.healthLabels; track item) {
+            <mat-chip>{{ item | sentenceCase }}</mat-chip>
+          }
+        </mat-chip-listbox>
       </section>
     </section>
 
     <!-- Allergy Alerts -->
-    <!-- <div *ngIf="selectedRecipe.allergyWarnings?.length">
-		<h4>Allergy Warnings</h4>
-		<span *ngFor="let warning of selectedRecipe.allergyWarnings">{{warning}}</span>
-	</div> -->
+
     <!-- Equipment Required -->
     <div class="mt-2">
-      <h4>Equipment Required</h4>
+      <h3>Equipment Required</h3>
       <mat-chip-listbox aria-label="Equipment Required">
         @for (item of selectedRecipe.equipment; track item) {
           <mat-chip>{{ item }}</mat-chip>
@@ -122,7 +115,7 @@
     </div>
     <section class="flex-box flex-column">
       <div>
-        <h4 class="mt-4">How to Make</h4>
+        <h3 class="mt-4">How to Make</h3>
         @if (selectedRecipe.steppedInstructions) {
           <mat-list>
             @for (item of selectedRecipe.steppedInstructions; track item) {
@@ -140,15 +133,6 @@
         }
       </div>
     </section>
-    <section class="mt-2">
-      <h4>Nutrition</h4>
-    </section>
-
-    <section class="mt-2">
-      <h4>Comments and Ratings</h4>
-    </section>
-    <section class="mt-2">
-      <h4>Related Recipes</h4>
-    </section>
+    <!-- <h3>Nutrition</h3> -->
   </article>
 }
