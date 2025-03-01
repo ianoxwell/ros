@@ -1,69 +1,70 @@
-<!-- <app-page-title></app-page-title> -->
-@if (!selectedRecipeId) {
-  <!-- action bar -->
-  <div class="action-bar">
-    <button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
-      <mat-icon class="mr-1">add</mat-icon> New
-    </button>
-  </div>
-  <div class="recipes-view">
-    <div class="filter-side-bar">
-      <app-search-bar [filterQuery]="filterQuery" [dataLength]="dataLength"></app-search-bar>
-    </div>
-    @if (!isLoading) {
-      <div class="container grid-parent">
-        @for (recipe of recipes; track recipe; let i = $index) {
-          <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event)"> </app-recipe-card>
-        }
-        @if (recipes.length === 0) {
-          <div>Sorry I can't find any recipes that match the filters</div>
-        }
-      </div>
-    } @else {
-      <app-loading-indicator></app-loading-indicator>
-    }
-  </div>
-} @else {
-  @if (selectedRecipe) {
+<section class="main-wrapper">
+  @if (!selectedRecipeId) {
+    <!-- action bar -->
     <div class="action-bar">
-      <span>
-        <button
-          type="button"
-          mat-flat-button
-          title="Previous"
-          (click)="changeRecipe({ direction: 'prev', id: selectedRecipe.id })"
-        >
-          <mat-icon class="color-on-primary">chevron_left</mat-icon> Prev
-        </button>
-        <button
-          type="button"
-          mat-flat-button
-          title="Next"
-          (click)="changeRecipe({ direction: 'next', id: selectedRecipe.id })"
-          class="ml-2"
-        >
-          Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
-        </button>
-      </span>
-      <span>
-        <h1>{{ selectedRecipe.name }}</h1>
-      </span>
-
-      <button mat-flat-button type="button" color="accent" (click)="backToRecipeView()">
-        <mat-icon class="mr-1">keyboard_return</mat-icon> Back
+      <button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
+        <mat-icon class="mr-1">add</mat-icon> New
       </button>
     </div>
-    <!-- <mat-toolbar>
+    <div class="recipes-view">
+      <div class="filter-side-bar">
+        <app-search-bar [filterQuery]="filterQuery" [dataLength]="dataLength"></app-search-bar>
+      </div>
+      @if (!isLoading) {
+        <div class="container grid-parent">
+          @for (recipe of recipes; track recipe; let i = $index) {
+            <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event)"> </app-recipe-card>
+          }
+          @if (recipes.length === 0) {
+            <div>Sorry I can't find any recipes that match the filters</div>
+          }
+        </div>
+      } @else {
+        <app-loading-indicator></app-loading-indicator>
+      }
+    </div>
+  } @else {
+    @if (selectedRecipe) {
+      <div class="action-bar">
+        <span>
+          <button
+            type="button"
+            mat-flat-button
+            title="Previous"
+            (click)="changeRecipe({ direction: 'prev', id: selectedRecipe.id })"
+          >
+            <mat-icon class="color-on-primary">chevron_left</mat-icon> Prev
+          </button>
+          <button
+            type="button"
+            mat-flat-button
+            title="Next"
+            (click)="changeRecipe({ direction: 'next', id: selectedRecipe.id })"
+            class="ml-2"
+          >
+            Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
+          </button>
+        </span>
+        <span>
+          <h1>{{ selectedRecipe.name }}</h1>
+        </span>
+
+        <button mat-flat-button type="button" color="accent" (click)="backToRecipeView()">
+          <mat-icon class="mr-1">keyboard_return</mat-icon> Back
+        </button>
+      </div>
+      <!-- <mat-toolbar>
       <h1>{{ 'Recipe ' + selectedRecipe.name }}</h1>
       <button mat-flat-button aria-label="Search Recipes" (click)="selectedRecipe = undefined">
         <mat-icon>back</mat-icon>
         Search Recipes
       </button>
     </mat-toolbar> -->
-    <app-recipe-view [selectedRecipe]="selectedRecipe"></app-recipe-view>
-  } @else {
-    <div class="recipes-view">
-      <app-loading-indicator></app-loading-indicator>
-    </div>
+      <app-recipe-view [selectedRecipe]="selectedRecipe"></app-recipe-view>
+    } @else {
+      <div class="recipes-view">
+        <app-loading-indicator></app-loading-indicator>
+      </div>
+    }
   }
-}
+</section>
