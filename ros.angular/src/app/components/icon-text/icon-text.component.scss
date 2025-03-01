@@ -1,4 +1,14 @@
 div {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  .icon {
+    margin-right: 0.5rem;
+  }
+}
+.icon-right {
+  flex-direction: row-reverse;
+  .icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+  }
 }

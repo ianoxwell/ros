@@ -1,4 +1,4 @@
-<div class="p-1" [title]="titleText">
-	<mat-icon class="mr-1" [color]="color">{{icon}}</mat-icon>
-	<span [innerHTML]="text"></span>
+<div class="p-1" [title]="titleText" [ngClass]="{ 'icon-right': !iconLeft }">
+  <mat-icon class="icon" [color]="color">{{ icon }}</mat-icon>
+  <span [innerHTML]="text"></span>
 </div>
