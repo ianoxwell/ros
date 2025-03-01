@@ -2,6 +2,7 @@ import { PageMetaDto, PaginatedDto } from '@base//paginated.entity';
 import { CPageOptionsDto } from '@base/filter.const';
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
+import { EOrder } from '@models/base.dto';
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,7 +18,7 @@ import {
 } from 'Models/ingredient.dto';
 import { IMeasurement } from 'Models/measurement.dto';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
-import { ILike, In, Like, Repository, UpdateResult } from 'typeorm';
+import { ILike, In, Like, Raw, Repository, UpdateResult } from 'typeorm';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
 import { Reference } from '../reference/reference.entity';
@@ -25,13 +26,13 @@ import { ISpoonIngredient } from '../spoon/models/spoon-ingredient.dto';
 import { Conversion } from './conversion/conversion.entity';
 import { CIngredientShort } from './ingredient-short.dto';
 import { Ingredient } from './ingredient.entity';
-import { EOrder } from '@models/base.dto';
 
 @Injectable()
 export class IngredientService {
   constructor(
     @InjectRepository(Ingredient) private readonly repository: Repository<Ingredient>,
-    @InjectRepository(Conversion) private readonly conversionRepository: Repository<Conversion>
+    @InjectRepository(Conversion) private readonly conversionRepository: Repository<Conversion>,
+    @InjectRepository(Measurement) private readonly measurementRepository: Repository<Measurement>
   ) {}
 
   /**
@@ -68,16 +69,22 @@ export class IngredientService {
     return ingredient;
   }
   /** Filter ingredients and paginate the results. */
-  async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<Ingredient>> {
+  async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredient>> {
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Like(`%${pageOptionsDto.keyword}%`), isActive: true },
+      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`), isActive: true },
       order: { name: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
-      skip: pageOptionsDto.skip
+      skip: pageOptionsDto.skip,
+      relations: {
+        possibleUnits: true,
+        conversions: true
+      }
     });
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    const measures = await this.measurementRepository.find();
+    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientDTO(ing, true, measures));
 
-    return new PaginatedDto(result, pageMetaDto);
+    return new PaginatedDto(fullResult, pageMetaDto);
   }
 
   /** Given an array of ingredient id's return the ingredient */
@@ -200,7 +207,7 @@ export class IngredientService {
       possibleUnits: (i.possibleUnits as unknown as number[]).map((measureId: number) =>
         this.mapMeasurementToIMeasurement(this.findMeasure(measureId, measures))
       ),
-      allergies: i.allergies.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })),
+      allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
       conversions: i.conversions.map((convert: Conversion) => this.mapConversionToIConversion(convert, i.id, measures))
     };
 

@@ -98,16 +98,12 @@ export interface INutrients {
 
 export interface INutritionProperties {
   glycemicIndex: number;
-
   glycemicLoad: number;
-
   nutritionScore: number;
 }
 
 export interface ICaloricBreakdown {
   percentProtein: number;
-
   percentFat: number;
-
   percentCarbs: number;
 }

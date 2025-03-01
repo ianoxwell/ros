@@ -2,6 +2,7 @@ import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { Measurement } from '@controllers/measurement/measurement.entity';
+import { IFilter } from '@models/filter.dto';
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { Delete, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
@@ -41,8 +42,12 @@ export class IngredientController {
   @Post('/search')
   @ApiOkResponse({ type: PaginatedDto<IIngredient> })
   @HttpCode(200)
-  async searchIngredients(@Body() filter: IFilterBase): Promise<PaginatedDto<Ingredient>> {
-    return await this.ingredientService.getIngredients(filter);
+  async searchIngredients(@Body() filter: IFilter): Promise<PaginatedDto<IIngredient>> {
+    const filterBase: IFilterBase = {
+      ...filter,
+      skip: filter.page * filter.take
+    };
+    return await this.ingredientService.getIngredients(filterBase);
   }
 
   @Get('check-name')
