@@ -2,13 +2,11 @@
   <article>
     <h2 class="print-only">{{ selectedRecipe.name }}</h2>
     <!-- Additional details -->
-    <section class="mt-2">
-      <mat-chip-listbox>
-        @for (tag of selectedRecipe.dishType; track tag) {
-          <mat-chip>{{ tag }}</mat-chip>
-        }
-      </mat-chip-listbox>
-    </section>
+    <mat-chip-listbox class="mt-2 mb-2">
+      @for (tag of selectedRecipe.dishType; track tag) {
+        <mat-chip>{{ tag | sentenceCase }}</mat-chip>
+      }
+    </mat-chip-listbox>
     <section class="top-section">
       <section class="description-ingredients">
         @if (selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0) {
@@ -109,7 +107,7 @@
       <h3>Equipment Required</h3>
       <mat-chip-listbox aria-label="Equipment Required">
         @for (item of selectedRecipe.equipment; track item) {
-          <mat-chip>{{ item }}</mat-chip>
+          <mat-chip>{{ item | sentenceCase }}</mat-chip>
         }
       </mat-chip-listbox>
     </div>
