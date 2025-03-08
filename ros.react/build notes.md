@@ -5,6 +5,7 @@
 * React with react router dom
 * [Vite](https://mantine.dev/guides/vite/)
 * [Mantine](https://mantine.dev/getting-started/) 
+* [lucide-react - icons](https://lucide.dev/icons/)
 
 ## SPA setup
 
