@@ -189,11 +189,11 @@ export class SpoonService {
     newRecipe.shortSummary = this.createSummary(spoonRecipe.summary);
     newRecipe.pricePerServing = spoonRecipe.pricePerServing;
     newRecipe.images = [spoonRecipe.image];
-    newRecipe.preparationMinutes = spoonRecipe.preparationMinutes;
-    newRecipe.cookingMinutes = spoonRecipe.cookingMinutes;
+    newRecipe.preparationMinutes = spoonRecipe.preparationMinutes || -1;
+    newRecipe.cookingMinutes = spoonRecipe.cookingMinutes || -1;
+    newRecipe.readyInMinutes = spoonRecipe.readyInMinutes || -1;
     newRecipe.aggregateLikes = spoonRecipe.aggregateLikes;
     newRecipe.healthScore = spoonRecipe.healthScore;
-    newRecipe.readyInMinutes = spoonRecipe.readyInMinutes;
     newRecipe.servings = spoonRecipe.servings;
     newRecipe.spoonId = spoonRecipe.id;
     newRecipe.sourceUrl = spoonRecipe.sourceUrl;
@@ -217,23 +217,22 @@ export class SpoonService {
     newRecipe.dishType = dishType;
     newRecipe.diets = diets;
 
-    const createdRecipe = await this.recipeService.createRecipeFromEntity(newRecipe);
-
-    const allSteppedInstructEquip = await this.mapSteppedInstructions(spoonRecipe.analyzedInstructions, ingredients, createdRecipe.id);
+    const allSteppedInstructEquip = await this.mapSteppedInstructions(spoonRecipe.analyzedInstructions, ingredients, newRecipe);
     const ingredientList: RecipeIngredient[] = await this.mapRecipeIngredientList(
       spoonRecipe.extendedIngredients,
       ingredients,
       measurements,
-      createdRecipe.id
+      newRecipe
     );
 
-    createdRecipe.equipment = allSteppedInstructEquip.allEquipment;
-    createdRecipe.steppedInstructions = allSteppedInstructEquip.steppedInstructions;
-    createdRecipe.ingredientList = ingredientList;
+    newRecipe.equipment = allSteppedInstructEquip.allEquipment;
+    newRecipe.steppedInstructions = allSteppedInstructEquip.steppedInstructions;
+    newRecipe.ingredientList = ingredientList;
+    console.log('newRecipe', newRecipe, spoonRecipe);
 
-    const updatedRecipe = await this.recipeService.updateRecipeFromEntity(createdRecipe);
+    const createdRecipe = await this.recipeService.createRecipeFromEntity(newRecipe);
 
-    if (updatedRecipe) {
+    if (createdRecipe) {
       return new CMessage('Successful save, ' + createdRecipe.id, HttpStatus.OK);
     }
 
@@ -248,9 +247,10 @@ export class SpoonService {
 
     const findMeasure = measures.find(
       (measure: Measurement) =>
-        measure.shortName === spoonMeasure.unitShort.toLocaleLowerCase() ||
-        measure.altShortName === spoonMeasure.unitShort.toLocaleLowerCase() ||
-        measure.title.toLocaleLowerCase() === spoonMeasure.unitLong.toLocaleLowerCase()
+        measure.shortName === spoonMeasure.unitShort.toLowerCase() ||
+        measure.altShortName === spoonMeasure.unitShort.toLowerCase() ||
+        measure.title.toLowerCase() === spoonMeasure.unitLong.toLowerCase() ||
+        spoonMeasure.unitLong.toLowerCase().includes(measure.title.toLowerCase())
     );
 
     if (!findMeasure) {
@@ -281,8 +281,9 @@ export class SpoonService {
           newConvert.targetUnit = grams; // grams from measurement.data
           newConvert.answer = spoonConvert.answer;
           newConvert.type = spoonConvert.type;
+          newConvert.ingredientId = newIngredient.id; // Set the ingredientId
 
-          return await this.conversionService.createConversion(newConvert);
+          return newConvert;
         })
     );
     newIngredient.conversions = conversions;
@@ -328,15 +329,15 @@ export class SpoonService {
 
   /** Each ingredient should have a primary purchase, e.g. celery is purchased by bunch and milk is purchased litres, by default items are purchased by weight - for example a kilo of flour. */
   private calcPurchasedBy(spoon: ISpoonIngredient): EPurchasedBy {
-    if (spoon.consistency.toLocaleLowerCase() === 'liquid') {
+    if (spoon.consistency.toLowerCase() === 'liquid') {
       return EPurchasedBy.volume;
     }
 
-    if (spoon.consistency.toLocaleLowerCase() === 'solid' && spoon.possibleUnits.includes('bunch')) {
+    if (spoon.consistency.toLowerCase() === 'solid' && spoon.possibleUnits.includes('bunch')) {
       return EPurchasedBy.bunch;
     }
 
-    if (spoon.consistency.toLocaleLowerCase() === 'solid' && spoon.possibleUnits.includes('each')) {
+    if (spoon.consistency.toLowerCase() === 'solid' && spoon.possibleUnits.includes('each')) {
       return EPurchasedBy.individual;
     }
 
@@ -386,8 +387,7 @@ export class SpoonService {
     const matchedMeasures: Measurement[] = [];
     units.forEach((unit: string) => {
       const result = measures.find(
-        (m: Measurement) =>
-          unit === m.title.toLocaleLowerCase() || unit === m.shortName.toLocaleLowerCase() || unit === m.altShortName?.toLocaleLowerCase()
+        (m: Measurement) => unit === m.title.toLowerCase() || unit === m.shortName.toLowerCase() || unit === m.altShortName?.toLowerCase()
       );
       if (!!result) {
         matchedMeasures.push(result);
@@ -401,7 +401,7 @@ export class SpoonService {
   private async mapSteppedInstructions(
     analyzedInstructions: AnalyzedInstruction[],
     ingredients: Ingredient[],
-    recipeId: number
+    newRecipe: Recipe
   ): Promise<{ steppedInstructions: RecipeSteppedInstruction[]; allEquipment: Equipment[] }> {
     const steppedInstructions: RecipeSteppedInstruction[] = [];
     const allEquipment: Equipment[] = [];
@@ -419,9 +419,7 @@ export class SpoonService {
         steppedInstruction.lengthTimeUnit = step.length?.unit;
         steppedInstruction.ingredients = stepIngredients;
         steppedInstruction.equipment = [];
-        steppedInstruction.recipeId = recipeId;
-
-        const saveSteppedInstruction = await this.recipeService.createSteppedInstruction(steppedInstruction);
+        steppedInstruction.recipeId = newRecipe.id;
 
         const equipment: EquipmentSteppedInstruction[] = await Promise.all(
           step.equipment.map(async (equip: SpoonEquipment) => {
@@ -434,14 +432,14 @@ export class SpoonService {
             steppedEquip.equipment = item;
             steppedEquip.temperature = equip.temperature?.number;
             steppedEquip.temperatureUnit = equip.temperature?.unit;
-            steppedEquip.recipeSteppedInstructionId = saveSteppedInstruction.id;
+            steppedEquip.recipeSteppedInstructionId = steppedInstruction.id;
 
-            return await this.recipeService.createSteppedInstructionEquipment(steppedEquip);
+            return steppedEquip;
           })
         );
-        saveSteppedInstruction.equipment = equipment;
+        steppedInstruction.equipment = equipment;
         // the create step returns with the entire step including Id - so theoretically when the recipe is saved it updated the recipes
-        steppedInstructions.push(saveSteppedInstruction);
+        steppedInstructions.push(steppedInstruction);
       });
     });
 
@@ -453,10 +451,9 @@ export class SpoonService {
     extendedIngredients: ExtendedIngredient[],
     ingredients: Ingredient[],
     measurements: Measurement[],
-    recipeId: number
+    newRecipe: Recipe
   ): Promise<RecipeIngredient[]> {
     return await Promise.all(
-      // this.uniqueByKeepFirst<ExtendedIngredient>(spoonRecipe.extendedIngredients, (it) => it.name).map(
       extendedIngredients.map(async (extIng: ExtendedIngredient) => {
         const ingredient: Ingredient | undefined = ingredients.find((item: Ingredient) => item.externalId === extIng.id);
 
@@ -466,9 +463,9 @@ export class SpoonService {
         reIngredient.consistency = extIng.consistency;
         reIngredient.meta = extIng.meta;
         reIngredient.measure = this.findMeasuresFromSpoon(extIng.measures.metric, measurements);
-        reIngredient.recipeId = recipeId;
+        reIngredient.recipeId = newRecipe.id;
 
-        return await this.recipeService.saveRecipeIngredient(reIngredient);
+        return reIngredient;
       })
     );
   }
