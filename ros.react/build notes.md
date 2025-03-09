@@ -69,3 +69,16 @@ Did not work at all that I could see
 * Menu background - #FFFFFF
 * Alert - #f7bd29 (Stars/favourites)
 * burnt orange - #e6600b (some titles?)
+
+## Menu cutout design
+
+ChatGPT was completely useless again to be able to find any answer on how to style a cutout for a background. Used the following medium article to great effect - https://medium.com/better-programming/how-to-make-a-curved-cutout-to-any-element-74dbdc6bab56 took a bit of time to understand positioning and sizing for linear and radial gradients though.
+
+##
+
+Architecture for the account pages - create the white card with ROS title
+Login page - email/password - alt login (not a member yet - register) and forgot password
+
+* if not registered then pass to register page - name, email, pw
+* also need the verify-email, reset-password - these take query params and pass to backend and then actions result
+* forgot-password form with email address
