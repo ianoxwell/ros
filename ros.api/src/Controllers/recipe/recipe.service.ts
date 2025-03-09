@@ -192,7 +192,7 @@ export class RecipeService {
   /** Checks for unique name and spoonId, returns true if item found. */
   async isSpoonRecipeAlreadySaved(spoonRecipe: ISpoonRecipe): Promise<boolean> {
     const findRecipe: Recipe | null = await this.repository.findOne({
-      where: [{ name: ILike(spoonRecipe.title) }, { spoonId: spoonRecipe.id }]
+      where: [{ name: ILike(spoonRecipe.title) }]
     });
 
     return findRecipe !== null;
@@ -241,7 +241,7 @@ export class RecipeService {
 
   /** Maps the spoon equipment to Equipment and saves, else returns the equipment. */
   async createSpoonEquipment(equip: SpoonEquipment): Promise<Equipment> {
-    const findEquip = await this.equipmentRepository.findOne({ where: { name: ILike(equip.name), spoonId: equip.id } });
+    const findEquip = await this.equipmentRepository.findOne({ where: { name: ILike(equip.name.toLowerCase()) } });
 
     if (!findEquip) {
       const newEquip = new Equipment();

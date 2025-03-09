@@ -87,7 +87,7 @@ export const CMeasurementData: IMeasurement[] = [
     title: 'Each',
     measurementType: EPurchasedBy.individual,
     shortName: 'ea',
-    altShortName: null,
+    altShortName: 'whole',
     convertsToId: 9,
     quantity: 1,
     countryCode: ECountryCode.ALL
@@ -186,6 +186,15 @@ export const CMeasurementData: IMeasurement[] = [
     altShortName: 'halve',
     convertsToId: 9,
     quantity: 0.5,
+    countryCode: ECountryCode.ALL
+  },
+  {
+    title: 'Slice',
+    measurementType: EPurchasedBy.individual,
+    shortName: 'slices',
+    altShortName: 'slice',
+    convertsToId: 9,
+    quantity: 0.2,
     countryCode: ECountryCode.ALL
   }
 ];

@@ -146,7 +146,7 @@ export class IngredientService {
 
   /** The name must also be unique. */
   async spoonIngredientNameExists(spoon: ISpoonIngredient): Promise<Ingredient | CMessage> {
-    const spoonCheck = await this.repository.findOne({ where: [{ externalId: spoon.id }, { name: ILike(spoon.name) }] });
+    const spoonCheck = await this.repository.findOne({ where: [{ name: ILike(spoon.name) }] });
 
     return !!spoonCheck ? spoonCheck : new CMessage('Go ahead and create it', HttpStatus.OK);
   }

@@ -253,8 +253,10 @@ export class SpoonService {
         spoonMeasure.unitLong.toLowerCase().includes(measure.title.toLowerCase())
     );
 
+    // TODO this is not the best response - maybe a looser search method?
     if (!findMeasure) {
-      throw new Error('unable to find measure ' + JSON.stringify(spoonMeasure));
+      console.log('unable to find measure', JSON.stringify(spoonMeasure));
+      return measures[0];
     }
 
     return findMeasure;
