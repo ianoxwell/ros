@@ -57,3 +57,15 @@ return (
 
 `npm install --save-dev vite-tsconfig-paths`
 Did not work at all that I could see
+
+## Color choices
+
+* Darker accent - #2a5846
+* accent foreground - #128758
+* text on accent - #FFFFFF
+* background normal - #F7F7F7
+* text on normal - #070707
+* muted text on normal - #6b6b6b
+* Menu background - #FFFFFF
+* Alert - #f7bd29 (Stars/favourites)
+* burnt orange - #e6600b (some titles?)
