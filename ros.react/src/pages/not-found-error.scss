@@ -1,0 +1,31 @@
+.not-found-error {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5%;
+  img {
+    width: 90vw;
+    max-width: 600px;
+    display: block;
+    margin-bottom: 2rem;
+  }
+  .not-found-title {
+    position: absolute;
+    top: 10%;
+    left: calc(50% - 22rem);
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: var(--grey-500);
+    }
+    a {
+      color: var(--primary-500);
+      text-decoration: underline;
+      text-transform: capitalize;
+    }
+  }
+}
