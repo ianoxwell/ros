@@ -25,7 +25,11 @@ export class RecipeController {
   @ApiOkResponse({ type: PaginatedDto<IRecipeShort> })
   @HttpCode(200)
   async searchIngredients(@Body() filter: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
-    return await this.recipeService.getRecipes(filter);
+    const filterBase: IFilterBase = {
+      ...filter,
+      skip: filter.page * filter.take
+    };
+    return await this.recipeService.getRecipes(filterBase);
   }
 
   /** Gets a specific recipe by Id */
