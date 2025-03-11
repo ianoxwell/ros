@@ -6,9 +6,13 @@
     "baseUrl": "./",
     "paths": {
       "@features/*": ["./src/features/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@domain/*": ["../ros.api/Models/*"]
     }
   },
+  "moduleResolution": "node",
+  "importHelpers": true,
   "files": [],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }
