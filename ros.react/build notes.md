@@ -79,6 +79,7 @@ ChatGPT was completely useless again to be able to find any answer on how to sty
 * Typescript path alias - e.g. "@features/*": ["src/features/*"]
   * Resolution - is to install `vite-tsconfig-paths` and then in vite.config to exactly specify WHICH tsconfig.json to use `plugins: [react(), tsconfigPaths({ loose: true, root: '../../tsconfig.json'})],` - seems to default to tsconfig.app.json (probably)
   * See [Stackoverflow question](https://stackoverflow.com/questions/75770948/vite-tsconfig-paths-resolves-the-paths-correctly-but-vite-cannot-find-the-files)
+* environment file must have prefix `VITE_` e.g. `VITE_API_URL` else vite doesn't share it - bit irritating, but okay I guess
 
 ##
 
