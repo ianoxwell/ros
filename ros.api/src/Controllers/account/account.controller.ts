@@ -1,6 +1,4 @@
 import { CMessage } from '@base/message.class';
-import { IResetPasswordRequest, IUserBasicAuth } from 'Models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from 'Models/user.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { Body, Get, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
@@ -13,12 +11,12 @@ import {
   ApiOkResponse,
   ApiTags
 } from '@nestjs/swagger';
-import { IAccessToken } from 'src/Services/auth/access-token.dto';
+import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
+import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
-import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('Accounts')
@@ -41,19 +39,13 @@ export class AccountController {
   @ApiCreatedResponse({
     description: 'User return'
   })
-  async register(@Body() registerUser: IRegisterUser): Promise<IUserProfile> {
-    if (await !this.userService.emailAvailable(registerUser.email)) {
-      throw new HttpException({ status: HttpStatus.CONFLICT, message: 'Email address is already registered' }, HttpStatus.CONFLICT);
+  async register(@Body() registerUser: IRegisterUser): Promise<IUserToken | CMessage> {
+    const isEmailAvailable = await this.userService.emailAvailable(registerUser.email);
+    if (isEmailAvailable) {
+      return new CMessage('Email address is already registered', HttpStatus.CONFLICT);
     }
 
-    return this.userService.registerUser(registerUser).then((user: User) => {
-      return {
-        id: user.id,
-        familyName: user.familyName,
-        givenNames: user.givenNames,
-        email: user.email
-      };
-    });
+    return await this.userService.registerUser(registerUser);
   }
 
   @Post('verify-email')
@@ -160,7 +152,7 @@ export class AccountController {
     description: 'jwt bearer token my man'
   })
   @ApiBadRequestResponse()
-  async userLogin(@Body() user: IUserBasicAuth): Promise<IAccessToken | CMessage> {
+  async userLogin(@Body() user: IUserLogin): Promise<IUserToken | CMessage> {
     if (!user.email || user.email.length < 4 || !user.email.includes('@')) {
       throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
     }

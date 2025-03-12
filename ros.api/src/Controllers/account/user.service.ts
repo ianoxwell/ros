@@ -1,12 +1,11 @@
 import { CMessage } from '@base/message.class';
-import { IResetPasswordRequest, IUserBasicAuth } from 'Models/reset-password-request.dto';
-import { IUserProfile, IUserSummary } from 'Models/user.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { IAccessToken } from 'src/Services/auth/access-token.dto';
+import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
+import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
 import { MailService } from 'src/Services/mail/mail.service';
 import { Repository } from 'typeorm';
 import { IRegisterUser } from './models/register-user.dto';
@@ -28,7 +27,7 @@ export class UserService {
     });
   }
 
-  async registerUser(user: IRegisterUser): Promise<User> {
+  async registerUser(user: IRegisterUser): Promise<IUserToken> {
     const isSocial = user.loginProvider.toLocaleLowerCase() === 'google';
     const newUser: Partial<User> = {
       familyName: user.familyName,
@@ -47,7 +46,14 @@ export class UserService {
       passwordLastReset: isSocial ? new Date() : null
     };
 
-    return this.repository.save(newUser);
+    const freshUser = await this.repository.save(newUser);
+    const token = this.jwtTokenService.sign({
+      username: freshUser.email,
+      sub: freshUser.id,
+      name: `${freshUser.givenNames} ${freshUser.familyName}`,
+      admin: freshUser.isAdmin
+    });
+    return { user: this.mapUserToSummary(freshUser), token };
   }
 
   async findById(id: number): Promise<IUserSummary | undefined> {
@@ -81,7 +87,7 @@ export class UserService {
   }
 
   /** Only to be used by the auth service */
-  async findOneUser(basicAuth: IUserBasicAuth): Promise<IAccessToken | CMessage> {
+  async findOneUser(basicAuth: IUserLogin): Promise<IUserToken | CMessage> {
     const user = await this.repository.findOne({ where: { email: basicAuth.email } });
     if (!user) {
       return { message: 'No such email address found.', status: HttpStatus.NOT_FOUND };
@@ -109,7 +115,7 @@ export class UserService {
 
     if (user.lastFailedLoginAttempt) {
       const timeNow = new Date().getTime();
-      const lockoutTime = user.lastFailedLoginAttempt.getTime() + 60 * 1000;
+      const lockoutTime = user.lastFailedLoginAttempt.getTime() + 6 * 1000;
       if (lockoutTime > timeNow) {
         return { message: 'Too fast speedy, have a think, slow down a little.', status: HttpStatus.TOO_MANY_REQUESTS };
       }
@@ -139,7 +145,7 @@ export class UserService {
       name: `${user.givenNames} ${user.familyName}`,
       admin: user.isAdmin
     });
-    return { token };
+    return { token, user: this.mapUserToSummary(user) };
   }
 
   /** Temp or partial - later will secure or remove */
