@@ -18,6 +18,7 @@ import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { UserService } from './user.service';
+import { User } from './user.entity';
 
 @ApiTags('Accounts')
 @Controller({ path: 'account' })
@@ -39,13 +40,25 @@ export class AccountController {
   @ApiCreatedResponse({
     description: 'User return'
   })
-  async register(@Body() registerUser: IRegisterUser): Promise<IUserToken | CMessage> {
+  async register(@Body() registerUser: IRegisterUser): Promise<IUserProfile | IUserToken | CMessage> {
     const isEmailAvailable = await this.userService.emailAvailable(registerUser.email);
     if (isEmailAvailable) {
       return new CMessage('Email address is already registered', HttpStatus.CONFLICT);
     }
 
-    return await this.userService.registerUser(registerUser);
+    let user: User | IUserToken = await this.userService.registerUser(registerUser);
+
+    if (user.hasOwnProperty('token')) {
+      return user;
+    }
+
+    user = user as User;
+    return {
+      id: user.id,
+      familyName: user.familyName,
+      givenNames: user.givenNames,
+      email: user.email
+    };
   }
 
   @Post('verify-email')

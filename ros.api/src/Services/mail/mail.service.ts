@@ -12,8 +12,22 @@ export class MailService {
 
     return await this.mailerService.sendMail({
       to: email,
-      subject: 'Recipe Ordering Simplified - password reset request',
+      subject: 'ROS - password reset request',
       template: '../../../../Services/mail/templates/password-reset', // `.hbs` extension is appended automatically
+      context: {
+        name,
+        url
+      }
+    });
+  }
+
+  async sendRegistrationEmail(email: string, name: string, verificationToken: string): Promise<any> {
+    const url = `${this.config.get('WEBSITE')}/verify-email?token=${verificationToken}&email=${email}`;
+
+    return await this.mailerService.sendMail({
+      to: email,
+      subject: 'ROS - email verification',
+      template: '../../../../Services/mail/templates/confirmation', // `.hbs` extension is appended automatically
       context: {
         name,
         url

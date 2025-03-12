@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
 import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
 import { MailService } from 'src/Services/mail/mail.service';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { User } from './user.entity';
@@ -22,13 +22,28 @@ export class UserService {
 
   /** Checks the email address to find out if the email address has been registered */
   async emailAvailable(email: string): Promise<boolean> {
-    return await this.repository.findOne({ where: { email } }).then((result: User) => {
+    return await this.repository.findOne({ where: { email, verified: Not(null), isActive: true } }).then((result: User) => {
       return result === null;
     });
   }
 
-  async registerUser(user: IRegisterUser): Promise<IUserToken> {
+  async registerUser(user: IRegisterUser): Promise<IUserToken | User> {
     const isSocial = user.loginProvider.toLocaleLowerCase() === 'google';
+    let existNonVerifiedUser = await this.repository.findOne({ where: { email: user.email, verified: Not(null), isActive: true } });
+    if (existNonVerifiedUser) {
+      existNonVerifiedUser = {
+        ...existNonVerifiedUser,
+        verificationToken: randomBytes(16).toString('hex'),
+        familyName: user.familyName,
+        givenNames: user.givenNames,
+        passwordHash: !!user.password ? await bcrypt.hash(user.password, 10) : null,
+        isActive: true
+      };
+      // send email
+      this.mailService.sendRegistrationEmail(user.email, user.givenNames, existNonVerifiedUser.verificationToken);
+      return existNonVerifiedUser;
+    }
+
     const newUser: Partial<User> = {
       familyName: user.familyName,
       givenNames: user.givenNames,
@@ -47,6 +62,12 @@ export class UserService {
     };
 
     const freshUser = await this.repository.save(newUser);
+    if (!isSocial && newUser.verificationToken) {
+      // send email
+      this.mailService.sendRegistrationEmail(user.email, user.givenNames, newUser.verificationToken);
+      return freshUser;
+    }
+
     const token = this.jwtTokenService.sign({
       username: freshUser.email,
       sub: freshUser.id,
