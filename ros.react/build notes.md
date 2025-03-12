@@ -74,6 +74,12 @@ Did not work at all that I could see
 
 ChatGPT was completely useless again to be able to find any answer on how to style a cutout for a background. Used the following medium article to great effect - https://medium.com/better-programming/how-to-make-a-curved-cutout-to-any-element-74dbdc6bab56 took a bit of time to understand positioning and sizing for linear and radial gradients though.
 
+## Gotchas
+
+* Typescript path alias - e.g. "@features/*": ["src/features/*"]
+  * Resolution - is to install `vite-tsconfig-paths` and then in vite.config to exactly specify WHICH tsconfig.json to use `plugins: [react(), tsconfigPaths({ loose: true, root: '../../tsconfig.json'})],` - seems to default to tsconfig.app.json (probably)
+  * See [Stackoverflow question](https://stackoverflow.com/questions/75770948/vite-tsconfig-paths-resolves-the-paths-correctly-but-vite-cannot-find-the-files)
+
 ##
 
 Architecture for the account pages - create the white card with ROS title
