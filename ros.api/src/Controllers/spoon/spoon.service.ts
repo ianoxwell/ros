@@ -458,14 +458,18 @@ export class SpoonService {
     return await Promise.all(
       extendedIngredients.map(async (extIng: ExtendedIngredient) => {
         const ingredient: Ingredient | undefined = ingredients.find((item: Ingredient) => item.externalId === extIng.id);
-
-        const reIngredient = new RecipeIngredient();
-        reIngredient.ingredientId = ingredient.id;
-        reIngredient.amount = extIng.measures.metric.amount;
-        reIngredient.consistency = extIng.consistency;
-        reIngredient.meta = extIng.meta;
-        reIngredient.measure = this.findMeasuresFromSpoon(extIng.measures.metric, measurements);
-        reIngredient.recipeId = newRecipe.id;
+        const measure = this.findMeasuresFromSpoon(extIng.measures.metric, measurements);
+        const reIngredient: RecipeIngredient = {
+          ingredientId: ingredient.id,
+          ingredient,
+          amount: extIng.measures.metric.amount,
+          consistency: extIng.consistency,
+          meta: extIng.meta,
+          measure,
+          measureId: measure.id,
+          recipeId: newRecipe.id,
+          recipe: newRecipe
+        };
 
         return reIngredient;
       })
