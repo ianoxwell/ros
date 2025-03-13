@@ -102,6 +102,11 @@ $ flyctl doctor
 
 ```
 
+## SMTP Mail server
+
+Email is sort of temp provided by mailtrap.io - can only read mail there regardless of the address it is sent to. Currently free
+<https://mailtrap.io/>
+
 ## Test
 
 ```bash
