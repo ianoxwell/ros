@@ -1,24 +1,21 @@
 #root {
   --darker-accent: #2a5846;
   --accent-foreground: #128758;
-  --text-on-accent: #FFFFFF;
+  --text-on-accent: #ffffff;
   --background-normal: #ebebeb;
   --text-on-normal: #070707;
   --muted-text: #6b6b6b;
-  --menu-background: #FFFFFF;
+  --menu-background: #ffffff;
   --alert-yellow: #f7bd29;
   --burnt-orange: #e6600b; // (some titles?)
 
   background-color: var(--background-normal);
   color: var(--text-on-normal);
   height: 100vh;
-
 }
-
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
