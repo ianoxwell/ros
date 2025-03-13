@@ -20,8 +20,8 @@ export class User extends RosBaseEntity {
   @Column({ length: 80, nullable: true })
   phoneNumber?: string;
 
-  @Column({ type: 'simple-array' })
-  photoUrl: string[];
+  @Column({ type: 'simple-array', nullable: true })
+  photoUrl?: string[];
 
   @Column({ type: 'bool', default: false })
   isActive: boolean;

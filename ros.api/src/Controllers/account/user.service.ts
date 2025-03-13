@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
 import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
 import { MailService } from 'src/Services/mail/mail.service';
-import { Not, Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { User } from './user.entity';
@@ -22,14 +22,14 @@ export class UserService {
 
   /** Checks the email address to find out if the email address has been registered */
   async emailAvailable(email: string): Promise<boolean> {
-    return await this.repository.findOne({ where: { email, verified: Not(null), isActive: true } }).then((result: User) => {
-      return result === null;
-    });
+    // , verified: Not(IsNull())
+    const findExistingUser = await this.repository.findOne({ where: { email, isActive: true } });
+    return findExistingUser === null;
   }
 
   async registerUser(user: IRegisterUser): Promise<IUserToken | User> {
-    const isSocial = user.loginProvider.toLocaleLowerCase() === 'google';
-    let existNonVerifiedUser = await this.repository.findOne({ where: { email: user.email, verified: Not(null), isActive: true } });
+    const isSocial = user.loginProvider?.toLowerCase() === 'google';
+    let existNonVerifiedUser = await this.repository.findOne({ where: { email: user.email, verified: Not(IsNull()), isActive: true } });
     if (existNonVerifiedUser) {
       existNonVerifiedUser = {
         ...existNonVerifiedUser,
@@ -37,6 +37,7 @@ export class UserService {
         familyName: user.familyName,
         givenNames: user.givenNames,
         passwordHash: !!user.password ? await bcrypt.hash(user.password, 10) : null,
+        photoUrl: user.photoUrl || [],
         isActive: true
       };
       // send email
@@ -49,7 +50,7 @@ export class UserService {
       givenNames: user.givenNames,
       email: user.email,
       passwordHash: !!user.password ? await bcrypt.hash(user.password, 10) : null,
-      photoUrl: user.photoUrl,
+      photoUrl: user.photoUrl || [],
       isActive: true,
       loginProvider: user.loginProvider || 'ros',
       loginProviderId: user.loginProviderId,
@@ -183,7 +184,7 @@ export class UserService {
     });
   }
 
-  async verifyUser(user: IVerifyTokenRequest): Promise<boolean> {
+  async verifyUser(user: IVerifyTokenRequest): Promise<IUserToken | boolean> {
     const account = await this.repository.findOne({ where: { email: user.email, verificationToken: user.token } });
     if (!account) {
       return false;
@@ -192,9 +193,18 @@ export class UserService {
     account.verified = new Date();
     account.verificationToken = null;
 
-    const result = this.repository.update(account.id, account);
+    const result = await this.repository.update(account.id, account);
+    if (!result) {
+      return false;
+    }
 
-    return !!result;
+    const token = this.jwtTokenService.sign({
+      username: account.email,
+      sub: account.id,
+      name: `${account.givenNames} ${account.familyName}`,
+      admin: account.isAdmin
+    });
+    return { token, user: this.mapUserToSummary(account) };
   }
 
   async forgotPassword(email: string): Promise<CMessage> {

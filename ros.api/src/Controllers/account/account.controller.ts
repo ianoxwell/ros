@@ -42,7 +42,7 @@ export class AccountController {
   })
   async register(@Body() registerUser: IRegisterUser): Promise<IUserProfile | IUserToken | CMessage> {
     const isEmailAvailable = await this.userService.emailAvailable(registerUser.email);
-    if (isEmailAvailable) {
+    if (!isEmailAvailable) {
       return new CMessage('Email address is already registered', HttpStatus.CONFLICT);
     }
 
@@ -62,14 +62,13 @@ export class AccountController {
   }
 
   @Post('verify-email')
-  @ApiForbiddenResponse()
   @ApiBadRequestResponse()
   @HttpCode(200)
   @ApiOkResponse({
     description: 'A success message if the account exists and token matches',
     type: CMessage
   })
-  async verifyEmail(@Body() verify: IVerifyTokenRequest): Promise<CMessage> {
+  async verifyEmail(@Body() verify: IVerifyTokenRequest): Promise<CMessage | IUserToken> {
     if (!verify.email || verify.email.length < 4 || !verify.email.includes('@')) {
       throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
     }
@@ -77,13 +76,17 @@ export class AccountController {
     // If email address doesn't exist throw bad juju
     if (await this.userService.emailAvailable(verify.email)) {
       throw new HttpException(
-        { status: HttpStatus.FORBIDDEN, message: 'Email address not exist, super suspicious like' },
-        HttpStatus.FORBIDDEN
+        { status: HttpStatus.NOT_FOUND, message: 'Email address not exist, super suspicious like' },
+        HttpStatus.NOT_FOUND
       );
     }
 
-    const result: boolean = await this.userService.verifyUser(verify);
-    return { message: result ? 'Verification successful, you can now login' : 'Verification Failed' };
+    const result: boolean | IUserToken = await this.userService.verifyUser(verify);
+    if (!result || typeof result === 'boolean') {
+      return { message: 'Verification Failed', status: HttpStatus.AMBIGUOUS };
+    }
+
+    return result;
   }
 
   @Post('forgot-password')
