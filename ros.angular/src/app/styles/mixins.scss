@@ -1,8 +1,10 @@
+@use "sass:meta";
+
 // https://gist.github.com/timknight/03e6335b8816aa534cf7
 // Breakpoints from https://material.io/design/layout/responsive-layout-grid.html#breakpoints
 // Values: xs | sm | md | lg | 480px | $min: 640px, $max: 767px
 @mixin breakpoint($min: 0, $max: 0) {
-	$type: type-of($min);
+	$type: meta.type-of($min);
 
 	@if $type == string {
 	  @if $min == xs {
