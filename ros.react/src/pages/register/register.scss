@@ -1,0 +1,26 @@
+@use '../../styles/mixins';
+
+.account-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  max-height: 100vh;
+  .login-section {
+    flex-grow: 1;
+    padding: 1.5rem;
+    .action-card {
+      max-width: 30rem;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 5rem;
+    }
+  }
+  .splash-section {
+    width: 50%;
+    background-color: var(--darker-accent);
+    display: none;
+    @include mixins.breakpoint(md) {
+      display: block;
+    }
+  }
+}
