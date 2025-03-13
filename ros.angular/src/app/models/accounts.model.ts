@@ -1,15 +1,6 @@
 import { SocialUser } from "@abacritt/angularx-social-login";
+import { INewUser } from "@DomainModels/user.dto";
 
-export interface INewUser {
-  givenNames: string;
-  familyName: string;
-  email: string;
-  password?: string;
-  photoUrl: string[];
-  loginProvider: string;
-  loginProviderId?: string;
-  verified?: Date;
-}
 
 export class NewUser implements INewUser {
   givenNames: string;

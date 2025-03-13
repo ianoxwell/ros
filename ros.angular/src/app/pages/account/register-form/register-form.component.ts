@@ -4,7 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
-import { INewUser, NewUser } from '@models/accounts.model';
+import { INewUser } from '@DomainModels/user.dto';
+import { NewUser } from '@models/accounts.model';
 import { MessageResult } from '@models/common.model';
 import { MessageStatus } from '@models/message.model';
 import { ValidationMessages } from '@models/static-variables';
@@ -16,10 +17,10 @@ import { of } from 'rxjs';
 import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-register-form',
-    templateUrl: './register-form.component.html',
-    styleUrls: ['./register-form.component.scss'],
-    standalone: false
+  selector: 'app-register-form',
+  templateUrl: './register-form.component.html',
+  styleUrls: ['./register-form.component.scss'],
+  standalone: false
 })
 export class RegisterFormComponent extends ComponentBase implements OnInit {
   form: UntypedFormGroup = new UntypedFormGroup({});

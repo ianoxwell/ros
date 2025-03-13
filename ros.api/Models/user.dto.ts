@@ -1,10 +1,20 @@
-import { IAccessToken } from '@services/auth/access-token.dto';
 import { IBaseDto } from './base.dto';
 
 export interface IUserProfile extends IBaseDto {
   familyName: string;
   givenNames: string;
   email: string;
+}
+
+export interface INewUser {
+  givenNames: string;
+  familyName: string;
+  email: string;
+  password?: string;
+  photoUrl: string[];
+  loginProvider: string;
+  loginProviderId?: string;
+  verified?: Date;
 }
 
 export interface IUserSummary extends IUserProfile {
@@ -31,4 +41,9 @@ export interface IUserLogin {
 export interface IUserToken {
   token: string;
   user: IUserSummary;
+}
+
+export interface IVerifyUserEmail {
+  token: string;
+  email: string;
 }
