@@ -184,10 +184,21 @@ export class UserService {
     });
   }
 
-  async verifyUser(user: IVerifyTokenRequest): Promise<IUserToken | boolean> {
-    const account = await this.repository.findOne({ where: { email: user.email, verificationToken: user.token } });
+  async verifyUser(user: IVerifyTokenRequest): Promise<IUserToken | CMessage> {
+    const account = await this.repository.findOne({ where: { email: user.email, isActive: true } });
     if (!account) {
-      return false;
+      return new CMessage('That email address does not match any of our current records', HttpStatus.NOT_FOUND);
+    }
+
+    if (!account.verificationToken && account.verified) {
+      return new CMessage('Looks like the account is already verified, please log in normally', HttpStatus.MISDIRECTED);
+    }
+
+    if (account.verificationToken !== user.token) {
+      return new CMessage(
+        'Looks like there is something wrong with the verification token, please try registering again',
+        HttpStatus.NOT_ACCEPTABLE
+      );
     }
 
     account.verified = new Date();
@@ -195,7 +206,7 @@ export class UserService {
 
     const result = await this.repository.update(account.id, account);
     if (!result) {
-      return false;
+      return new CMessage('Something went wrong trying to update', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     const token = this.jwtTokenService.sign({

@@ -73,20 +73,7 @@ export class AccountController {
       throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
     }
 
-    // If email address doesn't exist throw bad juju
-    if (await this.userService.emailAvailable(verify.email)) {
-      throw new HttpException(
-        { status: HttpStatus.NOT_FOUND, message: 'Email address not exist, super suspicious like' },
-        HttpStatus.NOT_FOUND
-      );
-    }
-
-    const result: boolean | IUserToken = await this.userService.verifyUser(verify);
-    if (!result || typeof result === 'boolean') {
-      return { message: 'Verification Failed', status: HttpStatus.AMBIGUOUS };
-    }
-
-    return result;
+    return await this.userService.verifyUser(verify);
   }
 
   @Post('forgot-password')
