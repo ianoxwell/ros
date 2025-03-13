@@ -1,4 +1,4 @@
-.header {
+.bottom-nav {
   --menu-height: 3.75rem;
   --card-color: #fff;
   --pillar-size: 20px;
@@ -7,10 +7,6 @@
   --circle-d: calc(var(--circle-r) * 2);
   --circles-space: calc(var(--big-circle-r) + var(--pillar-size));
   --circle-extend-inset: calc(var(--circle-r) + var(--circles-space));
-
-}
-
-.bottom-nav {
   background: 
     /* Big Circle Cutout */ radial-gradient(
         circle at 50% calc(0% - var(--pillar-size)),
@@ -87,16 +83,16 @@
         transform: scale(1.1);
       }
     }
-  }  
+  }
 }
 
 .user-menu {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
