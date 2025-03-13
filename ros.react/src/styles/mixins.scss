@@ -1,0 +1,63 @@
+
+// https://gist.github.com/timknight/03e6335b8816aa534cf7
+// Breakpoints from https://material.io/design/layout/responsive-layout-grid.html#breakpoints
+// Values: xs | sm | md | lg | 480px | $min: 640px, $max: 767px
+@mixin breakpoint($min: 0, $max: 0) {
+    $type: type-of($min);
+  
+    @if $type == string {
+      @if $min == xs {
+        @media (max-width: 599px) {
+          @content;
+        } // Mobile Devices
+      } @else if $min == sm {
+        @media (min-width: 600px) {
+          @content;
+        } // Tablet Devices
+      } @else if $min == md {
+        @media (min-width: 1024px) {
+          @content;
+        } // Desktops
+      } @else if $min == lg {
+        @media (min-width: 1440px) {
+          @content;
+        } // Widescreen Desktops
+      }
+  
+      // Otherwise pass a warning to the compiler as to the appropriate options
+      @else {
+        @warn "The breakpoint mixin supports the following attributes: xs, sm, md, lg";
+      }
+    } @else if $type == number {
+      // Allow for custom parameters for min and max size
+      $query: 'all' !default;
+      @if $min != 0 and $max != 0 {
+        $query: '(min-width: #{$min}) and (max-width: #{$max})';
+      } // set both min and max
+      @else if $min != 0 and $max == 0 {
+        $query: '(min-width: #{$min})';
+      } // set just min
+      @else if $min == 0 and $max != 0 {
+        $query: '(max-width: #{$max})';
+      } // set just max
+      @media #{$query} {
+        @content;
+      }
+    }
+  }
+  
+  // example Usages
+  // aside.primary {
+  // 	@include breakpoint(md) {
+  // 	  float: right;
+  // 	  width: 350px;
+  // 	}
+  // 	@include breakpoint(480px) {
+  // 	  display: none;
+  // 	}
+  // 	@include breakpoint($min: 640px, $max: 767px) {
+  // 	  text-align: center;
+  // 	  font-style: italic;
+  // 	}
+  // }
+  
