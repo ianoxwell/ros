@@ -4,13 +4,14 @@ import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } f
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
+import { CRoutes } from 'src/routes.const';
 import './GlobalNavigation.component.scss';
 
 const links = [
-  { title: 'Recipes', link: '/', icon: 'home', id: 0 },
-  { title: 'Orders', link: '/orders', icon: 'search', id: 1 },
-  { title: 'Schedule', link: '/schedule', icon: 'bookmark', id: 2 },
-  { title: 'Ingredients', link: '/ingredients', icon: 'user', id: 3 }
+  { title: 'Recipes', link: CRoutes.recipes, icon: 'home', id: 0 },
+  { title: 'Orders', link: CRoutes.orders, icon: 'search', id: 1 },
+  { title: 'Schedule', link: CRoutes.schedule, icon: 'bookmark', id: 2 },
+  { title: 'Ingredients', link: CRoutes.ingredients, icon: 'user', id: 3 }
 ];
 
 export const GlobalNavigation = () => {

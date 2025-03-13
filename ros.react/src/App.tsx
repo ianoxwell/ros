@@ -16,6 +16,7 @@ import AccountWrapper from '@pages/register/AccountWrapper';
 import VerifyEmail from '@pages/register/VerifyEmail';
 import ForgotPassword from '@pages/register/ForgotPassword';
 import ResetPassword from '@pages/register/ResetPassword';
+import { CRoutes } from './routes.const';
 
 function App() {
   return (
@@ -34,15 +35,15 @@ function App() {
             }
           >
             <Route index element={<Recipes />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/schedule" element={<Schedules />} />
-            <Route path="/ingredients" element={<Ingredients />} />
+            <Route path={CRoutes.orders} element={<Orders />} />
+            <Route path={CRoutes.schedule} element={<Schedules />} />
+            <Route path={CRoutes.ingredients} element={<Ingredients />} />
           </Route>
           <Route path="/" element={<AccountWrapper />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path={CRoutes.login} element={<Login />} />
+            <Route path={CRoutes.forgotPassword} element={<ForgotPassword />} />
+            <Route path={CRoutes.verifyEmail} element={<VerifyEmail />} />
+            <Route path={CRoutes.resetPassword} element={<ResetPassword />} />
           </Route>
           {/* TODO add in the rest of the registration bits here */}
           {/* TODO - make sure the registration flow in the API does not send back anything useful like logging in - should show something about email should be sent... */}

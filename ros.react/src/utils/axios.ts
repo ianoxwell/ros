@@ -26,14 +26,13 @@ const customFetch = axios.create({
 customFetch.interceptors.request.use((config) => {
   // const dispatch = useDispatch();
   const user = getUserFromLocalStorage();
-  const isFresh = !isTokenFresh(user?.token, 'exp');
-  console.log('what is the user from local?', user, isFresh);
+  const isFresh = isTokenFresh(user?.token, 'exp');
 
   if (user) {
     config.headers['Authorization'] = `Bearer ${user.token}`;
     if (!isFresh) {
       // dispatch(logoutUser('Logging out...'));
-      console.log('should clear out the user somehow without a dispach?');
+      console.log('should clear out the user somehow without a dispatch?');
     }
   }
 
