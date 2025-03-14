@@ -29,7 +29,7 @@ function App() {
   return (
     <>
       <MantineProvider theme={theme}>
-        <Notifications position="top-center" limit={5} autoClose={7000} zIndex={1001} />
+        <Notifications position="top-center" color="accent" limit={5} autoClose={7000} zIndex={1001} />
         {/* Note guide to mantine notifications - https://mantine.dev/x/notifications/#functions */}
 
         <Routes>
