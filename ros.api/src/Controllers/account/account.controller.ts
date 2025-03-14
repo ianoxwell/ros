@@ -114,16 +114,13 @@ export class AccountController {
     description:
       'Confirms password reset and returns jwk to login with. In terms of flow, the front end on receiving success message will then use the same pw to login.'
   })
-  async resetPassword(@Body() reset: IResetPasswordRequest): Promise<CMessage> {
+  async resetPassword(@Body() reset: IResetPasswordRequest): Promise<CMessage | IUserToken> {
     if (!reset.email || reset.email.length < 4 || !reset.email.includes('@')) {
-      throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
+      return new CMessage('Email address does not look right', HttpStatus.BAD_REQUEST);
     }
 
     if (!reset.token || reset.token.length < 16) {
-      throw new HttpException(
-        { status: HttpStatus.BAD_REQUEST, message: 'Token is not looking correct, try again' },
-        HttpStatus.BAD_REQUEST
-      );
+      return new CMessage('Token is not looking correct, try again', HttpStatus.BAD_REQUEST);
     }
 
     return await this.userService.resetPassword(reset);
