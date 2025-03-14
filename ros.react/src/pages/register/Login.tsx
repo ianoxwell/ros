@@ -1,9 +1,8 @@
 import { loginUser, registerUser, toggleIsMember } from '@features/user/userSlice';
 import { Button, Checkbox, Group, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { RootState } from 'src/store';
 
 const initialState = {
@@ -16,17 +15,8 @@ const initialState = {
 
 const Login = () => {
   const [values, setValues] = useState(initialState);
-  const { user, isLoading, isMember } = useSelector((store: RootState) => store.user);
+  const { isLoading, isMember } = useSelector((store: RootState) => store.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate('/');
-      }, 500);
-    }
-  }, [user, navigate]);
 
   const submitButton = () => {
     form.validate();
@@ -36,6 +26,9 @@ const Login = () => {
 
     // const rawForm = form.getValues();
     const { givenNames, familyName, email, password } = form.getValues();
+    console.log('current form', form.getValues(), form.isValid(), form.errors);
+    // Note to self the form.errors is usually blank if the form is not touched
+
     setValues({ ...values, givenNames, familyName, email, password });
     if (isMember) {
       dispatch(loginUser({ email, password }));
@@ -43,8 +36,6 @@ const Login = () => {
     }
 
     dispatch(registerUser({ givenNames, familyName, email, password, loginProvider: 'ros', photoUrl: [] }));
-    console.log('current form', form.getValues(), form.isValid(), form.errors);
-    // Note to self the form.errors is usually blank if the form is not touched
   };
 
   const toggleMember = () => {

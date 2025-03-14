@@ -4,26 +4,29 @@ import { notifications } from '@mantine/notifications';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from '@utils/localStorage';
 import { HttpStatusCode } from 'axios';
+import { CRoutes } from 'src/routes.const';
 import { clearStoreThunk, loginUserThunk, registerUserThunk, updateUserThunk, verifyUserEmailThunk } from './userThunk';
+
+export function isMessage<T>(payload: IMessage | T): payload is IMessage {
+  //magic happens here
+  return (<IMessage>payload).message !== undefined;
+}
 
 export interface IUserState {
   isLoading: boolean;
   isMember: boolean;
   user: IUserToken | undefined;
   errorMessage: string;
+  activePage: string;
 }
 
 const initialState: IUserState = {
   isLoading: false,
   isMember: true,
   user: getUserFromLocalStorage(),
-  errorMessage: ''
+  errorMessage: '',
+  activePage: ''
 };
-
-function isMessage<T>(payload: IMessage | T): payload is IMessage {
-  //magic happens here
-  return (<IMessage>payload).message !== undefined;
-}
 
 export const registerUser = createAsyncThunk(
   'user/registerUser', // actionName
@@ -63,6 +66,9 @@ const userSlice = createSlice({
     },
     toggleIsMember: (state) => {
       state.isMember = !state.isMember;
+    },
+    setPageNavigate: (state, { payload }: { payload: string }) => {
+      state.activePage = payload;
     }
   },
   extraReducers: (builder) => {
@@ -127,6 +133,12 @@ const userSlice = createSlice({
       .addCase(verifyUserEmailAccount.fulfilled, (state, { payload }: { payload: IUserToken | IMessage }) => {
         state.isLoading = false;
         if (isMessage<IUserToken>(payload)) {
+          if (payload.status === HttpStatusCode.MisdirectedRequest) {
+            notifications.show({ title: 'Email already verified', message: payload.message });
+            state.activePage = CRoutes.login;
+            return;
+          }
+
           state.errorMessage = payload.message;
           return;
         }
@@ -138,7 +150,7 @@ const userSlice = createSlice({
         notifications.show({ title: 'Email verified', message: `Welcome ${user.givenNames}` });
       })
       .addCase(verifyUserEmailAccount.rejected, (state, { payload }: { payload: IMessage | unknown }) => {
-        console.log('rejected', payload);
+        console.log('verifyUser rejected', payload);
         state.isLoading = false;
         if (isMessage<unknown>(payload)) {
           notifications.show({ message: payload.message });
@@ -148,5 +160,5 @@ const userSlice = createSlice({
   }
 });
 
-export const { toggleIsMember, logoutUser } = userSlice.actions;
+export const { toggleIsMember, logoutUser, setPageNavigate} = userSlice.actions;
 export default userSlice.reducer;

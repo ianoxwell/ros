@@ -11,8 +11,6 @@ const VerifyEmail = () => {
   const email = searchParams.get('email');
   const token = searchParams.get('token');
 
-  console.log('start of verify email', email);
-
   const verifyEmail = () => {
     dispatch(verifyUserEmailAccount({ email, token }));
   };
