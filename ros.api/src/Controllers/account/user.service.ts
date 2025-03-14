@@ -69,13 +69,7 @@ export class UserService {
       return freshUser;
     }
 
-    const token = this.jwtTokenService.sign({
-      username: freshUser.email,
-      sub: freshUser.id,
-      name: `${freshUser.givenNames} ${freshUser.familyName}`,
-      admin: freshUser.isAdmin
-    });
-    return { user: this.mapUserToSummary(freshUser), token };
+    return { user: this.mapUserToSummary(freshUser), token: this.createToken(freshUser) };
   }
 
   async findById(id: number): Promise<IUserSummary | undefined> {
@@ -160,14 +154,12 @@ export class UserService {
       user.firstLogin = currentDateTime;
     }
 
-    await this.repository.update(user.id, user);
-    const token = this.jwtTokenService.sign({
-      username: user.email,
-      sub: user.id,
-      name: `${user.givenNames} ${user.familyName}`,
-      admin: user.isAdmin
-    });
-    return { token, user: this.mapUserToSummary(user) };
+    const result = await this.repository.update(user.id, user);
+    if (!result) {
+      return { message: 'Something went pear shaped updating the DB.', status: HttpStatus.INTERNAL_SERVER_ERROR };
+    }
+
+    return { token: this.createToken(user), user: this.mapUserToSummary(user) };
   }
 
   /** Temp or partial - later will secure or remove */
@@ -209,13 +201,7 @@ export class UserService {
       return new CMessage('Something went wrong trying to update', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    const token = this.jwtTokenService.sign({
-      username: account.email,
-      sub: account.id,
-      name: `${account.givenNames} ${account.familyName}`,
-      admin: account.isAdmin
-    });
-    return { token, user: this.mapUserToSummary(account) };
+    return { token: this.createToken(account), user: this.mapUserToSummary(account) };
   }
 
   async forgotPassword(email: string, host: string): Promise<CMessage> {
@@ -255,7 +241,7 @@ export class UserService {
   }
 
   /** Takes the reset token and email and applies a hashed copy of the users new password. */
-  async resetPassword(reset: IResetPasswordRequest): Promise<CMessage> {
+  async resetPassword(reset: IResetPasswordRequest): Promise<IUserToken | CMessage> {
     const account = await this.repository.findOne({ where: { email: reset.email, resetToken: reset.token } });
     if (!account || !account.resetTokenExpires) {
       return { message: 'No account with that email and token has been found.', status: HttpStatus.NOT_FOUND };
@@ -265,16 +251,32 @@ export class UserService {
       return { message: 'Reset token has expired, please get new link and try again.', status: HttpStatus.RESET_CONTENT };
     }
 
+    const currentDateTime = new Date();
     account.passwordHash = await bcrypt.hash(reset.password, 10);
     account.passwordLastReset = new Date();
+    account.lastLogin = currentDateTime;
     account.resetToken = null;
     account.resetTokenExpires = null;
     account.failedLoginAttempt = 0;
+    account.timesLoggedIn++;
+    if (!account.firstLogin) {
+      account.firstLogin = currentDateTime;
+    }
 
     const result = await this.repository.update(account.id, account);
     if (!result) {
       return { message: 'Something went pear shaped.', status: HttpStatus.INTERNAL_SERVER_ERROR };
     }
-    return { message: 'Success, check your emails', status: HttpStatus.OK };
+
+    return { token: this.createToken(account), user: this.mapUserToSummary(account) };
+  }
+
+  private createToken(user: User): string {
+    return this.jwtTokenService.sign({
+      username: user.email,
+      sub: user.id,
+      name: `${user.givenNames} ${user.familyName}`,
+      admin: user.isAdmin
+    });
   }
 }
