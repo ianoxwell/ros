@@ -1,5 +1,3 @@
-import { EReferenceType } from '../src/Controllers/reference/reference.entity';
-
 export interface IReference {
   id?: number;
   title: string;
@@ -9,4 +7,15 @@ export interface IReference {
   altTitle?: string;
   onlineId?: number;
   sortOrder?: number;
+}
+
+export enum EReferenceType {
+  allergyWarning,
+  cuisineType,
+  dishTag,
+  dishType,
+  equipment,
+  healthLabel,
+  ingredientFoodGroup,
+  ingredientState
 }

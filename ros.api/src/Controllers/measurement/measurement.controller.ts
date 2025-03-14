@@ -1,7 +1,7 @@
+import { IMeasurement } from '@models/measurement.dto';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Measurement } from './measurement.entity';
 import { MeasurementService } from './measurement.service';
 
 @ApiTags('reference')
@@ -13,10 +13,9 @@ export class MeasurementController {
 
   @Get()
   @ApiOkResponse({
-    description: 'List of possible measurements',
-    type: [Measurement]
+    description: 'List of possible measurements'
   })
-  async findAll(): Promise<Measurement[]> {
+  async findAll(): Promise<IMeasurement[]> {
     return this.measurementService.findAll();
   }
 }

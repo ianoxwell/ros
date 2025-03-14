@@ -7,7 +7,7 @@ import {
   EReferenceDetail,
   IReferenceItem,
   IReferenceItemFull,
-  EReferenceType
+  EReferenceType,
 } from '@models/reference.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';

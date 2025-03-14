@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { allergyReference } from './reference.data';
-import { IReference } from '../../../Models/reference.dto';
-import { EReferenceType, Reference } from './reference.entity';
+import { EReferenceType, IReference } from '../../../Models/reference.dto';
+import { Reference } from './reference.entity';
 
 @Injectable()
 export class ReferenceService {

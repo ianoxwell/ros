@@ -1,18 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RosBaseEntity } from '@base/base.entity';
 import { Column, Entity } from 'typeorm';
-import { IReference } from '../../../Models/reference.dto';
-
-export enum EReferenceType {
-  allergyWarning,
-  cuisineType,
-  dishTag,
-  dishType,
-  equipment,
-  healthLabel,
-  ingredientFoodGroup,
-  ingredientState
-}
+import { EReferenceType, IReference } from '../../../Models/reference.dto';
 
 @Entity()
 export class Reference extends RosBaseEntity implements IReference {
