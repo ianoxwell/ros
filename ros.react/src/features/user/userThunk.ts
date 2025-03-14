@@ -7,10 +7,14 @@
  * https://redux.js.org/usage/writing-logic-thunks
  */
 
+import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
+import { INewUser, IUserLogin, IUserSummary, IVerifyUserEmail } from '@domain/user.dto';
 import { GetThunkAPI } from '@reduxjs/toolkit';
 import customFetch, { checkForUnauthorizedResponse } from '@utils/axios';
-import axios, { AxiosResponse } from 'axios';
-import { INewUser, IUserLogin, IVerifyUserEmail } from '@domain/user.dto';
+import axios from 'axios';
+import { logoutUser } from './userSlice';
+
+// TODO This is crazy wasteful replication - will RTK remove all of this?
 
 export const registerUserThunk = async (user: INewUser, thunkAPI: GetThunkAPI<unknown>) => {
   const url = '/account/register';
@@ -42,7 +46,17 @@ export const verifyUserEmailThunk = async (emailToken: IVerifyUserEmail, thunkAP
   }
 };
 
-export const updateUserThunk = async (url: string, user, thunkAPI) => {
+export const forgotPasswordEmailThunk = async (email: string, thunkAPI: GetThunkAPI<unknown>) => {
+  const url = '/account/forgot-password';
+  try {
+    const resp = await customFetch.post(url, { email });
+    return resp.data;
+  } catch (error: unknown) {
+    return axios.isAxiosError(error) ? thunkAPI.rejectWithValue(error.response?.data) : thunkAPI.rejectWithValue(error);
+  }
+};
+
+export const updateUserThunk = async (url: string, user: IUserSummary, thunkAPI: GetThunkAPI<unknown>) => {
   try {
     const resp = await customFetch.patch(url, user);
     return resp.data;
@@ -51,11 +65,22 @@ export const updateUserThunk = async (url: string, user, thunkAPI) => {
   }
 };
 
-export const clearStoreThunk = async (message, thunkAPI) => {
+export const resetPasswordThunk = async (reset: IResetPasswordRequest, thunkAPI: GetThunkAPI<unknown>) => {
+  const url = '/account/reset-password';
+  try {
+    const resp = await customFetch.post(url, reset);
+    return resp.data;
+  } catch (error: unknown) {
+    return axios.isAxiosError(error) ? thunkAPI.rejectWithValue(error.response?.data) : thunkAPI.rejectWithValue(error);
+  }
+};
+
+export const clearStoreThunk = async (message: string, thunkAPI: GetThunkAPI<unknown>) => {
   try {
     thunkAPI.dispatch(logoutUser(message));
     return Promise.resolve();
   } catch (error) {
+    console.log('error occurred for some reason', error);
     return Promise.reject();
   }
 };
