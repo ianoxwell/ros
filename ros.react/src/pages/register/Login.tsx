@@ -25,7 +25,6 @@ const Login = () => {
       return;
     }
 
-    // const rawForm = form.getValues();
     const { givenNames, familyName, email, password } = form.getValues();
     console.log('current form', form.getValues(), form.isValid(), form.errors);
     // Note to self the form.errors is usually blank if the form is not touched
