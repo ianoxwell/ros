@@ -1,24 +1,16 @@
 import { CMessage } from '@base/message.class';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
-import { Body, Get, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
+import { Body, Get, Headers, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiOkResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
 import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
-import { UserService } from './user.service';
 import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @ApiTags('Accounts')
 @Controller({ path: 'account' })
@@ -40,13 +32,13 @@ export class AccountController {
   @ApiCreatedResponse({
     description: 'User return'
   })
-  async register(@Body() registerUser: IRegisterUser): Promise<IUserProfile | IUserToken | CMessage> {
+  async register(@Body() registerUser: IRegisterUser, @Headers() headers): Promise<IUserProfile | IUserToken | CMessage> {
     const isEmailAvailable = await this.userService.emailAvailable(registerUser.email);
     if (!isEmailAvailable) {
       return new CMessage('Email address is already registered', HttpStatus.CONFLICT);
     }
 
-    let user: User | IUserToken = await this.userService.registerUser(registerUser);
+    let user: User | IUserToken = await this.userService.registerUser(registerUser, headers.host);
 
     if (user.hasOwnProperty('token')) {
       return user;
@@ -83,7 +75,7 @@ export class AccountController {
     description: 'Confirms email address message has been sent',
     type: CMessage
   })
-  async forgotPassword(@Body() mail: IForgotPassword): Promise<CMessage> {
+  async forgotPassword(@Body() mail: IForgotPassword, @Headers() headers): Promise<CMessage> {
     if (!mail.email || mail.email.length < 4 || !mail.email.includes('@')) {
       throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
     }
@@ -96,7 +88,7 @@ export class AccountController {
       );
     }
 
-    return this.userService.forgotPassword(mail.email);
+    return this.userService.forgotPassword(mail.email, headers.host);
   }
 
   @Post('validate-reset-token')

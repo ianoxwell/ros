@@ -27,7 +27,7 @@ export class UserService {
     return findExistingUser === null;
   }
 
-  async registerUser(user: IRegisterUser): Promise<IUserToken | User> {
+  async registerUser(user: IRegisterUser, host: string): Promise<IUserToken | User> {
     const isSocial = user.loginProvider?.toLowerCase() === 'google';
     let existNonVerifiedUser = await this.repository.findOne({ where: { email: user.email, verified: Not(IsNull()), isActive: true } });
     if (existNonVerifiedUser) {
@@ -41,7 +41,7 @@ export class UserService {
         isActive: true
       };
       // send email
-      this.mailService.sendRegistrationEmail(user.email, user.givenNames, existNonVerifiedUser.verificationToken);
+      this.mailService.sendRegistrationEmail(user.email, user.givenNames, existNonVerifiedUser.verificationToken, host);
       return existNonVerifiedUser;
     }
 
@@ -65,7 +65,7 @@ export class UserService {
     const freshUser = await this.repository.save(newUser);
     if (!isSocial && newUser.verificationToken) {
       // send email
-      this.mailService.sendRegistrationEmail(user.email, user.givenNames, newUser.verificationToken);
+      this.mailService.sendRegistrationEmail(user.email, user.givenNames, newUser.verificationToken, host);
       return freshUser;
     }
 
@@ -218,7 +218,7 @@ export class UserService {
     return { token, user: this.mapUserToSummary(account) };
   }
 
-  async forgotPassword(email: string): Promise<CMessage> {
+  async forgotPassword(email: string, host: string): Promise<CMessage> {
     const account = await this.repository.findOne({ where: { email } });
 
     if (account.loginProvider.toLocaleLowerCase() === 'google') {
@@ -235,7 +235,7 @@ export class UserService {
 
     this.repository.update(account.id, account);
 
-    const result = await this.mailService.sendPasswordReset(email, account.givenNames, account.resetToken);
+    const result = await this.mailService.sendPasswordReset(email, account.givenNames, account.resetToken, host);
 
     if (!!result && !!result.accepted.length) {
       return { message: 'Please check your registered email account for password reset instructions', status: HttpStatus.OK };

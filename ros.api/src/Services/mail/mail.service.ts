@@ -6,9 +6,9 @@ import { ConfigService } from '@nestjs/config';
 export class MailService {
   constructor(private mailerService: MailerService, private config: ConfigService) {}
 
-  async sendPasswordReset(email: string, name: string, token: string): Promise<any> {
-    // URL is in reference to the FE github pages site - not the API
-    const url = `${this.config.get('WEBSITE')}/account/reset-password?token=${token}&email=${email}`;
+  async sendPasswordReset(email: string, name: string, token: string, host: string): Promise<any> {
+    host = host || this.config.get('WEBSITE');
+    const url = `${host}/account/reset-password?token=${token}&email=${email}`;
 
     return await this.mailerService.sendMail({
       to: email,
@@ -21,8 +21,9 @@ export class MailService {
     });
   }
 
-  async sendRegistrationEmail(email: string, name: string, verificationToken: string): Promise<any> {
-    const url = `${this.config.get('WEBSITE')}/verify-email?token=${verificationToken}&email=${email}`;
+  async sendRegistrationEmail(email: string, name: string, verificationToken: string, host: string): Promise<any> {
+    host = host || this.config.get('WEBSITE');
+    const url = `${host}/verify-email?token=${verificationToken}&email=${email}`;
 
     return await this.mailerService.sendMail({
       to: email,
