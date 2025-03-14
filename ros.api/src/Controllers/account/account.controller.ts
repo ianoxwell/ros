@@ -38,7 +38,7 @@ export class AccountController {
       return new CMessage('Email address is already registered', HttpStatus.CONFLICT);
     }
 
-    let user: User | IUserToken = await this.userService.registerUser(registerUser, headers.host);
+    let user: User | IUserToken = await this.userService.registerUser(registerUser, headers.origin);
 
     if (user.hasOwnProperty('token')) {
       return user;
@@ -77,18 +77,15 @@ export class AccountController {
   })
   async forgotPassword(@Body() mail: IForgotPassword, @Headers() headers): Promise<CMessage> {
     if (!mail.email || mail.email.length < 4 || !mail.email.includes('@')) {
-      throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
+      return new CMessage('Email address does not look right, try correcting and send again', HttpStatus.BAD_REQUEST);
     }
 
     // If email address doesn't exist throw bad juju
     if (await this.userService.emailAvailable(mail.email)) {
-      throw new HttpException(
-        { status: HttpStatus.NOT_FOUND, message: 'Email address not exist, super suspicious like' },
-        HttpStatus.NOT_FOUND
-      );
+      return new CMessage('Email address not exist, super suspicious like', HttpStatus.NOT_FOUND);
     }
 
-    return this.userService.forgotPassword(mail.email, headers.host);
+    return this.userService.forgotPassword(mail.email, headers.origin);
   }
 
   @Post('validate-reset-token')
