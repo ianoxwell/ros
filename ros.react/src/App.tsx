@@ -1,5 +1,5 @@
 import SharedLayout from '@features/SharedLayout';
-import { MantineProvider } from '@mantine/core';
+import { colorsTuple, createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
@@ -8,20 +8,27 @@ import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';
 import { Recipes } from '@pages/Recipes';
+import AccountWrapper from '@pages/register/AccountWrapper';
+import ForgotPassword from '@pages/register/ForgotPassword';
 import Login from '@pages/register/Login';
+import ResetPassword from '@pages/register/ResetPassword';
+import VerifyEmail from '@pages/register/VerifyEmail';
 import { Schedules } from '@pages/Schedules';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
-import AccountWrapper from '@pages/register/AccountWrapper';
-import VerifyEmail from '@pages/register/VerifyEmail';
-import ForgotPassword from '@pages/register/ForgotPassword';
-import ResetPassword from '@pages/register/ResetPassword';
 import { CRoutes } from './routes.const';
+
+const theme = createTheme({
+  primaryColor: 'accent',
+  colors: {
+    accent: colorsTuple('#128758')
+  }
+});
 
 function App() {
   return (
     <>
-      <MantineProvider>
+      <MantineProvider theme={theme}>
         <Notifications position="top-center" limit={5} autoClose={7000} zIndex={1001} />
         {/* Note guide to mantine notifications - https://mantine.dev/x/notifications/#functions */}
 
