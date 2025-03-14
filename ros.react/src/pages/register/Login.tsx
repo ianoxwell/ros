@@ -1,8 +1,9 @@
 import { loginUser, registerUser, toggleIsMember } from '@features/user/userSlice';
-import { Button, Checkbox, Group, TextInput, UnstyledButton } from '@mantine/core';
+import { Button, Checkbox, Group, NavLink, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { CRoutes } from 'src/routes.const';
 import { RootState } from 'src/store';
 
 const initialState = {
@@ -99,6 +100,13 @@ const Login = () => {
           {...form.getInputProps('password')}
         />
 
+        {isMember && (
+          <section className="forgot-password">
+            <span className="forgot-password--text">Forgot Password?</span>
+            <NavLink href={CRoutes.forgotPassword} rightSection="Reset" />
+          </section>
+        )}
+
         {!isMember && (
           <Checkbox
             mt="md"
@@ -113,12 +121,12 @@ const Login = () => {
             Submit
           </Button>
         </Group>
-        <p>
-          {isMember ? 'Not a member yet?' : 'Already a member?'}
+        <section className="register-login">
+          <span>{isMember ? 'Not a member yet?' : 'Already a member?'}</span>
           <UnstyledButton type="button" onClick={toggleMember} className="member-btn">
             {isMember ? 'Register' : 'Login'}
           </UnstyledButton>
-        </p>
+        </section>
       </form>
     </>
   );
