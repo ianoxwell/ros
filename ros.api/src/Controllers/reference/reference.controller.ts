@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Reference } from './reference.entity';
 import { ReferenceService } from './reference.service';
 import { AuthGuard } from '@nestjs/passport';
+import { IReference } from '@models/reference.dto';
 
 @ApiTags('reference')
 @UseGuards(AuthGuard('jwt'))
@@ -16,7 +17,7 @@ export class ReferenceController {
     description: 'List of reference items',
     type: [Reference]
   })
-  async findAll(): Promise<Reference[]> {
+  async findAll(): Promise<IReference[]> {
     return this.referenceService.findAll();
   }
 
