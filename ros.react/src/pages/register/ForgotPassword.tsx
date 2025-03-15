@@ -7,8 +7,8 @@ import { TextInput, Button, Group } from '@mantine/core';
 import { isEmail, useForm } from '@mantine/form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CRoutes } from 'src/routes.const';
-import { RootState } from 'src/store';
+import { CRoutes } from '@app/routes.const';
+import { RootState } from '@app/store';
 
 const ForgotPassword = () => {
   const { isLoading } = useSelector((store: RootState) => store.user);

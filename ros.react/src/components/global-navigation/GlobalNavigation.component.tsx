@@ -4,7 +4,7 @@ import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } f
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
-import { CRoutes } from 'src/routes.const';
+import { CRoutes } from '@app/routes.const';
 import './GlobalNavigation.component.scss';
 
 const links = [

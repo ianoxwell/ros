@@ -16,7 +16,7 @@ import VerifyEmail from '@pages/register/VerifyEmail';
 import { Schedules } from '@pages/Schedules';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
-import { CRoutes } from './routes.const';
+import { CRoutes } from './app/routes.const';
 
 const theme = createTheme({
   primaryColor: 'accent',

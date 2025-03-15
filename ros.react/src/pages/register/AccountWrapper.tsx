@@ -2,7 +2,7 @@ import { Card } from '@mantine/core';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { RootState } from 'src/store';
+import { RootState } from '@app/store';
 import './register.scss';
 import { setPageNavigate } from '@features/user/userSlice';
 import { useDispatch } from 'react-redux';

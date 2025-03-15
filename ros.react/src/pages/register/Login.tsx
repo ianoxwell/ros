@@ -3,8 +3,8 @@ import { registerUser, toggleIsMember } from '@features/user/userSlice';
 import { Button, Checkbox, Group, NavLink, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { useDispatch, useSelector } from 'react-redux';
-import { CRoutes } from 'src/routes.const';
-import { RootState } from 'src/store';
+import { CRoutes } from '@app/routes.const';
+import { RootState } from '@app/store';
 
 const initialState = {
   givenNames: '',

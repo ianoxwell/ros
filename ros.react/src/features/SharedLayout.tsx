@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { GlobalNavigation } from './global-navigation/GlobalNavigation.component';
+import { GlobalNavigation } from '../components/global-navigation/GlobalNavigation.component';
 
 const SharedLayout = () => {
   console.log('blah blah shared layout');

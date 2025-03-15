@@ -7,7 +7,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from '@utils/localStorage';
 import { isMessage } from '@utils/typescriptHelpers';
 import { HttpStatusCode } from 'axios';
-import { CRoutes } from 'src/routes.const';
+import { CRoutes } from '@app/routes.const';
 import {
   clearStoreThunk,
   forgotPasswordEmailThunk,

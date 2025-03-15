@@ -2,7 +2,7 @@ import { verifyUserEmailAccount } from '@features/user/userSlice';
 import { Button } from '@mantine/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { RootState } from 'src/store';
+import { RootState } from '@app/store';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();

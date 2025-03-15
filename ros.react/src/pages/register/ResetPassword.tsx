@@ -7,7 +7,7 @@ import { hasLength, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { RootState } from 'src/store';
+import { RootState } from '@app/store';
 
 const ResetPassword = () => {
   const [visible, { toggle }] = useDisclosure(false);
