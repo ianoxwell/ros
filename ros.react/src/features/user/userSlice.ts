@@ -1,25 +1,20 @@
 import { IMessage } from '@domain/message.dto';
 import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
-import { INewUser, IUserLogin, IUserSummary, IUserToken, IVerifyUserEmail } from '@domain/user.dto';
+import { INewUser, IUserToken, IVerifyUserEmail } from '@domain/user.dto';
+import { apiSlice } from '@features/api/apiSlice';
 import { notifications } from '@mantine/notifications';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from '@utils/localStorage';
+import { isMessage } from '@utils/typescriptHelpers';
 import { HttpStatusCode } from 'axios';
 import { CRoutes } from 'src/routes.const';
 import {
   clearStoreThunk,
   forgotPasswordEmailThunk,
-  loginUserThunk,
   registerUserThunk,
   resetPasswordThunk,
-  updateUserThunk,
   verifyUserEmailThunk
 } from './userThunk';
-
-export function isMessage<T>(payload: IMessage | T): payload is IMessage {
-  //magic happens here
-  return (<IMessage>payload).message !== undefined;
-}
 
 export interface IUserState {
   isLoading: boolean;
@@ -45,13 +40,9 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk('user/loginUser', async (user: IUserLogin, thunkAPI) => {
-  return loginUserThunk(user, thunkAPI);
-});
-
-export const updateUser = createAsyncThunk('user/updateUser', async (user: IUserSummary, thunkAPI) => {
-  return updateUserThunk('/auth/updateUser', user, thunkAPI);
-});
+// export const updateUser = createAsyncThunk('user/updateUser', async (user: IUserSummary, thunkAPI) => {
+//   return updateUserThunk('/auth/updateUser', user, thunkAPI);
+// });
 
 export const verifyUserEmailAccount = createAsyncThunk(
   'user/verifyEmail',
@@ -119,37 +110,10 @@ const userSlice = createSlice({
         state.isLoading = false;
         notifications.show({ message: payload as string });
       })
-      // Login User
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(loginUser.fulfilled, (state, { payload }: { payload: IUserToken | IMessage }) => {
-        state.isLoading = false;
-        if (isMessage<IUserToken>(payload)) {
-          notifications.show({
-            message: payload.message
-          });
-          if (payload.status === HttpStatusCode.NotFound) {
-            state.isMember = false;
-          }
-
-          return;
-        }
-
-        const { user } = payload;
-        state.user = payload;
-        addUserToLocalStorage(payload);
-
-        notifications.show({ message: `Welcome Back ${user.givenNames}` });
-      })
-      .addCase(loginUser.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        notifications.show({ message: payload as string });
-      })
       // update user - TODO
-      .addCase(updateUser.pending, (state) => {
-        state.isLoading = true;
-      })
+      // .addCase(updateUser.pending, (state) => {
+      //   state.isLoading = true;
+      // })
       // Verify Email account
       .addCase(verifyUserEmailAccount.pending, (state) => {
         state.isLoading = true;
@@ -237,7 +201,29 @@ const userSlice = createSlice({
           notifications.show({ message: payload.message });
           state.errorMessage = payload.message;
         }
-      });
+      })
+      .addMatcher(
+        apiSlice.endpoints.loginUser.matchFulfilled,
+        (state, { payload }: { payload: IUserToken | IMessage }) => {
+          console.log('result from matcher', payload);
+          if (isMessage<IUserToken>(payload)) {
+            notifications.show({
+              message: payload.message
+            });
+            if (payload.status === HttpStatusCode.NotFound) {
+              state.isMember = false;
+            }
+
+            return;
+          }
+
+          const { user } = payload;
+          state.user = payload;
+          addUserToLocalStorage(payload);
+
+          notifications.show({ message: `Welcome Back ${user.givenNames}` });
+        }
+      );
   }
 });
 

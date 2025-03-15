@@ -1,7 +1,7 @@
-import { loginUser, registerUser, toggleIsMember } from '@features/user/userSlice';
+import { useLoginUserMutation } from '@features/api/apiSlice';
+import { registerUser, toggleIsMember } from '@features/user/userSlice';
 import { Button, Checkbox, Group, NavLink, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CRoutes } from 'src/routes.const';
 import { RootState } from 'src/store';
@@ -15,11 +15,11 @@ const initialState = {
 };
 
 const Login = () => {
-  const [values, setValues] = useState(initialState);
-  const { isLoading, isMember } = useSelector((store: RootState) => store.user);
+  const { isMember } = useSelector((store: RootState) => store.user);
   const dispatch = useDispatch();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
-  const submitButton = () => {
+  const submitButton = async () => {
     form.validate();
     if (!form.isValid()) {
       return;
@@ -29,9 +29,16 @@ const Login = () => {
     console.log('current form', form.getValues(), form.isValid(), form.errors);
     // Note to self the form.errors is usually blank if the form is not touched
 
-    setValues({ ...values, givenNames, familyName, email, password });
     if (isMember) {
-      dispatch(loginUser({ email, password }));
+      try {
+        await loginUser({ email, password }).unwrap();
+      } catch (error: unknown) {
+        console.log('Looks like a massive mistake happened', error);
+        // if (error.hasOwnProperty('message')) {
+        //   notifications.show({ message: error.message });
+        // }
+      }
+
       return;
     }
 
@@ -40,6 +47,7 @@ const Login = () => {
 
   const toggleMember = () => {
     dispatch(toggleIsMember());
+    // setValues({ ...values, isMember: !values.isMember });
   };
 
   const form = useForm({
