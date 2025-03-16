@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PagedResult } from '@models/common.model';
 import { Suggestion } from '@models/suggestion';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
 import { IFilter } from '@DomainModels/filter.dto';
+import { IPagedResult } from '@DomainModels/base.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class RecipeService {
   private apiUrl = environment.apiUrl + environment.apiVersion;
 
   constructor(private httpClient: HttpClient) {}
-  public getRecipe(filterQuery: IFilter | null): Observable<PagedResult<IRecipeShort>> {
+  public getRecipe(filterQuery: IFilter | null): Observable<IPagedResult<IRecipeShort>> {
     // if (!filterQuery) {
     //   filterQuery = new RecipeFilterQuery();
     // }
@@ -44,7 +44,7 @@ export class RecipeService {
 
     // queryString = queryString.slice(0, -1);
     console.log('ready the query', filterQuery);
-    return this.httpClient.post<PagedResult<IRecipe>>(`${this.apiUrl}recipe/search`, filterQuery, {
+    return this.httpClient.post<IPagedResult<IRecipe>>(`${this.apiUrl}recipe/search`, filterQuery, {
       headers: this.defaultHeader
     });
   }

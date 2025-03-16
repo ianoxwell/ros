@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IPagedResult } from '@DomainModels/base.dto';
 // import * as StackTrace from 'stacktrace-js';
-import { ISortPageObj, PagedResult } from '@models/common.model';
+import { ISortPageObj } from '@models/common.model';
 import { IEventLogDetail, ILogSearchCriteria } from '@models/log.models';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -18,7 +19,7 @@ export class LogService {
   getTodaysLogs(
     logSearchCriteria: ILogSearchCriteria,
     sortingCriteria: ISortPageObj
-  ): Observable<PagedResult<IEventLogDetail>> {
+  ): Observable<IPagedResult<IEventLogDetail>> {
     const url = `${environment.apiUrl}${environment.apiVersion}admin/logs`;
     let params: any = logSearchCriteria;
     if (sortingCriteria) {
@@ -36,7 +37,7 @@ export class LogService {
         };
       }
     }
-    return this.http.post<PagedResult<IEventLogDetail>>(url, params);
+    return this.http.post<IPagedResult<IEventLogDetail>>(url, params);
   }
 
   /**

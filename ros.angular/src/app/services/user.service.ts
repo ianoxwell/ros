@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PagedResult } from '@models/common.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IUserSummary } from '@DomainModels/user.dto';
+import { IPagedResult } from '@DomainModels/base.dto';
 @Injectable({
   providedIn: 'root'
 })
@@ -41,8 +41,8 @@ export class UserService {
   }
 
   // TODO implement the API
-  public getUserByEmail(emailString: string): Observable<PagedResult<IUserSummary>> {
-    return this.httpClient.get<PagedResult<IUserSummary>>(this.apiURL + `user?filter=email%3D${emailString}`, {
+  public getUserByEmail(emailString: string): Observable<IPagedResult<IUserSummary>> {
+    return this.httpClient.get<IPagedResult<IUserSummary>>(this.apiURL + `user?filter=email%3D${emailString}`, {
       headers: this.defaultHeader
     });
   }

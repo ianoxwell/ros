@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
-import { CBlankPagedMeta, PagedResult } from '@models/common.model';
+import { IPagedResult } from '@DomainModels/base.dto';
+import { CBlankPagedMeta } from '@models/common.model';
 import { Recipe } from '@models/recipe.model';
 
 export const fakeRecipe1: Recipe = {
@@ -290,7 +291,7 @@ export const fakeRecipe2: Recipe = {
   updatedAt: '2019-12-09T05:55:59.710Z'
 };
 
-export const fakeRecipeReturn: PagedResult<Recipe> = {
+export const fakeRecipeReturn: IPagedResult<Recipe> = {
   results: [fakeRecipe1, fakeRecipe2],
   meta: { ...CBlankPagedMeta, itemCount: 2 }
 };

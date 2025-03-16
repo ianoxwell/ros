@@ -3,10 +3,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
+import { IPagedResult } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
-import { CBlankPagedMeta, PagedResult } from '@models/common.model';
+import { CBlankPagedMeta } from '@models/common.model';
 import { RecipeFilterQuery } from '@models/filter-queries.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { IReferenceAll } from '@models/reference.model';
@@ -70,7 +71,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     this.listenFilterQueryChanges().subscribe();
   }
 
-  listenFilterQueryChanges(): Observable<PagedResult<IRecipeShort>> {
+  listenFilterQueryChanges(): Observable<IPagedResult<IRecipeShort>> {
     return this.stateService.getRecipeFilterQuery().pipe(
       switchMap((result: IFilter) => {
         console.log('filter result', result);
@@ -145,7 +146,7 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     console.log('here is the filter change', ev);
   }
 
-  getRecipes(): Observable<PagedResult<IRecipeShort>> {
+  getRecipes(): Observable<IPagedResult<IRecipeShort>> {
     this.isLoading = true;
     this.dataLength = 0;
     return this.recipeService.getRecipe(this.filterQuery).pipe(
@@ -162,8 +163,8 @@ export class RecipesComponent extends ComponentBase implements OnInit {
         console.log('stop loading');
         this.isLoading = false;
       }),
-      filter((result: PagedResult<IRecipeShort>) => result.meta.itemCount > 0),
-      tap((recipeResults: PagedResult<IRecipeShort>) => {
+      filter((result: IPagedResult<IRecipeShort>) => result.meta.itemCount > 0),
+      tap((recipeResults: IPagedResult<IRecipeShort>) => {
         this.dataLength = recipeResults.meta.itemCount;
         this.recipes = recipeResults.results;
         console.log('setting the recipe results', recipeResults, this.dataLength);

@@ -2,13 +2,14 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CBlankPagedMeta, ISortPageObj, PagedResult, SortPageObj } from '@models/common.model';
+import { CBlankPagedMeta, SortPageObj } from '@models/common.model';
 import { IMeasurement } from '@models/ingredient/ingredient-model';
 import { MessageStatus } from '@models/message.model';
 import { IReferenceAll } from '@models/reference.model';
 import { DialogService } from '@services/dialog.service';
 import { ReferenceService } from '@services/reference.service';
 // import {ConversionModel, EditedFieldModel, IngredientModel, PriceModel} from '../models/ingredient-model';
+import { IPagedResult } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IIngredient } from '@DomainModels/ingredient.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
@@ -35,7 +36,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   filterObject: IFilter = CBlankFilter;
   /** !Temp - is this nEEDED? */
   sortPageObj: SortPageObj = new SortPageObj();
-  data$: Observable<PagedResult<IIngredient>>;
+  data$: Observable<IPagedResult<IIngredient>>;
   isLoading = false;
   refData: IReferenceAll;
   measurements: IMeasurement[];
@@ -75,7 +76,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
   /**
    * Listens to the stateService ingredient filter and updates the data in the table on change.
    */
-  listenFilterQueryChanges(): Observable<PagedResult<IIngredient>> {
+  listenFilterQueryChanges(): Observable<IPagedResult<IIngredient>> {
     return this.stateService.getIngredientFilterQuery().pipe(
       switchMap((ingredientFilterObj: IFilter) => {
         console.log('heard a change in the filter obj', ingredientFilterObj);
@@ -105,7 +106,7 @@ export class IngredientsComponent extends ComponentBase implements OnInit {
    * load the ingredients that have been filtered
    * @returns Observable of Paged Result with Ingredient
    */
-  getIngredientList(): Observable<PagedResult<IIngredient>> {
+  getIngredientList(): Observable<IPagedResult<IIngredient>> {
     return this.ingredientService.getIngredientList(this.filterObject).pipe(
       catchError((error: unknown) => {
         const err = error as HttpErrorResponse;

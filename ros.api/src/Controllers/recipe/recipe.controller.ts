@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { IRecipe, IRecipeShort } from '../../../Models/recipe.dto';
 import { RecipeService } from './recipe.service';
+import { IPagedResult } from '../../../Models/base.dto';
 
 @ApiTags('Recipe')
 @UseGuards(AuthGuard('jwt'))
@@ -17,14 +18,14 @@ export class RecipeController {
 
   /** Quick and dirty get, limit of 20 items */
   @Get('list')
-  async findAll(): Promise<PaginatedDto<IRecipeShort>> {
+  async findAll(): Promise<IPagedResult<IRecipeShort>> {
     return await this.recipeService.findAll();
   }
 
   @Post('/search')
-  @ApiOkResponse({ type: PaginatedDto<IRecipeShort> })
+  @ApiOkResponse({ description: 'uses filter to search recipe, results paginated results' })
   @HttpCode(200)
-  async searchIngredients(@Body() filter: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
+  async searchIngredients(@Body() filter: IFilterBase): Promise<IPagedResult<IRecipeShort>> {
     const filterBase: IFilterBase = {
       ...filter,
       skip: filter.page * filter.take
@@ -72,7 +73,7 @@ export class RecipeController {
   @ApiOkResponse({
     description: 'Gets short recipes that include the filter string in the name'
   })
-  async ingredientSuggestionList(@Query('filter') filter: string): Promise<PaginatedDto<IRecipeShort>> {
+  async ingredientSuggestionList(@Query('filter') filter: string): Promise<IPagedResult<IRecipeShort>> {
     //  @Query('limit') limit: number
     const limit = 10;
     if (filter.length < 2) {

@@ -2,9 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewC
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EOrder } from '@DomainModels/base.dto';
+import { EOrder, IPagedResult } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { PagedResult } from '@models/common.model';
 
 @Component({
   template: '',
@@ -12,7 +11,7 @@ import { PagedResult } from '@models/common.model';
 })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class BaseTableComponent<T = any> implements OnChanges {
-  @Input({ required: true }) data!: PagedResult<T>;
+  @Input({ required: true }) data!: IPagedResult<T>;
   @Input({ required: true }) filter: IFilter = CBlankFilter;
   @Output() sortingPageChange = new EventEmitter<IFilter>();
   @Output() updateTableRequest = new EventEmitter();
@@ -26,7 +25,7 @@ export abstract class BaseTableComponent<T = any> implements OnChanges {
 
   ngOnChanges(change: SimpleChanges): void {
     if (!!change.data && !change.data.firstChange) {
-      const data: PagedResult<T> = change.data.currentValue;
+      const data: IPagedResult<T> = change.data.currentValue;
       this.dataSource.data = data.results;
     }
   }

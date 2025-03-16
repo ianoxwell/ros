@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IPagedResult } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IIngredient } from '@DomainModels/ingredient.dto';
-import { PagedResult } from '@models/common.model';
 import {
   IRawFoodIngredient,
   IRawFoodSuggestion,
@@ -69,12 +69,12 @@ export class IngredientService {
     );
   }
 
-  getIngredientList(filterQuery: IFilter): Observable<PagedResult<IIngredient>> {
+  getIngredientList(filterQuery: IFilter): Observable<IPagedResult<IIngredient>> {
     if (!filterQuery) {
       filterQuery = CBlankFilter;
     }
 
-    return this.httpClient.post<PagedResult<IIngredient>>(`${this.apiUrl}ingredient/search`, filterQuery, {
+    return this.httpClient.post<IPagedResult<IIngredient>>(`${this.apiUrl}ingredient/search`, filterQuery, {
       headers: this.defaultHeader
     });
   }

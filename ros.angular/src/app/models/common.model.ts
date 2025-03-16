@@ -48,20 +48,6 @@ export interface IngredientPaginator {
   filter?: string;
 }
 
-export interface PagedResult<T> {
-  results: T[];
-  meta: IPagedMeta;
-}
-
-export interface IPagedMeta {
-  readonly page: number;
-  readonly take: number;
-  readonly itemCount: number;
-  readonly pageCount: number;
-  readonly hasPreviousPage: boolean;
-  readonly hasNextPage: boolean;
-}
-
 export const CBlankPagedMeta = {
   page: 0,
   take: 0,
