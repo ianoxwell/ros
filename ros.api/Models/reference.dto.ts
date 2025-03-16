@@ -1,3 +1,5 @@
+import { IMeasurement } from './measurement.dto';
+
 export interface IReference {
   id?: number;
   title: string;
@@ -10,12 +12,12 @@ export interface IReference {
 }
 
 export enum EReferenceType {
-  allergyWarning,
-  cuisineType,
-  dishTag,
-  dishType,
-  equipment,
-  healthLabel,
-  ingredientFoodGroup,
-  ingredientState
+  allergyWarning = 0,
+  healthLabel = 5
+}
+
+export interface IAllReferences {
+  allergyWarning: IReference[];
+  healthLabel: IReference[];
+  measurements: IMeasurement[];
 }

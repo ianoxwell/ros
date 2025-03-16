@@ -2,14 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { allergyReference } from './reference.data';
-import { EReferenceType, IReference } from '../../../Models/reference.dto';
+import { EReferenceType, IAllReferences, IReference } from '../../../Models/reference.dto';
 import { Reference } from './reference.entity';
+import { MeasurementService } from '@controllers/measurement/measurement.service';
+import { IMeasurement } from '@models/measurement.dto';
 
 @Injectable()
 export class ReferenceService {
   constructor(
     @InjectRepository(Reference)
-    private readonly referenceRepository: Repository<Reference>
+    private readonly referenceRepository: Repository<Reference>,
+    private measurementService: MeasurementService
   ) {}
 
   findAll(): Promise<Reference[]> {
@@ -31,6 +34,17 @@ export class ReferenceService {
     }
 
     throw new Error('No record found');
+  }
+
+  async getAllReferences(): Promise<IAllReferences> {
+    const rawReferences = await this.referenceRepository.find();
+    const measurements = (await this.measurementService.findAll()) as IMeasurement[];
+
+    return {
+      allergyWarning: rawReferences.filter((ref) => ref.refType === EReferenceType.allergyWarning),
+      healthLabel: rawReferences.filter((ref) => ref.refType === EReferenceType.healthLabel),
+      measurements
+    };
   }
 
   /** Fires when npm run seed is run. */
