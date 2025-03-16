@@ -1,37 +1,18 @@
 import { clearStore } from '@features/user/userSlice';
 import axios from 'axios';
-import { getUserFromLocalStorage } from './localStorage';
-
-/** Decodes the token, parses and attempts to cast to T. */
-const decodeToken = (token: string) => {
-  return JSON.parse(atob(token.split('.')[1]));
-};
-
-/** Decodes the jwt token and compares to current time to see if the token is still fresh. */
-const isTokenFresh = (token: string | undefined, expiryKey = 'exp'): boolean => {
-  if (!token) {
-    return false;
-  }
-
-  const expiryString = decodeToken(token)[expiryKey] as unknown as string;
-  const expiry = new Date(expiryString).getTime() * 1000;
-
-  return new Date().getTime() < expiry;
-};
+import { getUserFromLocalStorage, isTokenFresh } from './localStorage';
 
 const customFetch = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 });
 
 customFetch.interceptors.request.use((config) => {
-  // const dispatch = useDispatch();
   const user = getUserFromLocalStorage();
   const isFresh = isTokenFresh(user?.token, 'exp');
 
   if (user) {
     config.headers['Authorization'] = `Bearer ${user.token}`;
     if (!isFresh) {
-      // dispatch(logoutUser('Logging out...'));
       console.log('should clear out the user somehow without a dispatch?');
     }
   }
