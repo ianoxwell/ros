@@ -1,10 +1,10 @@
+import { useAppDispatch } from '@app/hooks';
+import { CRoutes } from '@app/routes.const';
 import { logoutUser } from '@features/user/userSlice';
 import { Menu } from '@mantine/core';
 import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } from 'lucide-react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
-import { CRoutes } from '@app/routes.const';
 import './GlobalNavigation.component.scss';
 
 const links = [
@@ -20,7 +20,7 @@ export const GlobalNavigation = () => {
   const iconSize = 24;
   const iconPlusSize = 28;
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   function contextAwareNewItem() {
     console.log('contextually add something', location.pathname);

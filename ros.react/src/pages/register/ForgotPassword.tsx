@@ -2,18 +2,19 @@
  * Forgot password form - just has the email and button to send reset password link
  */
 
-import { forgotPasswordEmail } from '@features/user/userSlice';
-import { TextInput, Button, Group } from '@mantine/core';
-import { isEmail, useForm } from '@mantine/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@app/hooks';
 import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
+import { forgotPasswordEmail } from '@features/user/userSlice';
+import { Button, Group, TextInput } from '@mantine/core';
+import { isEmail, useForm } from '@mantine/form';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const { isLoading } = useSelector((store: RootState) => store.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const form = useForm({
     mode: 'uncontrolled', // more performant - https://mantine.dev/form/uncontrolled/

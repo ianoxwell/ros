@@ -1,16 +1,16 @@
+import { useAppDispatch } from '@app/hooks';
+import { RootState } from '@app/store';
+import { setPageNavigate } from '@features/user/userSlice';
 import { Card } from '@mantine/core';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { RootState } from '@app/store';
 import './register.scss';
-import { setPageNavigate } from '@features/user/userSlice';
-import { useDispatch } from 'react-redux';
 
 const AccountWrapper = () => {
   const { user, activePage } = useSelector((store: RootState) => store.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (user) {

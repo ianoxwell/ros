@@ -1,13 +1,14 @@
 /**
  * Form that picks up the email and token and query params and then has form inputs to reset the PW
  */
+import { useAppDispatch } from '@app/hooks';
+import { RootState } from '@app/store';
 import { resetPasswordEmail } from '@features/user/userSlice';
 import { Button, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { RootState } from '@app/store';
 
 const ResetPassword = () => {
   const [visible, { toggle }] = useDisclosure(false);
@@ -15,7 +16,7 @@ const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email');
   const token = searchParams.get('token');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const form = useForm({
     mode: 'uncontrolled', // more performant - https://mantine.dev/form/uncontrolled/
@@ -36,7 +37,9 @@ const ResetPassword = () => {
     }
 
     const { password } = form.getValues();
-    dispatch(resetPasswordEmail({ email, token, password }));
+    if (email && token) {
+      dispatch(resetPasswordEmail({ email, token, password }));
+    }
   };
 
   return (

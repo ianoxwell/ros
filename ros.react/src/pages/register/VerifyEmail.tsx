@@ -1,18 +1,21 @@
+import { useAppDispatch } from '@app/hooks';
+import { RootState } from '@app/store';
 import { verifyUserEmailAccount } from '@features/user/userSlice';
 import { Button } from '@mantine/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import { RootState } from '@app/store';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const { user, isLoading, errorMessage } = useSelector((store: RootState) => store.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const email = searchParams.get('email');
   const token = searchParams.get('token');
 
   const verifyEmail = () => {
-    dispatch(verifyUserEmailAccount({ email, token }));
+    if (email && token) {
+      dispatch(verifyUserEmailAccount({ email, token }));
+    }
   };
 
   return (

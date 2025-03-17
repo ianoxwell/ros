@@ -1,10 +1,11 @@
+import { useAppDispatch } from '@app/hooks';
+import { CRoutes } from '@app/routes.const';
+import { RootState } from '@app/store';
 import { useLoginUserMutation } from '@features/api/apiSlice';
 import { registerUser, toggleIsMember } from '@features/user/userSlice';
 import { Button, Checkbox, Group, NavLink, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { CRoutes } from '@app/routes.const';
-import { RootState } from '@app/store';
+import { useSelector } from 'react-redux';
 
 const initialState = {
   givenNames: '',
@@ -16,7 +17,7 @@ const initialState = {
 
 const Login = () => {
   const { isMember } = useSelector((store: RootState) => store.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const submitButton = async () => {
@@ -94,6 +95,7 @@ const Login = () => {
           label="Email"
           type="email"
           placeholder="your@email.com"
+          autoComplete='email'
           key={form.key('email')}
           {...form.getInputProps('email')}
         />
@@ -103,6 +105,7 @@ const Login = () => {
           required
           type="password"
           label="Password"
+          autoComplete='current-password'
           key={form.key('password')}
           {...form.getInputProps('password')}
         />
