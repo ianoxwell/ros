@@ -1,7 +1,8 @@
-import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { apiSlice } from '@features/api/apiSlice';
 import referenceSlice from '@features/references/referenceSlice';
 import userSlice from '@features/user/userSlice';
+import recipeFilterSlice from '@pages/recipes/recipeFilter.slice';
+import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import { listenerMiddleware } from './listenerMiddleware';
 
@@ -9,6 +10,7 @@ export const store = configureStore({
   reducer: {
     user: userSlice,
     references: referenceSlice,
+    recipeFilter: recipeFilterSlice,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>

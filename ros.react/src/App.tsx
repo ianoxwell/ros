@@ -7,7 +7,7 @@ import { Ingredients } from '@pages/Ingredients';
 import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';
-import { Recipes } from '@pages/Recipes';
+import { Recipes } from '@pages/recipes/Recipes';
 import AccountWrapper from '@pages/register/AccountWrapper';
 import ForgotPassword from '@pages/register/ForgotPassword';
 import Login from '@pages/register/Login';
