@@ -4,18 +4,26 @@
   --text-on-accent: #ffffff;
   --background-normal: #ebebeb;
   --text-on-normal: #070707;
-  --muted-text: #6b6b6b;
+  --muted-text: #6a6a6a;
   --menu-background: #ffffff;
   --alert-yellow: #f7bd29;
   --burnt-orange: #e6600b; // (some titles?)
 
   background-color: var(--background-normal);
   color: var(--text-on-normal);
-  height: 100vh;
+  min-height: 100vh;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
+}
+
+section.main-content {
+  margin-bottom: 4rem;
+  padding: 1rem;
+}
+.text-muted {
+  color: var(--muted-text);
 }
