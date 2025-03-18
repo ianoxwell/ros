@@ -12,6 +12,9 @@ const RosPagination = ({ meta }: { meta: IPagedMeta }) => {
     dispatch(setRecipePageNumber(page));
   };
 
+  // !TODO make limit on the number of pages that can be shown e.g. only 4 with middle item being center of range
+  // for example there are 7 pages - current page is 5 so show .. 4 5 6 7
+
   return (
     <>
       {meta.itemCount > meta.take && (
