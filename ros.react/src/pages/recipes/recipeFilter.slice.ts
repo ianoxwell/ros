@@ -9,9 +9,12 @@ const recipeFilterSlice = createSlice({
   reducers: {
     setRecipeTakeSize: (state, { payload }: { payload: number }) => {
       state.take = payload;
+    },
+    setRecipePageNumber: (state, { payload }: { payload: number }) => {
+        state.page = payload;
     }
   }
 });
 
-export const { setRecipeTakeSize } = recipeFilterSlice.actions;
+export const { setRecipeTakeSize, setRecipePageNumber } = recipeFilterSlice.actions;
 export default recipeFilterSlice.reducer;

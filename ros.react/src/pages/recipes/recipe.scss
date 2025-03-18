@@ -3,9 +3,12 @@
   .text-muted {
     line-height: 1;
   }
+  &--title {
+    max-width: 80%;
+  }
 }
 
 .filter-bar {
-    margin-bottom: 1rem; 
-    padding: 0 1rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
 }
