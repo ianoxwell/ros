@@ -21,7 +21,7 @@
           @content;
         } // Desktops
       } @else if $min == lg {
-        @media (min-width: 1440px) {
+        @media (min-width: 1600px) {
           @content;
         } // Widescreen Desktops
       }
