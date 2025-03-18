@@ -1,5 +1,7 @@
-import { useAppDispatch } from '@app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { CRoutes } from '@app/routes.const';
+import { RootState } from '@app/store';
+import { IUserToken } from '@domain/user.dto';
 import { logoutUser } from '@features/user/userSlice';
 import { Menu } from '@mantine/core';
 import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } from 'lucide-react';
@@ -21,6 +23,7 @@ export const GlobalNavigation = () => {
   const iconPlusSize = 28;
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
 
   function contextAwareNewItem() {
     console.log('contextually add something', location.pathname);
@@ -39,7 +42,7 @@ export const GlobalNavigation = () => {
       <div className="user-menu">
         <Menu shadow="md" width={200}>
           <Menu.Target>
-            <button type="button" className="nav-fab">
+            <button type="button" className="nav-fab" title={user.givenNames}>
               <User size={iconSize} />
             </button>
           </Menu.Target>
@@ -55,7 +58,7 @@ export const GlobalNavigation = () => {
 
       <nav className="bottom-nav">
         {navigation.map((nav) => (
-          <NavLink to={nav.link} className="nav-item" key={nav.id}>
+          <NavLink to={nav.link} aria-label={nav.title} className="nav-item" key={nav.id}>
             {({ isActive }) => {
               // Note that dynamic icon for lucide-react bloats the build size as it includes all icons - lacks tree shaking
               switch (nav.icon) {
@@ -73,7 +76,7 @@ export const GlobalNavigation = () => {
         ))}
 
         <div className="nav-fab-container">
-          <button type="button" onClick={contextAwareNewItem} className="nav-fab">
+          <button type="button" onClick={contextAwareNewItem} title="New" className="nav-fab">
             <Plus size={iconPlusSize} />
           </button>
         </div>

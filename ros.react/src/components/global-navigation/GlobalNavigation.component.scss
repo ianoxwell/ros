@@ -1,3 +1,8 @@
+/* 
+* Cutout loosely based on the following tutorial:
+* https://dev.to/karimshalapy/how-to-make-a-curved-cutout-to-any-element-a2j?comments_sort=latest
+*/
+
 .bottom-nav {
   --menu-height: 3.75rem;
   --card-color: #fff;
@@ -7,6 +12,7 @@
   --circle-d: calc(var(--circle-r) * 2);
   --circles-space: calc(var(--big-circle-r) + var(--pillar-size));
   --circle-extend-inset: calc(var(--circle-r) + var(--circles-space));
+  --card-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.1);
   background: 
     /* Big Circle Cutout */ radial-gradient(
         circle at 50% calc(0% - var(--pillar-size)),
@@ -36,6 +42,8 @@
   align-items: center;
   min-height: var(--menu-height);
   z-index: 1000;
+  filter: drop-shadow(var(--card-shadow));
+
 
   .nav-item {
     flex: 1;
