@@ -22,6 +22,13 @@ const theme = createTheme({
   primaryColor: 'accent',
   colors: {
     accent: colorsTuple('#128758')
+  },
+  breakpoints: {
+    xs: '37em',
+    sm: '48em',
+    md: '68em',
+    lg: '80em',
+    xl: '125em'
   }
 });
 
