@@ -19,6 +19,7 @@ import './App.scss';
 import { CRoutes } from './app/routes.const';
 
 const theme = createTheme({
+  fontFamily: 'Quicksand, sans-serif',
   primaryColor: 'accent',
   colors: {
     accent: colorsTuple('#128758')
