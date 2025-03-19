@@ -1,8 +1,10 @@
 import { Plural } from '@components/plural/Plural';
-import { IIngredient } from '@domain/ingredient.dto';
+import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { useGetRecipeQuery } from '@features/api/apiSlice';
-import { ActionIcon, Flex, Group, Image, List, Space, Spoiler, Title } from '@mantine/core';
+import { ActionIcon, Flex, Group, Image, SimpleGrid, Space, Spoiler, Stack, Text, Title } from '@mantine/core';
+import { fractionNumber } from '@utils/numberUtils';
+import { sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
 import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
 
@@ -73,15 +75,27 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
           <Space h="md" />
 
           <Title order={3}>Ingredients</Title>
+          <Space h="xs" />
           {data && (
-            <List>
-              {data.ingredients.map((ingredient: IIngredient) => (
-                <List.Item key={ingredient.id}>{ingredient.name}</List.Item>
-                // TODO add in the quantities
+            <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md" verticalSpacing="md">
+              {data.ingredientList.map((ri: IRecipeIngredient) => (
+                <Flex key={ri.id} align="center" direction="row" gap="xs">
+                  {/* <div className='recipe-image--wrapper'> */}
+                  <Image
+                    height={40}
+                    src={`https://img.spoonacular.com/ingredients_100x100/${ri.ingredient.image}`}
+                    alt={ri.ingredient.name}
+                  />
+                  {/* </div> */}
+
+                  <div>
+                    {parse(fractionNumber(ri.amount))} <b>{ri.measure.shortName}</b> {sentenceCase(ri.ingredient.name)}
+                  </div>
+                </Flex>
               ))}
-            </List>
+            </SimpleGrid>
           )}
-        {/* Add in List of equipment */}
+          {/* Add in List of equipment */}
 
           {/* TODO add in the instructions etc */}
           {/* @if (selectedRecipe.steppedInstructions) {
