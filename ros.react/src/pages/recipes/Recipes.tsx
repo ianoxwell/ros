@@ -2,15 +2,17 @@ import { useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
 import Loader from '@components/Loader/Loader.component';
 import RosPagination from '@components/RosPagination/RosPagination.component';
+import { IRecipeShort } from '@domain/recipe.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetRecipesMutation } from '@features/api/apiSlice';
-import { Button, Flex, SimpleGrid, Text, Title, Transition } from '@mantine/core';
+import { Button, Flex, Modal, SimpleGrid, Text, Title, Transition } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { SlidersVerticalIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import RecipeCard from './RecipeCard';
 import RecipeFilter from './RecipeFilter';
+import RecipeModal from './RecipeModal';
 import './recipe.scss';
 
 export const Recipes = () => {
@@ -18,7 +20,9 @@ export const Recipes = () => {
   const [getRecipes, { data, isLoading }] = useGetRecipesMutation();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const [filterOpen, { toggle }] = useDisclosure(false);
+  const [recipeOpened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery(`(max-width: 1599px)`);
+  const [viewRecipe, setViewRecipe] = useState<IRecipeShort | undefined>(undefined);
 
   useEffect(() => {
     try {
@@ -29,8 +33,30 @@ export const Recipes = () => {
     }
   }, [recipeFilter, getRecipes]);
 
+  const openModal = (recipeShort: IRecipeShort) => {
+    console.log('open the modal now', recipeShort);
+    setViewRecipe(recipeShort);
+    open();
+  };
+
+
+
   return (
     <>
+      <Modal
+        opened={recipeOpened}
+        onClose={close}
+        transitionProps={{ transition: 'slide-left' }}
+        fullScreen
+        radius={0}
+        withCloseButton={false}
+        padding={0}
+        aria-label={viewRecipe?.name || 'Recipe'}
+      >
+        {/* Modal content */}
+        {viewRecipe && <RecipeModal recipeShort={viewRecipe} closeModal={close} />}
+      </Modal>
+
       <div className="title-bar">
         <div className="text-muted">Hello {user.givenNames}</div>
         <Title className="title-bar--title">What would you like to cook today?</Title>
@@ -64,7 +90,7 @@ export const Recipes = () => {
             <>
               <SimpleGrid cols={{ base: 2, md: 3, lg: 4, xl: 5 }} spacing="md" verticalSpacing="md">
                 {data.results.map((recipe) => {
-                  return <RecipeCard key={recipe.id} recipe={recipe} />;
+                  return <RecipeCard key={recipe.id} recipe={recipe} openModal={openModal} />;
                 })}
               </SimpleGrid>
             </>
