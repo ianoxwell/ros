@@ -15,7 +15,7 @@ const RecipeFilter = ({ styles }: { styles: React.CSSProperties }) => {
   const [sortOrder, setSortOrder] = useState(filter.order);
   const sortBy = [
     { value: 'name', label: 'Name' },
-    { value: 'cookingMinutes', label: 'Cooking Time' },
+    { value: 'readyInMinutes', label: 'Cooking Time' },
     { value: 'healthScore', label: 'Health rating' },
     { value: 'servings', label: 'Servings' }
   ];
