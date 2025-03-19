@@ -2,7 +2,7 @@
 import { IPagedResult } from '@domain/base.dto';
 import { IFilter } from '@domain/filter.dto';
 import { IMessage } from '@domain/message.dto';
-import { IRecipeShort } from '@domain/recipe.dto';
+import { IRecipe, IRecipeShort } from '@domain/recipe.dto';
 import { IAllReferences } from '@domain/reference.dto';
 import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
 import { INewUser, IUserLogin, IUserToken, IVerifyUserEmail } from '@domain/user.dto';
@@ -66,6 +66,9 @@ export const apiSlice = createApi({
     }),
     getRecipes: builder.mutation<IPagedResult<IRecipeShort>, IFilter>({
       query: (filter) => ({ url: '/recipe/search', method: 'POST', body: filter })
+    }),
+    getRecipe: builder.query<IRecipe, number>({
+      query: (id) => ({ url: `/recipe/${id}`})
     })
   })
 });
@@ -78,5 +81,6 @@ export const {
   useForgotPasswordEmailMutation,
   useResetPasswordMutation,
   useGetReferencesQuery,
-  useGetRecipesMutation
+  useGetRecipesMutation,
+  useGetRecipeQuery
 } = apiSlice;
