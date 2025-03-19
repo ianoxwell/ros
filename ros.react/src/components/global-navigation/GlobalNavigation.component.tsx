@@ -3,7 +3,7 @@ import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
 import { IUserToken } from '@domain/user.dto';
 import { logoutUser } from '@features/user/userSlice';
-import { Menu } from '@mantine/core';
+import { Avatar, Menu, UnstyledButton } from '@mantine/core';
 import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -42,9 +42,24 @@ export const GlobalNavigation = () => {
       <div className="user-menu">
         <Menu shadow="md" width={200}>
           <Menu.Target>
-            <button type="button" className="nav-fab" title={user.givenNames}>
-              <User size={iconSize} />
-            </button>
+            <UnstyledButton type="button" className="nav-fab" title={user.givenNames}>
+              {(() => {
+                if (user.photoUrl?.length) {
+                  return <Avatar src={user.photoUrl[0]} radius="xl" />;
+                }
+
+                if (user.givenNames && user.familyName) {
+                  return (
+                    <Avatar radius="xl" color='primary'>
+                      {user.givenNames.at(0)}
+                      {user.familyName.at(0)}
+                    </Avatar>
+                  );
+                }
+
+                return <Avatar radius="xl" />;
+              })()}
+            </UnstyledButton>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>Application</Menu.Label>
