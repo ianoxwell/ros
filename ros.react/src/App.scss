@@ -16,12 +16,21 @@
   min-height: 100vh;
 }
 :root {
-  --mantine-scale: 0.9;
-  @include mixins.breakpoint(md) {
-    --mantine-scale: 1;
+  --mantine-h1-font-size: calc(1.875rem* var(--mantine-scale)); //30px
+  --mantine-h2-font-size: calc(1.5rem* var(--mantine-scale)); // 24px
+  --mantine-h3-font-size: calc(1.25rem* var(--mantine-scale)); //20px
+  --mantine-h4-font-size: calc(1rem* var(--mantine-scale)); //16px
+  @include mixins.breakpoint(md) { // Default
+    --mantine-h1-font-size: calc(2.125rem* var(--mantine-scale)); //34px
+    --mantine-h2-font-size: calc(1.625rem* var(--mantine-scale)); //26px
+    --mantine-h3-font-size: calc(1.375rem* var(--mantine-scale)); //22px
+    --mantine-h4-font-size: calc(1.125rem* var(--mantine-scale)); //18
   }
   @include mixins.breakpoint(lg) {
-    --mantine-scale: 1.1;
+    --mantine-h1-font-size: calc(2.5rem* var(--mantine-scale)); //40px
+    --mantine-h2-font-size: calc(1.875rem* var(--mantine-scale)); //30px
+    --mantine-h3-font-size: calc(1.625rem* var(--mantine-scale)); //26px
+    --mantine-h4-font-size: calc(1.375rem* var(--mantine-scale)); //22px
   }
 }
 
