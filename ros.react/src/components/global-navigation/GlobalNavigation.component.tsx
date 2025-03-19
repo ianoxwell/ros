@@ -4,7 +4,7 @@ import { RootState } from '@app/store';
 import { IUserToken } from '@domain/user.dto';
 import { logoutUser } from '@features/user/userSlice';
 import { Avatar, Menu, UnstyledButton } from '@mantine/core';
-import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket, User } from 'lucide-react';
+import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import './GlobalNavigation.component.scss';
@@ -45,19 +45,19 @@ export const GlobalNavigation = () => {
             <UnstyledButton type="button" className="nav-fab" title={user.givenNames}>
               {(() => {
                 if (user.photoUrl?.length) {
-                  return <Avatar src={user.photoUrl[0]} radius="xl" />;
+                  return <Avatar src={user.photoUrl[0]} radius="xl" size="lg" />;
                 }
 
                 if (user.givenNames && user.familyName) {
                   return (
-                    <Avatar radius="xl" color='primary'>
+                    <Avatar radius="xl" color="gray.7" variant="outline" size="lg">
                       {user.givenNames.at(0)}
                       {user.familyName.at(0)}
                     </Avatar>
                   );
                 }
 
-                return <Avatar radius="xl" />;
+                return <Avatar radius="xl" variant="outline" size="lg" />;
               })()}
             </UnstyledButton>
           </Menu.Target>
