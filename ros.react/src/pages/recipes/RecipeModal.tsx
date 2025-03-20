@@ -2,9 +2,9 @@ import { Plural } from '@components/plural/Plural';
 import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { useGetRecipeQuery } from '@features/api/apiSlice';
-import { ActionIcon, Flex, Group, Image, SimpleGrid, Space, Spoiler, Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Badge, Chip, Flex, Group, Image, SimpleGrid, Space, Spoiler, Stack, Title } from '@mantine/core';
 import { fractionNumber } from '@utils/numberUtils';
-import { sentenceCase } from '@utils/stringUtils';
+import { parseRecipeInstructions, sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
 import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
 
@@ -50,6 +50,12 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
 
           <Title order={2}>{recipeShort.name}</Title>
           <Space h="xs" />
+          <Group gap="xs">
+            {data?.dishType.map((dish, index) => (
+              <Chip key={index}>{sentenceCase(dish)}</Chip>
+            ))}
+          </Group>
+          <Space h="md" />
           <Flex direction="row" gap="md">
             <Group gap="xs">
               <Timer size={16} />
@@ -67,11 +73,20 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
             {/* Add in the health score */}
             {/* Add in the number of likes? */}
           </Flex>
-          {/* Add in the health labels chips */}
-          <Space h="xs" />
+          <Space h="md" />
+
           <Spoiler maxHeight={56} showLabel="Show more" hideLabel="Hide">
             {parse(recipeShort.summary)}
           </Spoiler>
+          <Space h="md" />
+
+          <Title order={3}>Diets</Title>
+          <Space h="xs" />
+          <Group gap="xs">
+            {data?.diets.map((diet, index) => (
+              <Chip key={index}>{sentenceCase(diet)}</Chip>
+            ))}
+          </Group>
           <Space h="md" />
 
           <Title order={3}>Ingredients</Title>
@@ -80,13 +95,11 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
             <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md" verticalSpacing="md">
               {data.ingredientList.map((ri: IRecipeIngredient) => (
                 <Flex key={ri.id} align="center" direction="row" gap="xs">
-                  {/* <div className='recipe-image--wrapper'> */}
                   <Image
                     height={40}
                     src={`https://img.spoonacular.com/ingredients_100x100/${ri.ingredient.image}`}
                     alt={ri.ingredient.name}
                   />
-                  {/* </div> */}
 
                   <div>
                     {parse(fractionNumber(ri.amount))} <b>{ri.measure.shortName}</b> {sentenceCase(ri.ingredient.name)}
@@ -95,24 +108,45 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
               ))}
             </SimpleGrid>
           )}
-          {/* Add in List of equipment */}
+          <Space h="md" />
 
-          {/* TODO add in the instructions etc */}
-          {/* @if (selectedRecipe.steppedInstructions) {
-          <mat-list>
-            @for (item of selectedRecipe.steppedInstructions; track item) {
-              <mat-list-item>
-                <div class="flex-box flex-row p-1">
-                  <span class="text-small text-muted mr-2 w-7 align-self-center">Step {{ item.stepNumber }}</span>
-                  <span [innerHTML]="item.step | safeHtml"></span>
-                </div>
-                <mat-divider></mat-divider>
-              </mat-list-item>
-            }
-          </mat-list>
-        } @else {
-          <div [innerHTML]="selectedRecipe.instructions"></div>
-        } */}
+          <Title order={3}>Equipment</Title>
+          <Space h="xs" />
+          <Group gap="xs">
+            {data?.equipment.map((item, index) => (
+              <Chip key={index}>{sentenceCase(item)}</Chip>
+            ))}
+          </Group>
+          <Space h="md" />
+
+          <Title order={3}>Instructions</Title>
+          <Space h="xs" />
+          {data &&
+            (() => {
+              if (data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
+                return (
+                  <Stack>
+                    {data.steppedInstructions.map((item) => (
+                      <Flex direction="row" align="center" gap="xs" key={item.id}>
+                        <Badge circle>{item.stepNumber}</Badge>
+                        <div>{parse(item.step)}</div>
+                      </Flex>
+                    ))}
+                  </Stack>
+                );
+              }
+
+              return (
+                <Stack>
+                  {parseRecipeInstructions(data.instructions).map((instruction, index) => (
+                    <Flex direction="row" align="center" gap="xs" key={index}>
+                      <Badge circle>{index + 1}</Badge>
+                      <div>{parse(instruction || '')}</div>
+                    </Flex>
+                  ))}
+                </Stack>
+              );
+            })()}
         </div>
       </div>
     </>
