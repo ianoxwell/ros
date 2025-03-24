@@ -9,25 +9,13 @@ import { Equipment } from './equipment/equipment.entity';
 import { HealthLabel } from './health-label/health-label.entity';
 import { HealthLabelService } from './health-label/health-label.service';
 import { RecipeIngredient } from './recipe-ingredient/recipe-ingredient.entity';
-import { EquipmentSteppedInstruction } from './recipe-stepped-instructions/equipment-stepped-instruction.entity';
-import { RecipeSteppedInstruction } from './recipe-stepped-instructions/recipe-stepped-instructions.entity';
 import { RecipeController } from './recipe.controller';
 import { Recipe } from './recipe.entity';
 import { RecipeService } from './recipe.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Recipe,
-      CuisineType,
-      DishType,
-      Equipment,
-      HealthLabel,
-      RecipeIngredient,
-      RecipeSteppedInstruction,
-      EquipmentSteppedInstruction,
-      Measurement
-    ]),
+    TypeOrmModule.forFeature([Recipe, CuisineType, DishType, Equipment, HealthLabel, RecipeIngredient, Measurement]),
     PassportModule,
     IngredientModule
   ],

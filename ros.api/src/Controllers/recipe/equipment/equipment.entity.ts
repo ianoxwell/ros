@@ -1,7 +1,6 @@
 import { RosBaseEntity } from '@base/base.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, Unique } from 'typeorm';
 import { Recipe } from '../recipe.entity';
-import { EquipmentSteppedInstruction } from '../recipe-stepped-instructions/equipment-stepped-instruction.entity';
 
 @Entity()
 @Unique(['name'])
@@ -24,7 +23,4 @@ export class Equipment extends RosBaseEntity {
   @ManyToMany(() => Recipe)
   @JoinTable()
   recipes: Recipe[];
-
-  @OneToMany(() => EquipmentSteppedInstruction, (steppedEquip) => steppedEquip.equipment)
-  equipmentSteppedInstruction: EquipmentSteppedInstruction[];
 }

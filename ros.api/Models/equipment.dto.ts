@@ -1,4 +1,4 @@
-import { IBaseDto } from "./base.dto";
+import { IBaseDto } from './base.dto';
 
 export interface ISimpleEquipment extends IBaseDto {
   equipmentId: number;

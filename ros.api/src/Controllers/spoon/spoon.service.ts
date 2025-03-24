@@ -19,8 +19,6 @@ import { DishType } from '../recipe/dish-type/dish-type.entity';
 import { Equipment } from '../recipe/equipment/equipment.entity';
 import { HealthLabel } from '../recipe/health-label/health-label.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
-import { EquipmentSteppedInstruction } from '../recipe/recipe-stepped-instructions/equipment-stepped-instruction.entity';
-import { RecipeSteppedInstruction } from '../recipe/recipe-stepped-instructions/recipe-stepped-instructions.entity';
 import { Recipe } from '../recipe/recipe.entity';
 import { RecipeService } from '../recipe/recipe.service';
 import { ISpoonConversion } from './models/spoon-conversion.dto';
@@ -36,6 +34,11 @@ import {
   Step
 } from './models/spoon-random-recipe.dto';
 import { ISpoonSuggestions } from './models/spoon-suggestions.dto';
+import { FileService } from '@services/file.service';
+import {
+  IEquipmentStepDto,
+  IRecipeSteppedInstructionDto
+} from '@controllers/recipe/recipe-stepped-instructions/recipe-stepped-instructions.model';
 
 @Injectable()
 export class SpoonService {
@@ -48,7 +51,8 @@ export class SpoonService {
     private ingredientService: IngredientService,
     private measurementService: MeasurementService,
     private conversionService: ConversionService,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private fileService: FileService
   ) {
     this.spoonApi = this.config.get<string>('SPOON_API');
     this.spoonKey = this.config.get<string>('SPOON_KEY');
@@ -102,15 +106,13 @@ export class SpoonService {
     unit = unit || 'grams';
     const spoonCheck = await this.ingredientService.spoonIngredientIdExists(parseInt(id));
 
-    if (spoonCheck.hasOwnProperty('status') && (spoonCheck as CMessage).status === HttpStatus.OK) {
+    if (typeof spoonCheck === 'boolean') {
       const url = `${this.spoonApi}/food/ingredients/${id}/information?amount=${amount}&unit=${unit}&apiKey=${this.spoonKey}`;
       const spoonIngredient = await this.getAxiosHttp<ISpoonIngredient>(url);
 
       const spoonNameCheck = await this.ingredientService.spoonIngredientNameExists(spoonIngredient);
 
-      return spoonNameCheck.hasOwnProperty('status') && (spoonNameCheck as CMessage).status === HttpStatus.OK
-        ? await this.createIngredientFromSpoon(spoonIngredient)
-        : (spoonNameCheck as Ingredient);
+      return typeof spoonNameCheck === 'boolean' ? await this.createIngredientFromSpoon(spoonIngredient) : spoonNameCheck;
     }
 
     return spoonCheck as Ingredient;
@@ -127,8 +129,8 @@ export class SpoonService {
   }
 
   /** Gets a random spoon recipe that means tag condition. */
-  async getSpoonRandomRecipe(tags: string, limit?: number): Promise<Recipe | CMessage> {
-    const url = `${this.spoonApi}/recipes/random?number=${limit}&tags=${tags}&fillIngredients=true&apiKey=${this.spoonKey}`;
+  async getSpoonRandomRecipe(tags: string): Promise<Recipe | CMessage> {
+    const url = `${this.spoonApi}/recipes/random?number=1&tags=${tags}&fillIngredients=true&apiKey=${this.spoonKey}`;
 
     const recipes: IRandomRecipeResponse = await this.getAxiosHttp<IRandomRecipeResponse>(url);
 
@@ -138,6 +140,7 @@ export class SpoonService {
         return new CMessage('Recipe already exists', HttpStatus.CONFLICT);
       }
 
+      await this.fileService.saveJsonFile<ISpoonRecipe>(spoonRecipe.title, spoonRecipe);
       return await this.createSpoonRecipe(spoonRecipe);
     }
 
@@ -151,8 +154,18 @@ export class SpoonService {
     const recipe: ISpoonRecipe = await this.getAxiosHttp<ISpoonRecipe>(url);
 
     if (recipe !== null) {
-      if (await this.recipeService.isSpoonRecipeAlreadySaved(recipe)) {
-        return new CMessage('Recipe already exists', HttpStatus.CONFLICT);
+      const recipeCheck = await this.recipeService.getRecipeByName(recipe.title);
+      if (typeof recipeCheck !== 'boolean') {
+        const allSteppedInstructEquip = await this.mapSteppedInstructions(recipe.analyzedInstructions, recipeCheck.ingredients);
+        recipeCheck.analyzedInstructions = allSteppedInstructEquip.steppedInstructions;
+        if (!recipeCheck.images.length) {
+          recipeCheck.images.push(recipe.image);
+        }
+        console.log('result', recipeCheck.analyzedInstructions);
+
+        const updateRecipe = await this.recipeService.updateRecipeFromEntity(recipeCheck);
+
+        return new CMessage(updateRecipe ? 'Recipe updated' : 'Recipe update fail', HttpStatus.CONFLICT);
       }
 
       return await this.createSpoonRecipe(recipe);
@@ -217,7 +230,7 @@ export class SpoonService {
     newRecipe.dishType = dishType;
     newRecipe.diets = diets;
 
-    const allSteppedInstructEquip = await this.mapSteppedInstructions(spoonRecipe.analyzedInstructions, ingredients, newRecipe);
+    const allSteppedInstructEquip = await this.mapSteppedInstructions(spoonRecipe.analyzedInstructions, ingredients);
     const ingredientList: RecipeIngredient[] = await this.mapRecipeIngredientList(
       spoonRecipe.extendedIngredients,
       ingredients,
@@ -226,7 +239,7 @@ export class SpoonService {
     );
 
     newRecipe.equipment = allSteppedInstructEquip.allEquipment;
-    newRecipe.steppedInstructions = allSteppedInstructEquip.steppedInstructions;
+    newRecipe.analyzedInstructions = allSteppedInstructEquip.steppedInstructions;
     newRecipe.ingredientList = ingredientList;
     console.log('newRecipe', newRecipe, spoonRecipe);
 
@@ -402,48 +415,54 @@ export class SpoonService {
   /** Maps the analyzed instructions -> step through to stepped instructions. */
   private async mapSteppedInstructions(
     analyzedInstructions: AnalyzedInstruction[],
-    ingredients: Ingredient[],
-    newRecipe: Recipe
-  ): Promise<{ steppedInstructions: RecipeSteppedInstruction[]; allEquipment: Equipment[] }> {
-    const steppedInstructions: RecipeSteppedInstruction[] = [];
+    ingredients: Ingredient[]
+  ): Promise<{ steppedInstructions: IRecipeSteppedInstructionDto[]; allEquipment: Equipment[] }> {
+    const equipmentDb = await this.recipeService.getAllEquipment();
+    const steppedInstructions: IRecipeSteppedInstructionDto[] = [];
     const allEquipment: Equipment[] = [];
 
-    analyzedInstructions.forEach((namedStep: AnalyzedInstruction) => {
-      namedStep.steps.forEach(async (step: Step) => {
-        const stepIngredientIds = step.ingredients.map((ing: IShortIngredient) => ing.id);
-        const stepIngredients = ingredients.filter((item: Ingredient) => stepIngredientIds.includes(item.id));
+    await Promise.all(
+      analyzedInstructions.map(async (namedStep: AnalyzedInstruction) => {
+        await Promise.all(
+          namedStep.steps.map(async (step: Step) => {
+            const stepIngredientIds = step.ingredients.map((ing: IShortIngredient) => ing.id);
+            const ingredientIds = ingredients
+              .filter((item: Ingredient) => stepIngredientIds.includes(item.externalId))
+              .map((item) => item.id);
 
-        const steppedInstruction: RecipeSteppedInstruction = new RecipeSteppedInstruction();
-        steppedInstruction.step = step.step;
-        steppedInstruction.stepName = namedStep.name;
-        steppedInstruction.stepNumber = step.number;
-        steppedInstruction.lengthTimeValue = step.length?.number;
-        steppedInstruction.lengthTimeUnit = step.length?.unit;
-        steppedInstruction.ingredients = stepIngredients;
-        steppedInstruction.equipment = [];
-        steppedInstruction.recipeId = newRecipe.id;
+            const steppedInstruction: IRecipeSteppedInstructionDto = {
+              step: step.step,
+              stepName: namedStep.name,
+              stepNumber: step.number,
+              lengthTimeValue: step.length?.number,
+              lengthTimeUnit: step.length?.unit,
+              equipment: [],
+              ingredientIds
+            };
 
-        const equipment: EquipmentSteppedInstruction[] = await Promise.all(
-          step.equipment.map(async (equip: SpoonEquipment) => {
-            const item = await this.recipeService.createSpoonEquipment(equip);
-            if (!allEquipment.find((allEquip: Equipment) => allEquip.spoonId === equip.id)) {
-              allEquipment.push(item);
-            }
+            const equipment: IEquipmentStepDto[] = await Promise.all(
+              step.equipment.map(async (equip: SpoonEquipment) => {
+                const existingEquip: Equipment | undefined = equipmentDb.find((item) => item.spoonId === equip.id);
+                const equipItem = existingEquip || (await this.recipeService.createSpoonEquipment(equip));
+                if (!allEquipment.find((allEquip: Equipment) => allEquip.spoonId === equip.id)) {
+                  allEquipment.push(equipItem);
+                }
 
-            const steppedEquip: EquipmentSteppedInstruction = new EquipmentSteppedInstruction();
-            steppedEquip.equipment = item;
-            steppedEquip.temperature = equip.temperature?.number;
-            steppedEquip.temperatureUnit = equip.temperature?.unit;
-            steppedEquip.recipeSteppedInstructionId = steppedInstruction.id;
+                const steppedEquip: IEquipmentStepDto = {
+                  equipmentId: equipItem.id,
+                  temperature: equip.temperature?.number,
+                  temperatureUnit: equip.temperature?.unit
+                };
 
-            return steppedEquip;
+                return steppedEquip;
+              })
+            );
+            steppedInstruction.equipment = equipment;
+            steppedInstructions.push(steppedInstruction);
           })
         );
-        steppedInstruction.equipment = equipment;
-        // the create step returns with the entire step including Id - so theoretically when the recipe is saved it updated the recipes
-        steppedInstructions.push(steppedInstruction);
-      });
-    });
+      })
+    );
 
     return { steppedInstructions, allEquipment };
   }

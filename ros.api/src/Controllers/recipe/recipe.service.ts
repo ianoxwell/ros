@@ -11,7 +11,7 @@ import { IIngredient } from 'Models/ingredient.dto';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
 import { IRecipeSteppedInstruction } from 'Models/recipe-stepped-instructions.dto';
 import { IRecipe, IRecipeShort, THealthBooleanLabels } from 'Models/recipe.dto';
-import { ILike, Like, Raw, Repository } from 'typeorm';
+import { ILike, In, Raw, Repository } from 'typeorm';
 import { CIngredientShort } from '../ingredient/ingredient-short.dto';
 import { Ingredient } from '../ingredient/ingredient.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
@@ -22,8 +22,7 @@ import { DishType } from './dish-type/dish-type.entity';
 import { Equipment } from './equipment/equipment.entity';
 import { HealthLabel } from './health-label/health-label.entity';
 import { RecipeIngredient } from './recipe-ingredient/recipe-ingredient.entity';
-import { EquipmentSteppedInstruction } from './recipe-stepped-instructions/equipment-stepped-instruction.entity';
-import { RecipeSteppedInstruction } from './recipe-stepped-instructions/recipe-stepped-instructions.entity';
+import { IEquipmentStepDto, IRecipeSteppedInstructionDto } from './recipe-stepped-instructions/recipe-stepped-instructions.model';
 import { Recipe } from './recipe.entity';
 
 @Injectable()
@@ -45,9 +44,6 @@ export class RecipeService {
   constructor(
     @InjectRepository(Recipe) private readonly repository: Repository<Recipe>,
     @InjectRepository(Equipment) private readonly equipmentRepository: Repository<Equipment>,
-    @InjectRepository(EquipmentSteppedInstruction)
-    private readonly equipmentSteppedInstructionRepository: Repository<EquipmentSteppedInstruction>,
-    @InjectRepository(RecipeSteppedInstruction) private readonly steppedInstructionRepository: Repository<RecipeSteppedInstruction>,
     @InjectRepository(HealthLabel) private readonly healthLabelRepository: Repository<HealthLabel>,
     @InjectRepository(DishType) private readonly dishTypeRepository: Repository<DishType>,
     @InjectRepository(CuisineType) private readonly cuisineTypeRepository: Repository<CuisineType>,
@@ -70,6 +66,12 @@ export class RecipeService {
     const fullResult = result.map((recipe: Recipe) => this.mapRecipeToShortRecipeDto(recipe));
 
     return new PaginatedDto(fullResult, pageMetaDto);
+  }
+
+  /** Used for quick and dirty json update - but this might be what we need for actual updates? */
+  async updateRecipeOneTime(recipePartial: Partial<Recipe>) {
+    const updatedRecipe = await this.repository.preload(recipePartial);
+    return await this.repository.save(updatedRecipe);
   }
 
   /** Filter ingredients and paginate the results. */
@@ -95,7 +97,7 @@ export class RecipeService {
       skip: 0
     };
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Like(`%${filter}%`) },
+      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`) },
       order: { name: EOrder.ASC },
       take: limit,
       skip: 0
@@ -108,9 +110,16 @@ export class RecipeService {
     );
   }
 
+  async getRecipeByName(name: string): Promise<Recipe | boolean> {
+    const getRecipe: Recipe = await this.repository.findOne({
+      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${name.toLowerCase()}%'`) }
+    });
+    return getRecipe || false;
+  }
+
   /** Gets a single recipe */
   async getRecipeById(id: number): Promise<IRecipe | CMessage> {
-    const measures = await this.measurementRepository.find();
+    console.time('get recipe');
 
     const getRecipe: Recipe = await this.repository.findOne({
       where: { id },
@@ -123,43 +132,24 @@ export class RecipeService {
       return new CMessage('Recipe by id not found, ' + queryTime + 'ms', HttpStatus.NOT_FOUND);
     }
 
-    const cuisineType: CuisineType[] = await Promise.all(
-      (getRecipe.cuisineType as unknown as number[]).map(async (id: number) => {
-        return await this.cuisineTypeRepository.findOne({ where: { id } });
-      })
-    );
+    const cuisineType: CuisineType[] = await this.cuisineTypeRepository.find({
+      where: { id: In(getRecipe.cuisineType as unknown as number[]) }
+    });
 
-    const equipment: Equipment[] = await Promise.all(
-      (getRecipe.equipment as unknown as number[]).map(async (id: number) => {
-        return await this.equipmentRepository.findOne({ where: { id } });
-      })
-    );
+    const equipment: Equipment[] = await this.equipmentRepository.find({
+      where: { id: In(getRecipe.equipment as unknown as number[]) }
+    });
 
-    const dishType: DishType[] = await Promise.all(
-      (getRecipe.dishType as unknown as number[]).map(async (id: number) => {
-        return await this.dishTypeRepository.findOne({ where: { id } });
-      })
-    );
+    const dishType: DishType[] = await this.dishTypeRepository.find({
+      where: { id: In(getRecipe.dishType as unknown as number[]) }
+    });
 
-    const diets: HealthLabel[] = await Promise.all(
-      (getRecipe.diets as unknown as number[]).map(async (id: number) => {
-        return await this.healthLabelRepository.findOne({ where: { id } });
-      })
-    );
+    const diets: HealthLabel[] = await this.healthLabelRepository.find({
+      where: { id: In(getRecipe.diets as unknown as number[]) }
+    });
 
     const ingredientIds = (getRecipe.ingredients as unknown as number[]).map((il) => il);
     const ingredients = await this.ingredientService.getIngredientFromIdList(ingredientIds);
-
-    const steppedInstructions: RecipeSteppedInstruction[] = await this.steppedInstructionRepository.find({
-      where: { recipeId: id },
-      relations: {
-        equipment: {
-          equipment: true
-        },
-        ingredients: true
-      },
-      order: { stepNumber: EOrder.ASC }
-    });
 
     const ingredientList: RecipeIngredient[] = await this.recipeIngredientRepository.find({
       where: { recipeId: id },
@@ -167,12 +157,13 @@ export class RecipeService {
     });
 
     getRecipe.ingredients = ingredients;
-    getRecipe.steppedInstructions = steppedInstructions;
     getRecipe.ingredientList = ingredientList;
     getRecipe.cuisineType = cuisineType;
     getRecipe.equipment = equipment;
     getRecipe.dishType = dishType;
     getRecipe.diets = diets;
+
+    console.timeEnd('get recipe');
 
     return this.mapRecipeToRecipeDto(getRecipe);
   }
@@ -241,28 +232,17 @@ export class RecipeService {
 
   /** Maps the spoon equipment to Equipment and saves, else returns the equipment. */
   async createSpoonEquipment(equip: SpoonEquipment): Promise<Equipment> {
-    const findEquip = await this.equipmentRepository.findOne({ where: { name: ILike(equip.name.toLowerCase()) } });
+    const newEquip = new Equipment();
+    newEquip.name = equip.name;
+    newEquip.altName = equip.localizedName;
+    newEquip.spoonId = equip.id;
+    newEquip.image = equip.image;
 
-    if (!findEquip) {
-      const newEquip = new Equipment();
-      newEquip.name = equip.name;
-      newEquip.altName = equip.localizedName;
-      newEquip.spoonId = equip.id;
-      newEquip.image = equip.image;
-
-      return await this.equipmentRepository.save(newEquip);
-    }
-
-    return findEquip;
+    return await this.equipmentRepository.save(newEquip);
   }
 
-  /** After the instruction has been mapped, just save it. */
-  async createSteppedInstruction(instruction: RecipeSteppedInstruction): Promise<RecipeSteppedInstruction> {
-    return await this.steppedInstructionRepository.save(instruction);
-  }
-
-  async createSteppedInstructionEquipment(equip: EquipmentSteppedInstruction): Promise<EquipmentSteppedInstruction> {
-    return await this.equipmentSteppedInstructionRepository.save(equip);
+  async getAllEquipment(): Promise<Equipment[]> {
+    return await this.equipmentRepository.find();
   }
 
   /** A recipeIngredient contains the amount and unit of the ingredient required for the recipe - e.g. 2 cups wholemeal flour  */
@@ -410,7 +390,7 @@ export class RecipeService {
       diets,
       ingredients,
       ingredientList: r.ingredientList.map((iL) => this.mapRecipeIngredientDtoToRecipeIngredient(recipe, iL, ingredients, measures)),
-      steppedInstructions: r.steppedInstructions.map((si) => this.mapSteppedInstructionsDtoToEntity(recipe, si, ingredients, equipment))
+      analyzedInstructions: [] // TODO complete this
     };
     return recipe;
   }
@@ -437,43 +417,6 @@ export class RecipeService {
     };
   }
 
-  private mapSteppedInstructionsDtoToEntity(
-    recipe: Recipe,
-    si: IRecipeSteppedInstruction,
-    recipeIngredients: Ingredient[],
-    equipments: Equipment[]
-  ): RecipeSteppedInstruction {
-    const stepIngredientIds = si.ingredients.map((i) => i.id);
-    const recipeSteppedInstruction: RecipeSteppedInstruction = {
-      id: si.id,
-      step: si.step,
-      stepName: si.stepName,
-      stepNumber: si.stepNumber,
-      lengthTimeValue: si.lengthTimeValue,
-      lengthTimeUnit: si.lengthTimeUnit,
-      recipe,
-      recipeId: recipe.id,
-      equipment: si.equipment.map((e) => this.mapEquipmentSteppedInstructionToEntity(recipeSteppedInstruction, e, equipments)),
-      ingredients: recipeIngredients.filter((i) => stepIngredientIds.includes(i.id))
-    };
-
-    return recipeSteppedInstruction;
-  }
-
-  private mapEquipmentSteppedInstructionToEntity(
-    recipeSteppedInstruction: RecipeSteppedInstruction,
-    e: IEquipmentSteppedInstruction,
-    equipments: Equipment[]
-  ): EquipmentSteppedInstruction {
-    return {
-      equipment: equipments.find((eq) => eq.id === e.equipmentId),
-      recipeSteppedInstruction,
-      recipeSteppedInstructionId: recipeSteppedInstruction.id,
-      temperature: e.temperature,
-      temperatureUnit: e.temperatureUnit
-    };
-  }
-
   private async mapRecipeToRecipeDto(recipe: Recipe): Promise<IRecipe> {
     // const cuisineType: string[] = recipe.cuisineType.map((item: CuisineType) => item.name);
     // const dishType: string[] = recipe.dishType.map((item: DishType) => item.name);
@@ -487,43 +430,50 @@ export class RecipeService {
     const ingredientList: IRecipeIngredient[] = recipe.ingredientList.map((il: RecipeIngredient) =>
       this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto(il, recipe.id, measures, recipe.ingredients)
     );
-    const steppedInstructions: IRecipeSteppedInstruction[] = recipe.steppedInstructions.map((si: RecipeSteppedInstruction) =>
-      this.mapRecipeSteppedInstructionToISteppedInstruction(si, recipe.id)
-    );
+    const steppedInstructions: IRecipeSteppedInstruction[] = recipe.analyzedInstructions
+      .map((si: IRecipeSteppedInstructionDto) =>
+        this.mapRecipeSteppedInstructionToISteppedInstruction(si, recipe.ingredients, recipe.equipment)
+      )
+      .sort((a, b) => a.stepNumber - b.stepNumber);
 
-    return {
+    const mappedRecipe = {
       ...this.mapRecipeToShortRecipeDto(recipe),
       ingredients,
       ingredientList,
       steppedInstructions,
       equipment: recipe.equipment.map((equip) => equip.name)
     };
+    return mappedRecipe;
   }
 
-  private mapRecipeSteppedInstructionToISteppedInstruction(si: RecipeSteppedInstruction, recipeId: number): IRecipeSteppedInstruction {
+  private mapRecipeSteppedInstructionToISteppedInstruction(
+    si: IRecipeSteppedInstructionDto,
+    recipeIngredients: Ingredient[],
+    recipeEquipment: Equipment[]
+  ): IRecipeSteppedInstruction {
     return {
-      id: si.id,
-      recipeId,
       step: si.step,
       stepName: si.stepName,
       stepNumber: si.stepNumber,
       lengthTimeValue: si.lengthTimeValue,
       lengthTimeUnit: si.lengthTimeUnit,
-      ingredients: si.ingredients.map((i: Ingredient) => new CIngredientShort(i)),
-      equipment: si.equipment.map((eSi: EquipmentSteppedInstruction) => this.mapEquipmentSteppedInstructionToIEquip(eSi, si.id))
+      ingredients: si.ingredientIds.map((i: number) => {
+        const ing = recipeIngredients.find((ingred) => ingred.id === i);
+        return new CIngredientShort(ing);
+      }),
+      equipment: si.equipment.length
+        ? si.equipment.map((eSi: IEquipmentStepDto) => this.mapEquipmentSteppedInstructionToIEquip(eSi, recipeEquipment))
+        : []
     };
   }
 
-  private mapEquipmentSteppedInstructionToIEquip(
-    eSi: EquipmentSteppedInstruction,
-    recipeSteppedInstructionId: number
-  ): IEquipmentSteppedInstruction {
+  private mapEquipmentSteppedInstructionToIEquip(eSi: IEquipmentStepDto, recipeEquipment: Equipment[]): IEquipmentSteppedInstruction {
+    const equip = recipeEquipment.find((item) => item.id === eSi.equipmentId);
+
     return {
-      id: eSi.id,
-      recipeSteppedInstructionId,
       temperature: eSi.temperature,
       temperatureUnit: eSi.temperatureUnit,
-      ...this.mapEquipmentToISimpleEquipment(eSi.equipment)
+      ...this.mapEquipmentToISimpleEquipment(equip)
     };
   }
 

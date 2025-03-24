@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { RosBaseEntity } from '@base/base.entity';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { User } from '../account/user.entity';
 import { Ingredient } from '../ingredient/ingredient.entity';
@@ -8,7 +8,7 @@ import { DishType } from './dish-type/dish-type.entity';
 import { Equipment } from './equipment/equipment.entity';
 import { HealthLabel } from './health-label/health-label.entity';
 import { RecipeIngredient } from './recipe-ingredient/recipe-ingredient.entity';
-import { RecipeSteppedInstruction } from './recipe-stepped-instructions/recipe-stepped-instructions.entity';
+import { IRecipeSteppedInstructionDto } from './recipe-stepped-instructions/recipe-stepped-instructions.model';
 
 @Entity()
 @Unique(['name'])
@@ -85,6 +85,8 @@ export class Recipe extends RosBaseEntity {
   weightWatcherSmartPoints: number;
   @Column({ length: 20 })
   gaps: string;
+  @Column({ type: 'jsonb', default: '[]' })
+  analyzedInstructions: IRecipeSteppedInstructionDto[];
 
   /** Relationship tables */
   @ManyToMany(() => Ingredient, { cascade: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
@@ -110,9 +112,6 @@ export class Recipe extends RosBaseEntity {
   // contains ingredient reference, quantity meta etc.
   @OneToMany(() => RecipeIngredient, (recipeIngredient) => recipeIngredient.recipe, { cascade: true })
   ingredientList: RecipeIngredient[];
-
-  @OneToMany(() => RecipeSteppedInstruction, (steppedInstruction) => steppedInstruction.recipe, { cascade: true })
-  steppedInstructions: RecipeSteppedInstruction[];
 
   @ManyToOne(() => User, (user) => user.createdRecipes)
   createdBy?: User;

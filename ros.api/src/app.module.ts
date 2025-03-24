@@ -10,8 +10,6 @@ import { DishType } from '@controllers/recipe/dish-type/dish-type.entity';
 import { Equipment } from '@controllers/recipe/equipment/equipment.entity';
 import { HealthLabel } from '@controllers/recipe/health-label/health-label.entity';
 import { RecipeIngredient } from '@controllers/recipe/recipe-ingredient/recipe-ingredient.entity';
-import { EquipmentSteppedInstruction } from '@controllers/recipe/recipe-stepped-instructions/equipment-stepped-instruction.entity';
-import { RecipeSteppedInstruction } from '@controllers/recipe/recipe-stepped-instructions/recipe-stepped-instructions.entity';
 import { Recipe } from '@controllers/recipe/recipe.entity';
 import { RecipeModule } from '@controllers/recipe/recipe.module';
 import { Reference } from '@controllers/reference/reference.entity';
@@ -45,9 +43,7 @@ import { MailModule } from '@services/mail/mail.module';
         DishType,
         Equipment,
         HealthLabel,
-        RecipeIngredient,
-        RecipeSteppedInstruction,
-        EquipmentSteppedInstruction
+        RecipeIngredient
       ],
       migrations: [],
       synchronize: false,
