@@ -1,13 +1,13 @@
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
+import { IPagedResult } from '@models/base.dto';
+import { IRecipe, IRecipeShort } from '@models/recipe.dto';
 import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
 import { Body, Delete, HttpCode, Post, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { IRecipe, IRecipeShort } from '../../../Models/recipe.dto';
 import { RecipeService } from './recipe.service';
-import { IPagedResult } from '../../../Models/base.dto';
 
 @ApiTags('Recipe')
 @UseGuards(AuthGuard('jwt'))
@@ -39,7 +39,7 @@ export class RecipeController {
     description: 'Single Recipe'
   })
   async find(@Param('id') id: string): Promise<IRecipe | CMessage> {
-    return this.recipeService.getRecipeById(parseInt(id));
+    return await this.recipeService.getRecipeById(parseInt(id));
   }
 
   /** Deletes a single recipe. */

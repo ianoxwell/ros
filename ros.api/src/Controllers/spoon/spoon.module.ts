@@ -5,10 +5,11 @@ import { MeasurementModule } from '../measurement/measurement.module';
 import { RecipeModule } from '../recipe/recipe.module';
 import { SpoonController } from './spoon.controller';
 import { SpoonService } from './spoon.service';
+import { FileService } from '@services/file.service';
 
 @Module({
   imports: [HttpModule, IngredientModule, MeasurementModule, RecipeModule],
-  providers: [SpoonService],
+  providers: [SpoonService, FileService],
   controllers: [SpoonController],
   exports: [SpoonService]
 })
