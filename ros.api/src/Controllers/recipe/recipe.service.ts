@@ -462,13 +462,21 @@ export class RecipeService {
         return new CIngredientShort(ing);
       }),
       equipment: si.equipment.length
-        ? si.equipment.map((eSi: IEquipmentStepDto) => this.mapEquipmentSteppedInstructionToIEquip(eSi, recipeEquipment))
+        ? si.equipment
+            .map((eSi: IEquipmentStepDto) => this.mapEquipmentSteppedInstructionToIEquip(eSi, recipeEquipment))
+            .filter((eSi) => !!eSi)
         : []
     };
   }
 
-  private mapEquipmentSteppedInstructionToIEquip(eSi: IEquipmentStepDto, recipeEquipment: Equipment[]): IEquipmentSteppedInstruction {
+  private mapEquipmentSteppedInstructionToIEquip(
+    eSi: IEquipmentStepDto,
+    recipeEquipment: Equipment[]
+  ): IEquipmentSteppedInstruction | null {
     const equip = recipeEquipment.find((item) => item.id === eSi.equipmentId);
+    if (!equip) {
+      return null;
+    }
 
     return {
       temperature: eSi.temperature,
