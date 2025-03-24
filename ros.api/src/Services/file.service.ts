@@ -8,12 +8,19 @@ export class FileService {
       fileName += '.json';
     }
 
+    let jsonData = JSON.stringify({});
+
     try {
-      const jsonData = JSON.stringify(data, null, 2);
-      return await writeFile(`./assets/${fileName}`, jsonData);
+      jsonData = JSON.stringify(data, null, 2);
     } catch (error) {
-      console.log('Error converting data to json');
-      return `Error converting data to json or saving file, ${error.json()}`;
+      console.log('Error converting data to json', error);
+      return `Error converting data to json or saving file, ${error}`;
+    }
+
+    try {
+      return await writeFile(`./recipesJson/${fileName}`, jsonData);
+    } catch (error) {
+      console.log('error writing file', error);
     }
   }
 }
