@@ -138,17 +138,17 @@ export class IngredientService {
   }
 
   /** The ingredient should be unique in the spoonacularId should not already exist. */
-  async spoonIngredientIdExists(externalId: number): Promise<Ingredient | CMessage> {
+  async spoonIngredientIdExists(externalId: number): Promise<Ingredient | boolean> {
     const spoonCheck = await this.repository.findOne({ where: { externalId } });
 
-    return !!spoonCheck ? spoonCheck : new CMessage('Go ahead and create it', HttpStatus.OK);
+    return !!spoonCheck ? spoonCheck : false;
   }
 
   /** The name must also be unique. */
-  async spoonIngredientNameExists(spoon: ISpoonIngredient): Promise<Ingredient | CMessage> {
+  async spoonIngredientNameExists(spoon: ISpoonIngredient): Promise<Ingredient | boolean> {
     const spoonCheck = await this.repository.findOne({ where: [{ name: ILike(spoon.name) }] });
 
-    return !!spoonCheck ? spoonCheck : new CMessage('Go ahead and create it', HttpStatus.OK);
+    return !!spoonCheck ? spoonCheck : false;
   }
 
   /** Save ingredient or return internal server error. */

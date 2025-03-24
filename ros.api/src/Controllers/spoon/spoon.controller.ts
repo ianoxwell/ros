@@ -64,9 +64,8 @@ export class SpoonController {
     description: 'comma separated tags: keto, Pescetarian, Vegetarian, Lacto-Vegetarian'
   })
   @ApiOkResponse({ type: Recipe })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  async getSpoonRandom(@Query('tags') tags = '', @Query('limit') limit = 1): Promise<Recipe | CMessage> {
-    return this.spoonService.getSpoonRandomRecipe(tags, limit);
+  async getSpoonRandom(@Query('tags') tags = ''): Promise<Recipe | CMessage> {
+    return this.spoonService.getSpoonRandomRecipe(tags);
   }
 
   @Get('recipe/id')
