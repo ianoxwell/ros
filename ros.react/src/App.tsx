@@ -3,7 +3,7 @@ import { colorsTuple, createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
-import { Ingredients } from '@pages/Ingredients';
+import { Ingredients } from '@pages/ingredients/Ingredients';
 import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';

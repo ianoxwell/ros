@@ -1,9 +1,10 @@
 import { useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
+import SortAndFilterButton from '@components/SortAndFilterButton/SortAndFilterButton.component';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetRecipesMutation } from '@features/api/apiSlice';
-import { ActionIcon, AppShell, Button, Collapse, Flex, Group, Modal, Space, Text, Title } from '@mantine/core';
+import { ActionIcon, AppShell, Collapse, Flex, Group, Modal, Space, Text, Title } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { ChevronLeft, SlidersVerticalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -58,22 +59,7 @@ export const Recipes = () => {
         <Title className="title-bar--title">What would you like to cook today?</Title>
       </div>
 
-      <Button
-        variant="transparent"
-        justify="space-between"
-        rightSection={<div>{data?.meta.itemCount} recipes</div>}
-        fullWidth
-        className="filter--button"
-        type="button"
-        onClick={toggle}
-      >
-        <Flex align="center" gap="sm">
-          <SlidersVerticalIcon size={20} />
-          <Text tt="uppercase" fw={500}>
-            Sort and Filter
-          </Text>
-        </Flex>
-      </Button>
+      <SortAndFilterButton meta={data?.meta} toggle={toggle} page="recipes" />
       <div className="recipes-wrapper">
         {(() => {
           if (!data) {

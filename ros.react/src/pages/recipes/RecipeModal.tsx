@@ -24,6 +24,7 @@ import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
 const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; closeModal: () => void }) => {
   const { data, isLoading } = useGetRecipeQuery(recipeShort.id || 0);
   const heartRecipe = () => {
+    // TODO favourite/update the recipe
     console.log('should probably write something for this in the api');
   };
 
