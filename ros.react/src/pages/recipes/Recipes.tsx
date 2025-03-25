@@ -1,31 +1,17 @@
 import { useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
-import Loader from '@components/Loader/Loader.component';
-import RosPagination from '@components/RosPagination/RosPagination.component';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetRecipesMutation } from '@features/api/apiSlice';
-import {
-  ActionIcon,
-  AppShell,
-  Button,
-  Collapse,
-  Flex,
-  Group,
-  Modal,
-  SimpleGrid,
-  Space,
-  Text,
-  Title
-} from '@mantine/core';
+import { ActionIcon, AppShell, Button, Collapse, Flex, Group, Modal, Space, Text, Title } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { ChevronLeft, SlidersVerticalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import RecipeCard from './RecipeCard';
-import RecipeFilter from './RecipeFilter';
-import RecipeModal from './RecipeModal';
 import './recipe.scss';
+import RecipeFilter from './RecipeFilter';
+import RecipeGrid from './RecipeGrid';
+import RecipeModal from './RecipeModal';
 
 export const Recipes = () => {
   const recipeFilter = useSelector((store: RootState) => store.recipeFilter);
@@ -49,27 +35,6 @@ export const Recipes = () => {
     console.log('open the modal now', recipeShort);
     setViewRecipe(recipeShort);
     open();
-  };
-
-  // TODO shift to its own component and pass down data, isLoading and output
-  // TODO also change to Skeleton for the Loader please
-  const RecipeGrid = () => {
-    return (
-      <section className="recipes">
-        {isLoading || !data ? (
-          <Loader />
-        ) : (
-          <>
-            <SimpleGrid cols={{ base: 2, md: 3, lg: 4, xl: 5 }} spacing="md" verticalSpacing="md">
-              {data.results.map((recipe) => {
-                return <RecipeCard key={recipe.id} recipe={recipe} openModal={openModal} />;
-              })}
-            </SimpleGrid>
-          </>
-        )}
-        {data && <RosPagination meta={data.meta} />}
-      </section>
-    );
   };
 
   return (
@@ -111,6 +76,10 @@ export const Recipes = () => {
       </Button>
       <div className="recipes-wrapper">
         {(() => {
+          if (!data) {
+            return;
+          }
+
           if (!isMobile) {
             return (
               <>
@@ -131,7 +100,7 @@ export const Recipes = () => {
                     <RecipeFilter />
                   </AppShell.Navbar>
                   <AppShell.Main>
-                    <RecipeGrid />
+                    <RecipeGrid data={data} isLoading={isLoading} openModal={openModal} />
                   </AppShell.Main>
                 </AppShell>
               </>
@@ -143,7 +112,7 @@ export const Recipes = () => {
               <Collapse in={filterOpen}>
                 <RecipeFilter />
               </Collapse>
-              <RecipeGrid />
+              <RecipeGrid data={data} isLoading={isLoading} openModal={openModal} />
             </>
           );
         })()}
