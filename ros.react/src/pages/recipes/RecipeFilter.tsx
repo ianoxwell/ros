@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { setNewFilter } from './recipeFilter.slice';
 
-const RecipeFilter = ({ styles }: { styles: React.CSSProperties }) => {
+const RecipeFilter = () => {
   const filter = useSelector((store: RootState) => store.recipeFilter);
   const references = useGetReferencesQuery();
   const healthLabels = sortLabels(references.data?.healthLabel);
@@ -44,7 +44,7 @@ const RecipeFilter = ({ styles }: { styles: React.CSSProperties }) => {
   };
 
   return (
-    <section className="filter-content" style={styles}>
+    <section className="filter-content">
       <form onSubmit={form.onSubmit((values) => submitForm(values))}>
         <Stack gap="md">
           <TextInput

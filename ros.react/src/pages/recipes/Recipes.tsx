@@ -5,9 +5,21 @@ import RosPagination from '@components/RosPagination/RosPagination.component';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetRecipesMutation } from '@features/api/apiSlice';
-import { Button, Flex, Modal, SimpleGrid, Text, Title, Transition } from '@mantine/core';
+import {
+  ActionIcon,
+  AppShell,
+  Button,
+  Collapse,
+  Flex,
+  Group,
+  Modal,
+  SimpleGrid,
+  Space,
+  Text,
+  Title
+} from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { SlidersVerticalIcon } from 'lucide-react';
+import { ChevronLeft, SlidersVerticalIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import RecipeCard from './RecipeCard';
@@ -39,7 +51,26 @@ export const Recipes = () => {
     open();
   };
 
-
+  // TODO shift to its own component and pass down data, isLoading and output
+  // TODO also change to Skeleton for the Loader please
+  const RecipeGrid = () => {
+    return (
+      <section className="recipes">
+        {isLoading || !data ? (
+          <Loader />
+        ) : (
+          <>
+            <SimpleGrid cols={{ base: 2, md: 3, lg: 4, xl: 5 }} spacing="md" verticalSpacing="md">
+              {data.results.map((recipe) => {
+                return <RecipeCard key={recipe.id} recipe={recipe} openModal={openModal} />;
+              })}
+            </SimpleGrid>
+          </>
+        )}
+        {data && <RosPagination meta={data.meta} />}
+      </section>
+    );
+  };
 
   return (
     <>
@@ -79,24 +110,43 @@ export const Recipes = () => {
         </Flex>
       </Button>
       <div className="recipes-wrapper">
-        {/* className={filterOpen ? 'filter-content filter-content--open' : 'filter-content filter-content--closed'} */}
-        <Transition mounted={filterOpen} transition={isMobile ? 'slide-down' : 'slide-right'} duration={400}>
-          {(styles) => <RecipeFilter styles={styles} />}
-        </Transition>
-        <section className="recipes">
-          {isLoading || !data ? (
-            <Loader />
-          ) : (
+        {(() => {
+          if (!isMobile) {
+            return (
+              <>
+                <AppShell navbar={{ width: 320, breakpoint: 'lg', collapsed: { desktop: !filterOpen } }}>
+                  <AppShell.Navbar p="md">
+                    <Flex align="center" justify="space-between">
+                      <Group gap="sm">
+                        <SlidersVerticalIcon size={20} />
+                        <Text tt="uppercase" fw={500}>
+                          Sort and Filter
+                        </Text>
+                      </Group>
+                      <ActionIcon size="lg" variant="outline" color="dark.6" type="button" onClick={toggle} radius="xl">
+                        <ChevronLeft size={24} />
+                      </ActionIcon>
+                    </Flex>
+                    <Space h="xl" />
+                    <RecipeFilter />
+                  </AppShell.Navbar>
+                  <AppShell.Main>
+                    <RecipeGrid />
+                  </AppShell.Main>
+                </AppShell>
+              </>
+            );
+          }
+
+          return (
             <>
-              <SimpleGrid cols={{ base: 2, md: 3, lg: 4, xl: 5 }} spacing="md" verticalSpacing="md">
-                {data.results.map((recipe) => {
-                  return <RecipeCard key={recipe.id} recipe={recipe} openModal={openModal} />;
-                })}
-              </SimpleGrid>
+              <Collapse in={filterOpen}>
+                <RecipeFilter />
+              </Collapse>
+              <RecipeGrid />
             </>
-          )}
-          {data && <RosPagination meta={data.meta} />}
-        </section>
+          );
+        })()}
       </div>
     </>
   );
