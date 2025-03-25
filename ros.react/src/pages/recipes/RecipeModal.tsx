@@ -2,7 +2,20 @@ import { Plural } from '@components/plural/Plural';
 import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
 import { IRecipeShort } from '@domain/recipe.dto';
 import { useGetRecipeQuery } from '@features/api/apiSlice';
-import { ActionIcon, Badge, Chip, Flex, Group, Image, SimpleGrid, Space, Spoiler, Stack, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Avatar,
+  Badge,
+  Chip,
+  Flex,
+  Group,
+  Image,
+  SimpleGrid,
+  Space,
+  Spoiler,
+  Stack,
+  Title
+} from '@mantine/core';
 import { fractionNumber } from '@utils/numberUtils';
 import { parseRecipeInstructions, sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
@@ -50,12 +63,28 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
 
           <Title order={2}>{recipeShort.name}</Title>
           <Space h="xs" />
-          <Group gap="xs">
-            {data?.dishType.map((dish, index) => (
-              <Chip key={index}>{sentenceCase(dish)}</Chip>
-            ))}
-          </Group>
-          <Space h="md" />
+          {data?.dishType?.length && (
+            <>
+              <Group gap="xs">
+                {data?.dishType.map((dish, index) => (
+                  <Chip key={index}>{sentenceCase(dish)}</Chip>
+                ))}
+              </Group>
+              <Space h="md" />
+            </>
+          )}
+
+          {data?.cuisineType?.length && (
+            <>
+              <Group gap="xs">
+                {data?.cuisineType.map((cuisine, index) => (
+                  <Chip key={index}>{sentenceCase(cuisine)}</Chip>
+                ))}
+              </Group>
+              <Space h="md" />
+            </>
+          )}
+
           <Flex direction="row" gap="md">
             <Group gap="xs">
               <Timer size={16} />
@@ -78,75 +107,94 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
           <Spoiler maxHeight={56} showLabel="Show more" hideLabel="Hide">
             {parse(recipeShort.summary)}
           </Spoiler>
-          <Space h="md" />
+          <Space h="xl" />
 
-          <Title order={3}>Diets</Title>
-          <Space h="xs" />
-          <Group gap="xs">
-            {data?.diets.map((diet, index) => (
-              <Chip key={index}>{sentenceCase(diet)}</Chip>
-            ))}
-          </Group>
-          <Space h="md" />
-
-          <Title order={3}>Ingredients</Title>
-          <Space h="xs" />
-          {data && (
-            <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md" verticalSpacing="md">
-              {data.ingredientList.map((ri: IRecipeIngredient) => (
-                <Flex key={ri.id} align="center" direction="row" gap="xs">
-                  <Image
-                    height={40}
-                    src={`https://img.spoonacular.com/ingredients_100x100/${ri.ingredient.image}`}
-                    alt={ri.ingredient.name}
-                  />
-
-                  <div>
-                    {parse(fractionNumber(ri.amount))} <b>{ri.measure.shortName}</b> {sentenceCase(ri.ingredient.name)}
-                  </div>
-                </Flex>
-              ))}
-            </SimpleGrid>
+          {data?.diets?.length && (
+            <>
+              <Title order={3}>Diets</Title>
+              <Space h="xs" />
+              <Group gap="xs">
+                {data.diets.map((diet, index) => (
+                  <Chip key={index}>{sentenceCase(diet)}</Chip>
+                ))}
+              </Group>
+              <Space h="xl" />
+            </>
           )}
-          <Space h="md" />
+          {data && (
+            <>
+              <Title order={3}>Ingredients</Title>
+              <Space h="xs" />
+              <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md" verticalSpacing="md">
+                {data.ingredientList.map((ri: IRecipeIngredient) => (
+                  <Flex key={ri.id} align="center" direction="row" gap="xs">
+                    <Image
+                      height={40}
+                      src={`https://img.spoonacular.com/ingredients_100x100/${ri.ingredient.image}`}
+                      alt={ri.ingredient.name}
+                    />
 
-          <Title order={3}>Equipment</Title>
-          <Space h="xs" />
-          <Group gap="xs">
-            {data?.equipment.map((item, index) => (
-              <Chip key={index}>{sentenceCase(item)}</Chip>
-            ))}
-          </Group>
-          <Space h="md" />
+                    <div>
+                      {parse(fractionNumber(ri.amount))} <b>{ri.measure.shortName}</b>{' '}
+                      {sentenceCase(ri.ingredient.name)}
+                    </div>
+                  </Flex>
+                ))}
+              </SimpleGrid>
+              <Space h="xl" />
+            </>
+          )}
 
-          <Title order={3}>Instructions</Title>
-          <Space h="xs" />
-          {data &&
-            (() => {
-              if (data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
-                return (
-                  <Stack>
-                    {data.steppedInstructions.map((item) => (
-                      <Flex direction="row" align="center" gap="xs" key={item.id}>
-                        <Badge circle>{item.stepNumber}</Badge>
-                        <div>{parse(item.step)}</div>
-                      </Flex>
-                    ))}
-                  </Stack>
-                );
-              }
+          {data?.equipment?.length && (
+            <>
+              {' '}
+              <Title order={3}>Equipment</Title>
+              <Space h="xs" />
+              <Group gap="xs">
+                {data?.equipment.map((item, index) => (
+                  <Chip key={index}>{sentenceCase(item.name)}</Chip>
+                ))}
+              </Group>
+              <Space h="xl" />
+            </>
+          )}
 
-              return (
-                <Stack>
-                  {parseRecipeInstructions(data.instructions).map((instruction, index) => (
-                    <Flex direction="row" align="center" gap="xs" key={index}>
-                      <Badge circle>{index + 1}</Badge>
-                      <div>{parse(instruction || '')}</div>
-                    </Flex>
-                  ))}
-                </Stack>
-              );
-            })()}
+          {data?.instructions && (
+            <>
+              <Title order={3}>Instructions</Title>
+              <Space h="xs" />
+              {data &&
+                (() => {
+                  if (data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
+                    return (
+                      <Stack>
+                        {data.steppedInstructions.map((item, index) => (
+                          <Flex direction="row" align="center" gap="xs" key={index}>
+                            <Avatar className="step-badge" size="md" radius="xl">
+                              {item.stepNumber}
+                            </Avatar>
+                            <div>{parse(item.step)}</div>
+                          </Flex>
+                        ))}
+                      </Stack>
+                    );
+                  }
+
+                  return (
+                    <Stack>
+                      {parseRecipeInstructions(data.instructions).map((instruction, index) => (
+                        <Flex direction="row" align="center" gap="xs" key={index}>
+                          <Badge circle>{index + 1}</Badge>
+                          <div>{parse(instruction || '')}</div>
+                        </Flex>
+                      ))}
+                    </Stack>
+                  );
+                })()}
+            </>
+          )}
+
+          <Space h="xl" />
         </div>
       </div>
     </>
