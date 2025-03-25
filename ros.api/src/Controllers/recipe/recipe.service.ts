@@ -3,6 +3,7 @@ import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { EOrder } from '@models/base.dto';
+import { IRecipeFilter } from '@models/filter.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IEquipmentSteppedInstruction } from 'Models/equipment-stepped-instruction.dto';
@@ -75,9 +76,18 @@ export class RecipeService {
   }
 
   /** Filter ingredients and paginate the results. */
-  async getRecipes(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IRecipeShort>> {
+  async getRecipes(pageOptionsDto: IRecipeFilter): Promise<PaginatedDto<IRecipeShort>> {
+    const additionalQueryParams = {
+      ...(pageOptionsDto.cuisineTypes?.length && { cuisineType: { id: In(pageOptionsDto.cuisineTypes) } }),
+      ...(pageOptionsDto.diets?.length && { diets: { id: In(pageOptionsDto.diets) } }),
+      ...(pageOptionsDto.dishTypes?.length && { dishType: { id: In(pageOptionsDto.dishTypes) } }),
+      ...(pageOptionsDto.equipment?.length && { equipment: { id: In(pageOptionsDto.equipment) } })
+    };
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`) },
+      where: [
+        { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`), ...additionalQueryParams },
+        { summary: ILike(pageOptionsDto.keyword) }
+      ],
       order: { [pageOptionsDto.sort || 'name']: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
       skip: pageOptionsDto.skip
@@ -212,7 +222,7 @@ export class RecipeService {
       return null;
     }
 
-    const updatedRecipe = await this.mapRecipeDtoToRecipe(recipe);
+    const updatedRecipe = await this.mapRecipeDtoToRecipeEntity(recipe);
     updatedRecipe.id = recipe.id;
     const result = await this.repository.update(findRecipe.id, updatedRecipe);
     return result ? recipe : null;
@@ -225,7 +235,7 @@ export class RecipeService {
       return new CMessage('Recipe name already exists, change name and save again', HttpStatus.CONFLICT);
     }
 
-    const newRecipeEntity = await this.mapRecipeDtoToRecipe(recipe);
+    const newRecipeEntity = await this.mapRecipeDtoToRecipeEntity(recipe);
     const result = await this.repository.save(newRecipeEntity);
     return result ? await this.mapRecipeToRecipeDto(result) : new CMessage('Unknown failure on save', HttpStatus.BAD_REQUEST);
   }
@@ -335,7 +345,7 @@ export class RecipeService {
     };
   }
 
-  private async mapRecipeDtoToRecipe(r: IRecipe): Promise<Recipe> {
+  private async mapRecipeDtoToRecipeEntity(r: IRecipe): Promise<Recipe> {
     const ingredientIds = r.ingredients.map((i) => i.id).filter((id) => !!id);
     const measures = await this.measurementRepository.find();
     const cuisines = await this.cuisineTypeRepository.find();
@@ -344,9 +354,10 @@ export class RecipeService {
     const healthLabels = await this.healthLabelRepository.find();
     const ingredientsPartial = await this.ingredientService.getIngredientFromIdList(ingredientIds);
 
+    const equipmentIdList = r.equipment.map((e) => e.id);
     const cuisineType: CuisineType[] = cuisines.filter((c) => r.cuisineType.includes(c.name));
     const dishType: DishType[] = dishTypes.filter((d) => r.dishType.includes(d.name));
-    const equipment: Equipment[] = equipments.filter((e) => r.equipment.includes(e.name));
+    const equipment: Equipment[] = equipments.filter((e) => equipmentIdList.includes(e.id));
     const diets: HealthLabel[] = healthLabels.filter((h) => r.diets.includes(h.name));
     // Map any ingredients not found in the repository
     const openIngredients: Ingredient[] = r.ingredients
@@ -441,7 +452,7 @@ export class RecipeService {
       ingredients,
       ingredientList,
       steppedInstructions,
-      equipment: recipe.equipment.map((equip) => equip.name)
+      equipment: recipe.equipment.map((equip) => ({ id: equip.id, name: equip.name, image: equip.image }))
     };
     return mappedRecipe;
   }

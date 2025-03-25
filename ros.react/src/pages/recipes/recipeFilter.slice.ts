@@ -1,7 +1,7 @@
-import { CBlankFilter, IFilter } from '@domain/filter.dto';
+import { CBlankFilter, IRecipeFilter } from '@domain/filter.dto';
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState: IFilter = CBlankFilter;
+const initialState: IRecipeFilter = CBlankFilter;
 
 const recipeFilterSlice = createSlice({
   name: 'recipeFilter',
@@ -13,7 +13,7 @@ const recipeFilterSlice = createSlice({
     setRecipePageNumber: (state, { payload }: { payload: number }) => {
         state.page = payload;
     },
-    setNewFilter: (state, { payload }: { payload: IFilter}) => {
+    setNewFilter: (state, { payload }: { payload: IRecipeFilter}) => {
         state = payload;
         return payload;
     }

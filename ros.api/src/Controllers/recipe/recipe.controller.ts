@@ -1,7 +1,7 @@
-import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { IPagedResult } from '@models/base.dto';
+import { IRecipeFilter } from '@models/filter.dto';
 import { IRecipe, IRecipeShort } from '@models/recipe.dto';
 import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
 import { Body, Delete, HttpCode, Post, Query, UseGuards } from '@nestjs/common/decorators';
@@ -25,8 +25,8 @@ export class RecipeController {
   @Post('/search')
   @ApiOkResponse({ description: 'uses filter to search recipe, results paginated results' })
   @HttpCode(200)
-  async searchIngredients(@Body() filter: IFilterBase): Promise<IPagedResult<IRecipeShort>> {
-    const filterBase: IFilterBase = {
+  async searchIngredients(@Body() filter: IRecipeFilter): Promise<IPagedResult<IRecipeShort>> {
+    const filterBase: IRecipeFilter = {
       ...filter,
       skip: filter.page * filter.take
     };

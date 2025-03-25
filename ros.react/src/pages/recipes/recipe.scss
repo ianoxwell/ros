@@ -79,4 +79,10 @@
       min-height: var(--size);
     }
   }
+
+  .step-badge {
+    span {
+      color: var(--darker-accent);
+    }
+  }
 }

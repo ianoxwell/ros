@@ -50,7 +50,7 @@ export interface IRecipe extends IRecipeShort {
   instructions: string;
   summary: string;
   shortSummary: string;
-  equipment: string[];
+  equipment: IEquipment[];
   pricePerServing: number;
   images: string[];
   preparationMinutes: number;
@@ -82,6 +82,15 @@ export interface IRecipe extends IRecipeShort {
   createdBy?: IUserProfile;
   editedBy?: IUserProfile;
   favoriteBy?: IUserProfile[];
+}
+export interface ISimpleReference {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface IEquipment extends ISimpleReference {
+  image?: string;
 }
 
 export type THealthBooleanLabels =

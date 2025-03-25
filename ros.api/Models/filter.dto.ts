@@ -10,12 +10,21 @@ export interface IFilter {
   order?: EOrder;
 
   keyword?: string;
+  skip: number;
 }
 
-export const CBlankFilter = {
+export interface IRecipeFilter extends IFilter {
+  cuisineTypes?: number[];
+  diets?: number[];
+  dishTypes?: number[];
+  equipment?: number[];
+}
+
+export const CBlankFilter: IFilter = {
   take: 10,
   page: 0,
   sort: 'name',
   order: EOrder.ASC,
-  keyword: ''
+  keyword: '',
+  skip: 0
 };
