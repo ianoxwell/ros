@@ -20,6 +20,10 @@ export interface IRecipeFilter extends IFilter {
   equipment?: number[];
 }
 
+export interface IIngredientFilter extends IFilter {
+  aisle?: number[];
+}
+
 export const CBlankFilter: IFilter = {
   take: 10,
   page: 0,
