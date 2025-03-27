@@ -1,6 +1,6 @@
 @use './styles/mixins.scss';
 
-#root {
+:root {
   --darker-accent: #003c25;
   --accent-foreground: #128758;
   --text-on-accent: #ffffff;
@@ -14,8 +14,6 @@
   background-color: var(--background-normal);
   color: var(--text-on-normal);
   min-height: 100vh;
-}
-:root {
   --mantine-h1-font-size: calc(1.875rem* var(--mantine-scale)); //30px
   --mantine-h2-font-size: calc(1.5rem* var(--mantine-scale)); // 24px
   --mantine-h3-font-size: calc(1.25rem* var(--mantine-scale)); //20px
