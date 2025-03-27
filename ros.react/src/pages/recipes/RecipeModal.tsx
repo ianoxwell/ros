@@ -1,3 +1,4 @@
+import { CImageUrl } from '@app/routes.const';
 import { Plural } from '@components/plural/Plural';
 import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
 import { IRecipeShort } from '@domain/recipe.dto';
@@ -131,7 +132,7 @@ const RecipeModal = ({ recipeShort, closeModal }: { recipeShort: IRecipeShort; c
                   <Flex key={ri.id} align="center" direction="row" gap="xs">
                     <Image
                       height={40}
-                      src={`https://img.spoonacular.com/ingredients_100x100/${ri.ingredient.image}`}
+                      src={`${CImageUrl}${ri.ingredient.image}`}
                       alt={ri.ingredient.name}
                     />
 

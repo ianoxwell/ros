@@ -10,3 +10,7 @@ export const CRoutes = {
   schedule: '/schedule',
   ingredients: '/ingredients'
 };
+
+
+export const CImageUrl = 'https://img.spoonacular.com/ingredients_100x100/';
+export const CImageUrlLarge = 'https://img.spoonacular.com/ingredients_500x500/';
