@@ -1,0 +1,85 @@
+@use 'sass:math';
+
+.nutrition-image {
+  border-radius: 50%;
+  margin: 0 -5rem;
+  min-width: 20rem;
+}
+.nutrition-parent {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  position: absolute;
+  padding-top: 6rem;
+
+  .nutrient-line {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 3rem;
+
+    .nutrient-short {
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin: 0 0.5rem;
+      color: var(--darker-accent);
+    }
+    .nutrient-details {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .nutrient-name {
+      color: var(--muted-text);
+    }
+
+    .short-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+  }
+  .nutrition--text {
+    &.left {
+      text-align: right;
+      .nutrient-line {
+        flex-direction: row-reverse;
+      }
+      .nutrient-short {
+        color: var(--accent-foreground);
+      }
+    }
+  }
+}
+.vitamins,
+.minerals {
+  width: 50%;
+  &.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+}
+.vitamins.title {
+  color: var(--accent-foreground);
+  text-align: right;
+}
+.minerals.title {
+  color: var(--darker-accent);
+}
+.calories.title {
+  width: 24rem;
+  div {
+    font-size: 1.5rem;
+    color: var(--burnt-orange);
+    padding-top: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  span {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+}
