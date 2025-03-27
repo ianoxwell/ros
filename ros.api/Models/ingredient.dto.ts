@@ -29,6 +29,8 @@ export interface IIngredient extends IIngredientShort {
 
   nutrition?: {
     nutrients: INutrients;
+    vitamins: IVitamins;
+    minerals: IMinerals;
     properties: INutritionProperties;
     caloricBreakdown: ICaloricBreakdown;
   };
@@ -53,47 +55,53 @@ export enum EPurchasedBy {
   bunch
 }
 
-export interface INutrients {
-  calories: number;
-  fat: number;
-  transFat: number;
-  saturatedFat: number;
-  monoUnsaturatedFat: number;
-  polyUnsaturatedFat: number;
-  protein: number;
-  cholesterol: number;
-  carbohydrates: number;
-  netCarbohydrates: number;
-  alcohol: number;
-  fiber: number;
-  sugar: number;
-  sodium: number;
-  caffeine: number;
-  manganese: number;
-  potassium: number;
-  magnesium: number;
-  calcium: number;
-  copper: number;
-  zinc: number;
-  phosphorus: number;
-  fluoride: number;
-  choline: number;
-  iron: number;
+export interface IVitamins {
+  folate: number;
+  folicAcid: number;
   vitaminA: number;
   vitaminB1: number;
+  vitaminB12: number;
   vitaminB2: number;
   vitaminB3: number;
   vitaminB5: number;
   vitaminB6: number;
-  vitaminB12: number;
   vitaminC: number;
   vitaminD: number;
   vitaminE: number;
   vitaminK: number;
-  folate: number;
-  folicAcid: number;
+}
+
+export interface IMinerals {
+  calcium: number;
+  choline: number;
+  copper: number;
+  fluoride: number;
   iodine: number;
+  iron: number;
+  magnesium: number;
+  manganese: number;
+  phosphorus: number;
+  potassium: number;
   selenium: number;
+  sodium: number;
+  zinc: number;
+}
+
+export interface INutrients {
+  alcohol: number;
+  caffeine: number;
+  calories: number;
+  carbohydrates: number;
+  cholesterol: number;
+  fat: number;
+  fiber: number;
+  monoUnsaturatedFat: number;
+  netCarbohydrates: number;
+  polyUnsaturatedFat: number;
+  protein: number;
+  saturatedFat: number;
+  sugar: number;
+  transFat: number;
 }
 
 export interface INutritionProperties {

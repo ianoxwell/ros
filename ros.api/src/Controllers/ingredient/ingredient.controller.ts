@@ -77,7 +77,7 @@ export class IngredientController {
 
   /** Quick and dirty get */
   @Get('list')
-  async findAll(): Promise<PaginatedDto<Ingredient>> {
+  async findAll(): Promise<PaginatedDto<IIngredient>> {
     return await this.ingredientService.findAll();
   }
 
@@ -85,7 +85,7 @@ export class IngredientController {
   @ApiOkResponse({
     description: 'Get a single Ingredient by Id'
   })
-  async find(@Param('id') id: string): Promise<Ingredient> {
-    return this.ingredientService.getIngredientByIdForRecipe(parseInt(id));
+  async find(@Param('id') id: string): Promise<IIngredient> {
+    return this.ingredientService.getIngredientById(parseInt(id));
   }
 }

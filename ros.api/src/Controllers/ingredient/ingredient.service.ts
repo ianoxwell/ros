@@ -12,9 +12,11 @@ import {
   ICaloricBreakdown,
   IIngredient,
   IIngredientShort,
+  IMinerals,
   INutrients,
   INutritionProperties,
-  IReferenceShort
+  IReferenceShort,
+  IVitamins
 } from 'Models/ingredient.dto';
 import { IMeasurement } from 'Models/measurement.dto';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
@@ -68,6 +70,21 @@ export class IngredientService {
 
     return ingredient;
   }
+
+  async getIngredientById(id: string | number): Promise<IIngredient> {
+    id = typeof id === 'number' ? id : parseInt(id);
+    const ingredient: Ingredient = await this.repository.findOne({
+      where: { id, isActive: true },
+      relations: {
+        possibleUnits: true,
+        conversions: true,
+        allergies: true
+      }
+    });
+
+    const measures = await this.measurementRepository.find();
+    return this.mapIngredientToIIngredientDTO(ingredient, true, measures);
+  }
   /** Filter ingredients and paginate the results. */
   async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredient>> {
     const [result, itemCount] = await this.repository.findAndCount({
@@ -77,7 +94,8 @@ export class IngredientService {
       skip: pageOptionsDto.skip,
       relations: {
         possibleUnits: true,
-        conversions: true
+        conversions: true,
+        allergies: true
       }
     });
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
@@ -100,7 +118,7 @@ export class IngredientService {
   }
 
   /** Quick and dirty find all - at least it maps it to a pagination object to show number of results. */
-  async findAll(): Promise<PaginatedDto<Ingredient>> {
+  async findAll(): Promise<PaginatedDto<IIngredient>> {
     const [result, itemCount] = await this.repository.findAndCount({
       where: { isActive: true },
       relations: {
@@ -108,9 +126,11 @@ export class IngredientService {
         conversions: true
       }
     });
+    const measures = await this.measurementRepository.find();
+    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientDTO(ing, true, measures));
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: CPageOptionsDto });
 
-    return new PaginatedDto(result, pageMetaDto);
+    return new PaginatedDto(fullResult, pageMetaDto);
   }
 
   /** Update ingredient */
@@ -214,6 +234,8 @@ export class IngredientService {
     if (isNutritionIncluded) {
       ing.nutrition = {
         nutrients: this.mapIngredientToINutrient(i),
+        vitamins: this.mapIngredientToIVitamins(i),
+        minerals: this.mapIngredientToIMineral(i),
         properties: this.mapIngredientToINutritionProp(i),
         caloricBreakdown: this.mapIngredientToICaloricBreakdown(i)
       };
@@ -245,48 +267,58 @@ export class IngredientService {
     return ingredients.find((i: Ingredient) => i.id === id);
   }
 
-  private mapIngredientToINutrient(i: Ingredient): INutrients {
+  private mapIngredientToIMineral(i: Ingredient): IMinerals {
     return {
-      calories: i.calories,
-      fat: i.fat,
-      transFat: i.transFat,
-      saturatedFat: i.saturatedFat,
-      monoUnsaturatedFat: i.monoUnsaturatedFat,
-      polyUnsaturatedFat: i.polyUnsaturatedFat,
-      protein: i.protein,
-      cholesterol: i.cholesterol,
-      carbohydrates: i.carbohydrates,
-      netCarbohydrates: i.netCarbohydrates,
-      alcohol: i.alcohol,
-      fiber: i.fiber,
-      sugar: i.sugar,
-      sodium: i.sodium,
-      caffeine: i.caffeine,
-      manganese: i.manganese,
-      potassium: i.potassium,
-      magnesium: i.magnesium,
       calcium: i.calcium,
-      copper: i.copper,
-      zinc: i.zinc,
-      phosphorus: i.phosphorus,
-      fluoride: i.fluoride,
       choline: i.choline,
+      copper: i.copper,
+      fluoride: i.fluoride,
+      iodine: i.iodine,
       iron: i.iron,
+      magnesium: i.magnesium,
+      manganese: i.manganese,
+      phosphorus: i.phosphorus,
+      potassium: i.potassium,
+      selenium: i.selenium,
+      sodium: i.sodium,
+      zinc: i.zinc
+    };
+  }
+
+  private mapIngredientToIVitamins(i: Ingredient): IVitamins {
+    return {
+      folate: i.folate,
+      folicAcid: i.folicAcid,
       vitaminA: i.vitaminA,
       vitaminB1: i.vitaminB1,
+      vitaminB12: i.vitaminB12,
       vitaminB2: i.vitaminB2,
       vitaminB3: i.vitaminB3,
       vitaminB5: i.vitaminB5,
       vitaminB6: i.vitaminB6,
-      vitaminB12: i.vitaminB12,
       vitaminC: i.vitaminC,
       vitaminD: i.vitaminD,
       vitaminE: i.vitaminE,
-      vitaminK: i.vitaminK,
-      folate: i.folate,
-      folicAcid: i.folicAcid,
-      iodine: i.iodine,
-      selenium: i.selenium
+      vitaminK: i.vitaminK
+    };
+  }
+
+  private mapIngredientToINutrient(i: Ingredient): INutrients {
+    return {
+      alcohol: i.alcohol,
+      caffeine: i.caffeine,
+      calories: i.calories,
+      carbohydrates: i.carbohydrates,
+      cholesterol: i.cholesterol,
+      fat: i.fat,
+      fiber: i.fiber,
+      monoUnsaturatedFat: i.monoUnsaturatedFat,
+      netCarbohydrates: i.netCarbohydrates,
+      polyUnsaturatedFat: i.polyUnsaturatedFat,
+      protein: i.protein,
+      saturatedFat: i.saturatedFat,
+      sugar: i.sugar,
+      transFat: i.transFat
     };
   }
 
@@ -373,33 +405,33 @@ export class IngredientService {
       alcohol: i.nutrition.nutrients.alcohol,
       fiber: i.nutrition.nutrients.fiber,
       sugar: i.nutrition.nutrients.sugar,
-      sodium: i.nutrition.nutrients.sodium,
+      sodium: i.nutrition.minerals.sodium,
       caffeine: i.nutrition.nutrients.caffeine,
-      manganese: i.nutrition.nutrients.manganese,
-      potassium: i.nutrition.nutrients.potassium,
-      magnesium: i.nutrition.nutrients.magnesium,
-      calcium: i.nutrition.nutrients.calcium,
-      copper: i.nutrition.nutrients.copper,
-      zinc: i.nutrition.nutrients.zinc,
-      phosphorus: i.nutrition.nutrients.phosphorus,
-      fluoride: i.nutrition.nutrients.fluoride,
-      choline: i.nutrition.nutrients.choline,
-      iron: i.nutrition.nutrients.iron,
-      vitaminA: i.nutrition.nutrients.vitaminA,
-      vitaminB1: i.nutrition.nutrients.vitaminB1,
-      vitaminB2: i.nutrition.nutrients.vitaminB2,
-      vitaminB3: i.nutrition.nutrients.vitaminB3,
-      vitaminB5: i.nutrition.nutrients.vitaminB5,
-      vitaminB6: i.nutrition.nutrients.vitaminB6,
-      vitaminB12: i.nutrition.nutrients.vitaminB12,
-      vitaminC: i.nutrition.nutrients.vitaminC,
-      vitaminD: i.nutrition.nutrients.vitaminD,
-      vitaminE: i.nutrition.nutrients.vitaminE,
-      vitaminK: i.nutrition.nutrients.vitaminK,
-      folate: i.nutrition.nutrients.folate,
-      folicAcid: i.nutrition.nutrients.folicAcid,
-      iodine: i.nutrition.nutrients.iodine,
-      selenium: i.nutrition.nutrients.selenium,
+      manganese: i.nutrition.minerals.manganese,
+      potassium: i.nutrition.minerals.potassium,
+      magnesium: i.nutrition.minerals.magnesium,
+      calcium: i.nutrition.minerals.calcium,
+      copper: i.nutrition.minerals.copper,
+      zinc: i.nutrition.minerals.zinc,
+      phosphorus: i.nutrition.minerals.phosphorus,
+      fluoride: i.nutrition.minerals.fluoride,
+      choline: i.nutrition.minerals.choline,
+      iron: i.nutrition.minerals.iron,
+      vitaminA: i.nutrition.vitamins.vitaminA,
+      vitaminB1: i.nutrition.vitamins.vitaminB1,
+      vitaminB2: i.nutrition.vitamins.vitaminB2,
+      vitaminB3: i.nutrition.vitamins.vitaminB3,
+      vitaminB5: i.nutrition.vitamins.vitaminB5,
+      vitaminB6: i.nutrition.vitamins.vitaminB6,
+      vitaminB12: i.nutrition.vitamins.vitaminB12,
+      vitaminC: i.nutrition.vitamins.vitaminC,
+      vitaminD: i.nutrition.vitamins.vitaminD,
+      vitaminE: i.nutrition.vitamins.vitaminE,
+      vitaminK: i.nutrition.vitamins.vitaminK,
+      folate: i.nutrition.vitamins.folate,
+      folicAcid: i.nutrition.vitamins.folicAcid,
+      iodine: i.nutrition.minerals.iodine,
+      selenium: i.nutrition.minerals.selenium,
       isActive: true
     };
 

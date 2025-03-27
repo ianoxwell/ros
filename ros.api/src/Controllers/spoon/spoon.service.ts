@@ -111,6 +111,7 @@ export class SpoonService {
       const spoonIngredient = await this.getAxiosHttp<ISpoonIngredient>(url);
 
       const spoonNameCheck = await this.ingredientService.spoonIngredientNameExists(spoonIngredient);
+      await this.fileService.saveJsonFile(`ingredient - ${spoonIngredient.name}`, spoonIngredient);
 
       return typeof spoonNameCheck === 'boolean' ? await this.createIngredientFromSpoon(spoonIngredient) : spoonNameCheck;
     }
