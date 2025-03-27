@@ -4,28 +4,26 @@ import SortAndFilterButton from '@components/SortAndFilterButton/SortAndFilterBu
 import { IRecipeShort } from '@domain/recipe.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetRecipesMutation } from '@features/api/apiSlice';
-import { ActionIcon, AppShell, Collapse, Flex, Group, Modal, Space, Text, Title } from '@mantine/core';
+import { ActionIcon, AppShell, Collapse, Flex, Group, Space, Text, Title } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { ChevronLeft, SlidersVerticalIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import './recipe.scss';
 import RecipeFilter from './RecipeFilter';
 import RecipeGrid from './RecipeGrid';
-import RecipeModal from './RecipeModal';
 
 export const Recipes = () => {
   const recipeFilter = useSelector((store: RootState) => store.recipeFilter);
   const [getRecipes, { data, isLoading }] = useGetRecipesMutation();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const [filterOpen, { toggle }] = useDisclosure(false);
-  const [recipeOpened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery(`(max-width: 1599px)`);
-  const [viewRecipe, setViewRecipe] = useState<IRecipeShort | undefined>(undefined);
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
-      console.log('got recipe filter', recipeFilter);
       getRecipes(recipeFilter);
     } catch (error) {
       console.log('made a boo boo', error);
@@ -33,27 +31,11 @@ export const Recipes = () => {
   }, [recipeFilter, getRecipes]);
 
   const openModal = (recipeShort: IRecipeShort) => {
-    console.log('open the modal now', recipeShort);
-    setViewRecipe(recipeShort);
-    open();
+    navigate(`/${recipeShort.id}`)
   };
 
   return (
     <>
-      <Modal
-        opened={recipeOpened}
-        onClose={close}
-        transitionProps={{ transition: 'slide-left' }}
-        fullScreen
-        radius={0}
-        withCloseButton={false}
-        padding={0}
-        aria-label={viewRecipe?.name || 'Recipe'}
-      >
-        {/* Modal content */}
-        {viewRecipe && <RecipeModal recipeShort={viewRecipe} closeModal={close} />}
-      </Modal>
-
       <div className="title-bar">
         <div className="text-muted">Hello {user.givenNames}</div>
         <Title className="title-bar--title">What would you like to cook today?</Title>

@@ -68,7 +68,7 @@ export const apiSlice = createApi({
     getRecipes: builder.mutation<IPagedResult<IRecipeShort>, IRecipeFilter>({
       query: (filter) => ({ url: '/recipe/search', method: 'POST', body: filter })
     }),
-    getRecipe: builder.query<IRecipe, number>({
+    getRecipe: builder.query<IRecipe, string | undefined>({
       query: (id) => ({ url: `/recipe/${id}` })
     }),
     getIngredients: builder.mutation<IPagedResult<IIngredient>, IFilter>({

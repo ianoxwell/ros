@@ -3,7 +3,7 @@ import { colorsTuple, createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
-import { Ingredients } from '@pages/ingredients/Ingredients';
+import { IngredientsPage } from '@pages/ingredients/IngredientsPage';
 import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';
@@ -17,6 +17,8 @@ import { Schedules } from '@pages/Schedules';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { CRoutes } from './app/routes.const';
+import IngredientModal from '@pages/ingredients/IngredientModal';
+import RecipeModal from '@pages/recipes/RecipeModal';
 
 const theme = createTheme({
   fontFamily: 'Quicksand, sans-serif',
@@ -52,8 +54,11 @@ function App() {
             <Route index element={<Recipes />} />
             <Route path={CRoutes.orders} element={<Orders />} />
             <Route path={CRoutes.schedule} element={<Schedules />} />
-            <Route path={CRoutes.ingredients} element={<Ingredients />} />
-          </Route>
+            <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
+            <Route path={`${CRoutes.ingredients}/:id`} element={<><IngredientsPage /><IngredientModal /></>} />
+            <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
+            <Route path="/:id" element={<><Recipes /><RecipeModal /></>} />
+            </Route>
           <Route path="/" element={<AccountWrapper />}>
             <Route path={CRoutes.login} element={<Login />} />
             <Route path={CRoutes.forgotPassword} element={<ForgotPassword />} />
