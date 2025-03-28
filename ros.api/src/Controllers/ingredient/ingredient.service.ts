@@ -27,7 +27,7 @@ import { Reference } from '../reference/reference.entity';
 import { ISpoonIngredient } from '../spoon/models/spoon-ingredient.dto';
 import { Conversion } from './conversion/conversion.entity';
 import { CIngredientShort } from './ingredient-short.dto';
-import { Ingredient } from './ingredient.entity';
+import { IIngredientEntityExtended, Ingredient } from './ingredient.entity';
 
 @Injectable()
 export class IngredientService {
@@ -73,34 +73,48 @@ export class IngredientService {
 
   async getIngredientById(id: string | number): Promise<IIngredient> {
     id = typeof id === 'number' ? id : parseInt(id);
-    const ingredient: Ingredient = await this.repository.findOne({
-      where: { id, isActive: true },
-      relations: {
-        possibleUnits: true,
-        conversions: true,
-        allergies: true
-      }
-    });
+    const ingredient: IIngredientEntityExtended = await this.repository.query(
+      `SELECT i.*, 
+      json_agg(DISTINCT m.*) FILTER (WHERE m.id IS NOT NULL) AS "possibleUnits", 
+      json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL) AS "conversions", 
+      json_agg(DISTINCT r.*) FILTER (WHERE r.id IS NOT NULL) AS "allergies",
+      json_agg(DISTINCT jsonb_build_object(
+      'id', rii."recipeId",
+      'name', rec.name,
+      'images', rec.images,
+      'summary', rec.summary,
+      'aggregateLikes', rec."aggregateLikes"
+      )) FILTER (WHERE rii."recipeId" IS NOT NULL) AS "recipes"
+      FROM ingredient i
+      LEFT JOIN ingredient_possible_units_measurement ipum ON ipum."ingredientId" = i.id
+      LEFT JOIN measurement m ON m.id = ipum."measurementId"
+      LEFT JOIN conversion c ON c."ingredientId" = i.id
+      LEFT JOIN ingredient_allergies_reference iar ON iar."ingredientId" = i.id
+      LEFT JOIN reference r ON r.id = iar."referenceId"
+      LEFT JOIN recipe_ingredients_ingredient rii ON rii."ingredientId" = i.id
+      LEFT JOIN recipe rec ON rec.id = rii."recipeId"
+      WHERE i.id = $1 AND i."isActive" = true
+      GROUP BY i.id`,
+      [id]
+    );
 
-    const measures = await this.measurementRepository.find();
-    return this.mapIngredientToIIngredientDTO(ingredient, true, measures);
+    return this.mapIngredientToIIngredientDTO(ingredient[0]);
   }
   /** Filter ingredients and paginate the results. */
-  async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredient>> {
+  async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredientShort>> {
     const [result, itemCount] = await this.repository.findAndCount({
       where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`), isActive: true },
       order: { name: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
       skip: pageOptionsDto.skip,
       relations: {
-        possibleUnits: true,
-        conversions: true,
-        allergies: true
+        possibleUnits: false,
+        conversions: false,
+        allergies: false
       }
     });
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
-    const measures = await this.measurementRepository.find();
-    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientDTO(ing, true, measures));
+    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientShort(ing));
 
     return new PaginatedDto(fullResult, pageMetaDto);
   }
@@ -118,16 +132,15 @@ export class IngredientService {
   }
 
   /** Quick and dirty find all - at least it maps it to a pagination object to show number of results. */
-  async findAll(): Promise<PaginatedDto<IIngredient>> {
+  async findAll(): Promise<PaginatedDto<IIngredientShort>> {
     const [result, itemCount] = await this.repository.findAndCount({
       where: { isActive: true },
       relations: {
-        possibleUnits: true,
-        conversions: true
+        possibleUnits: false,
+        conversions: false
       }
     });
-    const measures = await this.measurementRepository.find();
-    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientDTO(ing, true, measures));
+    const fullResult = result.map((ing: Ingredient) => this.mapIngredientToIIngredientShort(ing));
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: CPageOptionsDto });
 
     return new PaginatedDto(fullResult, pageMetaDto);
@@ -206,40 +219,32 @@ export class IngredientService {
       name: i.name,
       originalName: i.originalName,
       image: i.image,
-      aisle: i.aisle
+      aisle: i.aisle,
+      nutrition: {
+        nutrients: this.mapIngredientToINutrient(i),
+        vitamins: this.mapIngredientToIVitamins(i),
+        minerals: this.mapIngredientToIMineral(i),
+        properties: this.mapIngredientToINutritionProp(i),
+        caloricBreakdown: this.mapIngredientToICaloricBreakdown(i)
+      }
     };
   }
 
-  mapIngredientToIIngredientDTO(i: Ingredient, isNutritionIncluded = true, measures: Measurement[]): IIngredient {
+  mapIngredientToIIngredientDTO(i: IIngredientEntityExtended): IIngredient {
     const ing: IIngredient = {
-      id: i.id,
-      name: i.name,
-      originalName: i.originalName,
-      image: i.image,
+      ...this.mapIngredientToIIngredientShort(i),
       externalId: i.externalId,
-      aisle: i.aisle,
       estimatedCost: {
         value: i.estimatedCost,
         unit: i.estimatedCostUnit
       },
       createdAt: i.createdAt,
       updatedAt: i.updatedAt,
-      possibleUnits: (i.possibleUnits as unknown as number[]).map((measureId: number) =>
-        this.mapMeasurementToIMeasurement(this.findMeasure(measureId, measures))
-      ),
+      possibleUnits: i.possibleUnits,
+      conversions: i.conversions || [],
       allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
-      conversions: i.conversions.map((convert: Conversion) => this.mapConversionToIConversion(convert, i.id, measures))
+      recipes: i.recipes
     };
-
-    if (isNutritionIncluded) {
-      ing.nutrition = {
-        nutrients: this.mapIngredientToINutrient(i),
-        vitamins: this.mapIngredientToIVitamins(i),
-        minerals: this.mapIngredientToIMineral(i),
-        properties: this.mapIngredientToINutritionProp(i),
-        caloricBreakdown: this.mapIngredientToICaloricBreakdown(i)
-      };
-    }
 
     return ing;
   }
@@ -250,15 +255,16 @@ export class IngredientService {
     measures: Measurement[],
     ingredients: Ingredient[]
   ): IRecipeIngredient {
+    const measure = this.mapMeasurementToIMeasurement(this.findMeasure(iL.measureId, measures));
     return {
       id: iL.id,
       ingredientId: iL.ingredientId,
       recipeId,
       amount: iL.amount,
-      unit: iL.measure.title,
+      unit: measure.title,
       consistency: iL.consistency,
       meta: iL.meta,
-      measure: this.mapMeasurementToIMeasurement(this.findMeasure(iL.measureId, measures)),
+      measure,
       ingredient: new CIngredientShort(this.findIngredient(iL.ingredientId, ingredients))
     };
   }

@@ -42,7 +42,7 @@ export class IngredientController {
   @Post('/search')
   @ApiOkResponse({ type: PaginatedDto<IIngredient> })
   @HttpCode(200)
-  async searchIngredients(@Body() filter: IFilter): Promise<PaginatedDto<IIngredient>> {
+  async searchIngredients(@Body() filter: IFilter): Promise<PaginatedDto<IIngredientShort>> {
     const filterBase: IFilterBase = {
       ...filter,
       skip: filter.page * filter.take
@@ -71,13 +71,12 @@ export class IngredientController {
     }
 
     const ing = await this.ingredientService.createIngredientFromDto(ingredient);
-    const measures = await this.measurementRepository.find();
-    return ing instanceof CMessage ? ing : this.ingredientService.mapIngredientToIIngredientDTO(ing, true, measures);
+    return ing instanceof CMessage ? ing : this.ingredientService.mapIngredientToIIngredientDTO(ing);
   }
 
   /** Quick and dirty get */
   @Get('list')
-  async findAll(): Promise<PaginatedDto<IIngredient>> {
+  async findAll(): Promise<PaginatedDto<IIngredientShort>> {
     return await this.ingredientService.findAll();
   }
 

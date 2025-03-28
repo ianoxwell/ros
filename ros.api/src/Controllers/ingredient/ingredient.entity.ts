@@ -1,7 +1,7 @@
 import { RosBaseEntity } from '@base/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
-import { EPurchasedBy } from '../../../Models/ingredient.dto';
+import { EPurchasedBy, IIngredientRecipeVeryShort } from '../../../Models/ingredient.dto';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
 import { Reference } from '../reference/reference.entity';
@@ -178,4 +178,8 @@ export class Ingredient extends RosBaseEntity {
 
   @Column('boolean', { default: true })
   isActive: boolean;
+}
+
+export interface IIngredientEntityExtended extends Ingredient {
+  recipes?: IIngredientRecipeVeryShort[];
 }
