@@ -26,11 +26,11 @@ export const sortLabels = (data: ISimpleReference[] | undefined) => {
 };
 
 /** Takes the nutrient values 24.000, 0.1234 and returns '24' or '0.123' */
-export const fixWholeNumber = (value: number | string | undefined): string => {
+export const fixWholeNumber = (value: number | string | undefined, length = 3): string => {
   if (!value || isNaN(Number(value))) {
     return '0';
   }
 
   const num = Number(value);
-  return Number.isInteger(num) ? num.toString() : num.toFixed(3);
+  return Number.isInteger(num) ? num.toString() : num.toFixed(length);
 };
