@@ -1,8 +1,8 @@
-import { IRecipeSteppedInstruction } from './recipe-stepped-instructions.dto';
 import { IBaseDto } from './base.dto';
-import { IIngredient } from './ingredient.dto';
-import { IUserProfile } from './user.dto';
+import { IIngredientShort } from './ingredient.dto';
 import { IRecipeIngredient } from './recipe-ingredient.dto';
+import { IRecipeSteppedInstruction } from './recipe-stepped-instructions.dto';
+import { IUserProfile } from './user.dto';
 
 export interface IRecipeTease {
   id: number;
@@ -75,7 +75,7 @@ export interface IRecipe extends IRecipeShort {
   dishType: string[];
   diets: string[];
 
-  ingredients: IIngredient[];
+  ingredients: IIngredientShort[];
   ingredientList: IRecipeIngredient[];
   steppedInstructions: IRecipeSteppedInstruction[];
 

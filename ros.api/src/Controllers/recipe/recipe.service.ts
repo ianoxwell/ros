@@ -8,7 +8,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IEquipmentSteppedInstruction } from 'Models/equipment-stepped-instruction.dto';
 import { ISimpleEquipment } from 'Models/equipment.dto';
-import { IIngredient } from 'Models/ingredient.dto';
+import { IIngredientShort } from 'Models/ingredient.dto';
 import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
 import { IRecipeSteppedInstruction } from 'Models/recipe-stepped-instructions.dto';
 import { IRecipe, IRecipeShort, THealthBooleanLabels } from 'Models/recipe.dto';
@@ -129,52 +129,49 @@ export class RecipeService {
 
   /** Gets a single recipe */
   async getRecipeById(id: number): Promise<IRecipe | CMessage> {
-    console.time('get recipe');
+    console.time('get recipe start');
 
-    const getRecipe: Recipe = await this.repository.findOne({
-      where: { id },
-      loadRelationIds: true
-    });
+    const rawRecipe: Recipe[] = await this.repository.query(
+      `SELECT r.*, 
+      json_agg(DISTINCT i.*) FILTER (WHERE i.id IS NOT NULL) AS ingredients,
+      json_agg(DISTINCT ri.*) FILTER (WHERE ri.id IS NOT NULL) AS "ingredientList",
+      json_agg(DISTINCT e.*) FILTER (WHERE e.id IS NOT NULL) AS equipment,
+      ARRAY_AGG(DISTINCT ct."name") FILTER (WHERE ct.id IS NOT NULL) AS "cuisineType",
+      ARRAY_AGG(DISTINCT dt."name") FILTER (WHERE dt.id IS NOT NULL) AS "dishType",
+      ARRAY_AGG(DISTINCT hl."name") FILTER (WHERE hl.id IS NOT NULL) AS diets
+      FROM recipe r
+      LEFT JOIN recipe_ingredient ri ON ri."recipeId" = r.id
+      LEFT JOIN ingredient i on i.id = ri."ingredientId"
+      LEFT JOIN recipe_equipment_equipment ree ON ree."recipeId" = r.id
+      LEFT JOIN equipment e ON e.id = ree."equipmentId"
+      LEFT JOIN recipe_cuisine_type_cuisine_type rct ON rct."recipeId" = r.id
+      LEFT JOIN cuisine_type ct on ct.id = rct."cuisineTypeId" 
+      LEFT JOIN recipe_dish_type_dish_type rdt ON rdt."recipeId" = r.id
+      LEFT JOIN dish_type dt on dt.id = rdt."dishTypeId" 
+      LEFT JOIN recipe_diets_health_label rhl ON rhl."recipeId" = r.id
+      LEFT JOIN health_label hl ON hl.id = rhl."healthLabelId"
+      WHERE r.id = $1
+      GROUP BY r.id`,
+      [id]
+    );
 
-    if (!getRecipe || getRecipe === null) {
+    if (!rawRecipe || rawRecipe === null || !rawRecipe.length) {
       const queryTime = new Date().getTime() - this.startTime;
 
       return new CMessage('Recipe by id not found, ' + queryTime + 'ms', HttpStatus.NOT_FOUND);
     }
 
-    const cuisineType: CuisineType[] = await this.cuisineTypeRepository.find({
-      where: { id: In(getRecipe.cuisineType as unknown as number[]) }
-    });
+    // raw query is wrapped in an array
+    const getRecipe: Recipe = rawRecipe[0];
 
-    const equipment: Equipment[] = await this.equipmentRepository.find({
-      where: { id: In(getRecipe.equipment as unknown as number[]) }
-    });
+    getRecipe.cuisineType = getRecipe.cuisineType ?? [];
+    getRecipe.dishType = getRecipe.dishType ?? [];
+    getRecipe.diets = getRecipe.diets ?? [];
+    if (!Array.isArray(getRecipe.images)) {
+      getRecipe.images = [getRecipe.images];
+    }
 
-    const dishType: DishType[] = await this.dishTypeRepository.find({
-      where: { id: In(getRecipe.dishType as unknown as number[]) }
-    });
-
-    const diets: HealthLabel[] = await this.healthLabelRepository.find({
-      where: { id: In(getRecipe.diets as unknown as number[]) }
-    });
-
-    const ingredientIds = (getRecipe.ingredients as unknown as number[]).map((il) => il);
-    const ingredients = await this.ingredientService.getIngredientFromIdList(ingredientIds);
-
-    const ingredientList: RecipeIngredient[] = await this.recipeIngredientRepository.find({
-      where: { recipeId: id },
-      loadRelationIds: true
-    });
-
-    getRecipe.ingredients = ingredients;
-    getRecipe.ingredientList = ingredientList;
-    getRecipe.cuisineType = cuisineType;
-    getRecipe.equipment = equipment;
-    getRecipe.dishType = dishType;
-    getRecipe.diets = diets;
-
-    console.timeEnd('get recipe');
-
+    console.timeEnd('get recipe start');
     return this.mapRecipeToRecipeDto(getRecipe);
   }
 
@@ -309,9 +306,6 @@ export class RecipeService {
   }
 
   private mapRecipeToShortRecipeDto(recipe: Recipe): IRecipeShort {
-    const cuisineType: string[] = recipe.cuisineType?.map((item: CuisineType) => item.name);
-    const dishType: string[] = recipe.dishType?.map((item: DishType) => item.name);
-    const diets: string[] = recipe.diets?.map((item: HealthLabel) => item.name);
     const healthLabels: THealthBooleanLabels[] = this.healthLabelKeys.filter((key: THealthBooleanLabels) => recipe[key]);
 
     return {
@@ -339,9 +333,9 @@ export class RecipeService {
       weightWatcherSmartPoints: recipe.weightWatcherSmartPoints,
       gaps: recipe.gaps,
       healthLabels,
-      cuisineType,
-      dishType,
-      diets
+      cuisineType: recipe.cuisineType as unknown as string[],
+      dishType: recipe.dishType as unknown as string[],
+      diets: recipe.diets as unknown as string[]
     };
   }
 
@@ -360,10 +354,7 @@ export class RecipeService {
     const equipment: Equipment[] = equipments.filter((e) => equipmentIdList.includes(e.id));
     const diets: HealthLabel[] = healthLabels.filter((h) => r.diets.includes(h.name));
     // Map any ingredients not found in the repository
-    const openIngredients: Ingredient[] = r.ingredients
-      .filter((i) => !i.id)
-      .map((ing) => this.ingredientService.mapIIngredientDtoIngredient(ing));
-    const ingredients: Ingredient[] = [...ingredientsPartial, ...openIngredients]; // TODO confirm this is correct way to do this
+    const ingredients: Ingredient[] = [...ingredientsPartial]; // TODO confirm this is correct way to do this , ...openIngredients
 
     const recipe: Recipe = {
       name: r.name,
@@ -429,14 +420,10 @@ export class RecipeService {
   }
 
   private async mapRecipeToRecipeDto(recipe: Recipe): Promise<IRecipe> {
-    // const cuisineType: string[] = recipe.cuisineType.map((item: CuisineType) => item.name);
-    // const dishType: string[] = recipe.dishType.map((item: DishType) => item.name);
-    // const diets: string[] = recipe.diets.map((item: HealthLabel) => item.name);
-    // const healthLabels: THealthBooleanLabels[] = this.healthLabelKeys.filter((key: THealthBooleanLabels) => recipe[key]);
     const measures = await this.measurementRepository.find();
 
-    const ingredients: IIngredient[] = recipe.ingredients.map((i: Ingredient) =>
-      this.ingredientService.mapIngredientToIIngredientDTO(i, true, measures)
+    const ingredients: IIngredientShort[] = recipe.ingredients.map((i: Ingredient) =>
+      this.ingredientService.mapIngredientToIIngredientShort(i)
     );
     const ingredientList: IRecipeIngredient[] = recipe.ingredientList.map((il: RecipeIngredient) =>
       this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto(il, recipe.id, measures, recipe.ingredients)
