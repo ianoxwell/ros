@@ -42,3 +42,10 @@ export const CVitaminsMinerals: TVitaminMineralInfo = {
   sodium: { name: 'Sodium', measure: 'mg', shortName: 'Na', rda: 2300 }, // mg
   zinc: { name: 'Zinc', measure: 'mg', shortName: 'Zn', rda: 11 } // mg // μg
 };
+
+export const CMacroNutrientRda = {
+  protein: { amount: 50, measure: 'g', note: 'Based on a 2000-calorie diet' },
+  carbohydrates: { amount: 275, measure: 'g', note: 'Based on a 2000-calorie diet' },
+  fat: { amount: 78, measure: 'g', note: 'Based on a 2000-calorie diet' },
+  fiber: { amount: 28, measure: 'g', note: 'For adults, varies by age & sex' }
+};
