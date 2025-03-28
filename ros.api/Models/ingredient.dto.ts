@@ -10,6 +10,21 @@ export interface IIngredientShort extends IBaseDto {
   originalName: string;
   image?: string;
   aisle?: string;
+  nutrition?: {
+    nutrients: INutrients;
+    vitamins: IVitamins;
+    minerals: IMinerals;
+    properties: INutritionProperties;
+    caloricBreakdown: ICaloricBreakdown;
+  };
+}
+
+export interface IIngredientRecipeVeryShort {
+  id: number;
+  name: string;
+  summary: string;
+  images: string[];
+  aggregateLikes: number;
 }
 
 export interface IIngredient extends IIngredientShort {
@@ -27,18 +42,11 @@ export interface IIngredient extends IIngredientShort {
   /** Linked many to many table */
   recipeIngredientList?: IRecipe[];
 
-  nutrition?: {
-    nutrients: INutrients;
-    vitamins: IVitamins;
-    minerals: IMinerals;
-    properties: INutritionProperties;
-    caloricBreakdown: ICaloricBreakdown;
-  };
-
   estimatedCost: {
     value: number;
     unit: string;
   };
+  recipes?: IIngredientRecipeVeryShort[];
 }
 
 export interface IReferenceShort {
