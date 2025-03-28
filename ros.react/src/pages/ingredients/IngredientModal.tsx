@@ -1,10 +1,23 @@
 import { CImageUrlLarge, CRoutes } from '@app/routes.const';
 import { CMacroNutrientRda } from '@domain/vitamin-mineral-const';
 import { useGetIngredientQuery } from '@features/api/apiSlice';
-import { ActionIcon, Flex, Image, Modal, Space, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Group,
+  HoverCard,
+  Image,
+  List,
+  Modal,
+  SimpleGrid,
+  Space,
+  Title
+} from '@mantine/core';
 import { fixWholeNumber, sentenceCase } from '@utils/stringUtils';
+import parse from 'html-react-parser';
 import { ChevronLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import NutritionCurveLeft from './nutritionCurveLeft';
 import NutritionCurveRight from './nutritionCurveRight';
 import NutritionText from './NutritionText.component';
@@ -52,9 +65,13 @@ const IngredientModal = () => {
               <ChevronLeft size={28} />
             </ActionIcon>
           </div>
-          <Title order={2}>{sentenceCase(ingredient.name)}</Title>
+          <Title order={2} className="ingredient-modal--title">
+            {sentenceCase(ingredient.name)}
+          </Title>
           <Space h="xl" />
-
+          <div>
+            Typically found in <b>{sentenceCase(ingredient.aisle)}</b> aisle
+          </div>
           <Flex direction="column" justify="center" align="center">
             <Title order={3}>Nutrition</Title>
             <Flex gap="md">
@@ -128,10 +145,46 @@ const IngredientModal = () => {
               </div>
             </Flex>
           </Flex>
+          <Space h="lg" />
 
-          <div>List of conversions in text</div>
+          {!!ingredient.conversions?.length && (
+            <section>
+              <Title order={2}>Typical conversions in grams</Title>
+              <List>
+                {ingredient.conversions.map((convert) => (
+                  <List.Item>{convert.answer}</List.Item>
+                ))}
+              </List>
+            </section>
+          )}
+          <Space h="lg" />
 
-          <div>Some sort of list of recipes (with links) that this ingredient is in</div>
+          {ingredient.recipes?.length && (
+            <section>
+              <Title order={2}>Recipes</Title>
+              <SimpleGrid cols={{ base: 3, md: 4, lg: 5, xl: 6 }} spacing="md" verticalSpacing="md">
+                {ingredient.recipes.map((recipe) => (
+                  <HoverCard width={320} shadow="md" key={recipe.id}>
+                    <HoverCard.Target>
+                      <NavLink to={`/${recipe.id}`} aria-label={recipe.name}>
+                        <Flex direction="column">
+                          <Image src={recipe.images} alt={recipe.name} h="180" radius="md" />
+                          <div className="recipe-title">{recipe.name}</div>
+                        </Flex>
+                      </NavLink>
+                    </HoverCard.Target>
+                    <HoverCard.Dropdown>{parse(recipe.summary)}</HoverCard.Dropdown>
+                  </HoverCard>
+                ))}
+              </SimpleGrid>
+            </section>
+          )}
+          <Space h="xl" />
+          <Group justify="flex-end" mt="lg">
+            <Button variant="outline" onClick={closeModal} type="button">
+              Close
+            </Button>
+          </Group>
         </div>
       )}
     </Modal>

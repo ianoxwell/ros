@@ -1,11 +1,13 @@
+import { useAppDispatch } from '@app/hooks';
 import Loader from '@components/Loader/Loader.component';
-import RosPagination from '@components/RosPagination/RosPagination.component';
 import { IPagedResult } from '@domain/base.dto';
 import { IRecipeShort } from '@domain/recipe.dto';
-import { SimpleGrid } from '@mantine/core';
+import { Group, Pagination, SimpleGrid, Space } from '@mantine/core';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import RecipeCard from './RecipeCard';
+import { setRecipePageNumber } from './recipeFilter.slice';
 
-  // TODO also change to Skeleton for the Loader please
+// TODO also change to Skeleton for the Loader please
 const RecipeGrid = ({
   data,
   isLoading,
@@ -15,6 +17,12 @@ const RecipeGrid = ({
   isLoading: boolean;
   openModal: (recipeShort: IRecipeShort) => void;
 }) => {
+  const dispatch = useAppDispatch();
+
+  const setPageNumber = (page: number) => {
+    dispatch(setRecipePageNumber(page - 1));
+  };
+
   return (
     <section className="recipes">
       {isLoading || !data ? (
@@ -28,7 +36,25 @@ const RecipeGrid = ({
           </SimpleGrid>
         </>
       )}
-      {data && <RosPagination meta={data.meta} />}
+      {data && (
+        <>
+          <Space h="xl" />
+          <Pagination.Root
+            siblings={1}
+            defaultValue={1}
+            value={data.meta.page + 1}
+            onChange={setPageNumber}
+            total={data.meta.pageCount}
+          >
+            <Group justify="center" gap="xs" className="ros-paginator">
+              <Pagination.First icon={ChevronsLeft} />
+              <Pagination.Items />
+              <Pagination.Last icon={ChevronsRight} />
+            </Group>
+          </Pagination.Root>
+          <Space h="xl" />
+        </>
+      )}
     </section>
   );
 };

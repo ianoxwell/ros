@@ -1,17 +1,19 @@
-import { useAppSelector } from '@app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
 import SortAndFilterButton from '@components/SortAndFilterButton/SortAndFilterButton.component';
 import { IIngredientShort } from '@domain/ingredient.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetIngredientsMutation } from '@features/api/apiSlice';
-import { Button, Table, Title } from '@mantine/core';
+import { Button, Group, Pagination, Space, Table, Title } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { sentenceCase } from '@utils/stringUtils';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import './ingredients.scss';
+import { setIngredientPageNumber } from './ingredientFilter.slice';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 export const IngredientsPage = () => {
   const ingredientFilter = useSelector((store: RootState) => store.ingredientFilter);
@@ -20,6 +22,7 @@ export const IngredientsPage = () => {
   const [filterOpen, { toggle }] = useDisclosure(false);
   const isMobile = useMediaQuery(`(max-width: 1599px)`);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     try {
@@ -31,6 +34,15 @@ export const IngredientsPage = () => {
 
   const openModal = (ing: IIngredientShort) => {
     navigate(`${CRoutes.ingredients}/${ing.id}`);
+  };
+
+  const openFilter = () => {
+    dispatch(setIngredientPageNumber(0));
+    toggle();
+  }
+
+  const setPageNumber = (page: number) => {
+    dispatch(setIngredientPageNumber(page - 1));
   };
 
   const rows = data?.results.map((ingredient) => (
@@ -64,9 +76,30 @@ export const IngredientsPage = () => {
         <div className="text-muted">Hello {user.givenNames}</div>
         <Title className="title-bar--title">What ingredients would you like to know more about today?</Title>
       </div>
+      <Space h="md" />
+      <SortAndFilterButton meta={data?.meta} toggle={openFilter} page="ingredients" />
 
-      <SortAndFilterButton meta={data?.meta} toggle={toggle} page="ingredients" />
-      <IngredientTable />
+      {!!data?.results.length && (
+        <section>
+          <IngredientTable />
+          <Space h="xl" />
+
+          <Pagination.Root
+            siblings={1}
+            defaultValue={1}
+            value={data.meta.page + 1}
+            onChange={setPageNumber}
+            total={data.meta.pageCount}
+          >
+            <Group justify="center" gap="xs" className='ros-paginator'>
+              <Pagination.First icon={ChevronsLeft} />
+              <Pagination.Items />
+              <Pagination.Last icon={ChevronsRight} />
+            </Group>
+          </Pagination.Root>
+          <Space h="xl" />
+        </section>
+      )}
     </>
   );
 };

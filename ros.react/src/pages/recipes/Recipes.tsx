@@ -80,7 +80,7 @@ export const Recipes = () => {
               <Collapse in={filterOpen}>
                 <RecipeFilter />
               </Collapse>
-              <RecipeGrid data={data} isLoading={isLoading} openModal={openModal} />
+              <RecipeGrid data={data} isLoading={isLoading} openModal={openModal}  />
             </>
           );
         })()}

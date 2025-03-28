@@ -1,57 +1,71 @@
 @use 'sass:math';
 
-.nutrition-image {
-  border-radius: 50%;
-  margin: 0 -5rem;
-  min-width: 20rem;
-}
-.nutrition-parent {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  position: absolute;
-  padding-top: 6rem;
-
-  .nutrient-line {
-    width: 100%;
+.nutrition {
+  &-image {
+    border-radius: 50%;
+    margin: 0 -5rem;
+    min-width: 20rem;
+  }
+  &-parent {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    height: 3rem;
+    width: 100%;
+    position: absolute;
 
-    .nutrient-short {
-      font-size: 2.2rem;
-      font-weight: bold;
-      margin: 0 0.5rem;
-      color: var(--darker-accent);
-    }
-    .nutrient-details {
+    .nutrient-line {
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
+      flex-direction: row;
+      align-items: center;
+      height: 3rem;
 
-    .nutrient-name {
-      color: var(--muted-text);
-    }
+      .nutrient-short {
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin: 0 0.5rem;
+        color: var(--darker-accent);
+      }
+      .nutrient-details {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
 
-    .short-name {
-      font-size: 1.8rem;
-      font-weight: 700;
+      .nutrient-name {
+        color: var(--muted-text);
+      }
+
+      .short-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+    }
+    .nutrition--text {
+      &.left {
+        text-align: right;
+        .nutrient-line {
+          flex-direction: row-reverse;
+        }
+        .nutrient-short {
+          color: var(--accent-foreground);
+        }
+      }
     }
   }
-  .nutrition--text {
-    &.left {
-      text-align: right;
-      .nutrient-line {
-        flex-direction: row-reverse;
-      }
-      .nutrient-short {
+  &-summary {
+    div {
+      display: flex;
+      flex-direction: column;
+      min-width: 10rem;
+      align-items: center;
+      h4 {
         color: var(--accent-foreground);
+        text-transform: uppercase;
       }
     }
   }
 }
+
 .vitamins,
 .minerals {
   width: 50%;
@@ -81,5 +95,34 @@
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1;
+  }
+}
+
+.ingredient-modal {
+  margin-bottom: 5rem;
+  padding: 2rem;
+  &--title {
+    margin-left: 6rem;
+  }
+  .flex-float-header {
+    position: absolute;
+  }
+}
+
+.ros-paginator {
+  .mantine-Pagination-control {
+    background-color: white;
+    color: var(--accent-foreground);
+    outline: 1px solid var(--accent-foreground);
+    padding: 0 1rem;
+    border-color: transparent;
+    height: 36px;
+    width: unset;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .mantine-Pagination-control:where([data-active]) {
+    color: white;
+    background-color: var(--accent-foreground);
   }
 }

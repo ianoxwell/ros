@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Avatar,
   Badge,
+  Button,
   Chip,
   Flex,
   Group,
@@ -83,10 +84,9 @@ const RecipeModal = () => {
                 <Heart size={28} />
               </ActionIcon>
             </Flex>
-
             <Title order={2}>{data.name}</Title>
             <Space h="xs" />
-            {data?.dishType?.length && (
+            {!!data?.dishType?.length && (
               <>
                 <Group gap="xs">
                   {data?.dishType.map((dish, index) => (
@@ -96,8 +96,7 @@ const RecipeModal = () => {
                 <Space h="md" />
               </>
             )}
-
-            {data?.cuisineType?.length && (
+            {!!data?.cuisineType?.length && (
               <>
                 <Group gap="xs">
                   {data?.cuisineType.map((cuisine, index) => (
@@ -107,7 +106,6 @@ const RecipeModal = () => {
                 <Space h="md" />
               </>
             )}
-
             <Flex direction="row" gap="md">
               <Group gap="xs">
                 <Timer size={16} />
@@ -126,13 +124,11 @@ const RecipeModal = () => {
               {/* Add in the number of likes? */}
             </Flex>
             <Space h="md" />
-
             <Spoiler maxHeight={56} showLabel="Show more" hideLabel="Hide">
               {parse(data.summary)}
             </Spoiler>
             <Space h="xl" />
-
-            {data?.diets?.length && (
+            {!!data?.diets?.length && (
               <>
                 <Title order={3}>Diets</Title>
                 <Space h="xs" />
@@ -163,8 +159,7 @@ const RecipeModal = () => {
                 <Space h="xl" />
               </>
             )}
-
-            {data?.equipment?.length && (
+            {!!data?.equipment?.length && (
               <>
                 {' '}
                 <Title order={3}>Equipment</Title>
@@ -177,14 +172,13 @@ const RecipeModal = () => {
                 <Space h="xl" />
               </>
             )}
-
             {data?.instructions && (
               <>
                 <Title order={3}>Instructions</Title>
                 <Space h="xs" />
                 {data &&
                   (() => {
-                    if (data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
+                    if (!!data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
                       return (
                         <Stack>
                           {data.steppedInstructions.map((item, index) => (
@@ -212,7 +206,12 @@ const RecipeModal = () => {
                   })()}
               </>
             )}
-
+            <Space h="xl" />
+            <Group justify="flex-end" mt="lg">
+              <Button variant="outline" onClick={closeModal} type="button">
+                Close
+              </Button>
+            </Group>
             <Space h="xl" />
           </div>
         </div>

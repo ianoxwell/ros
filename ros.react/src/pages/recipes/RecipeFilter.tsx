@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@app/hooks';
 import { RootState } from '@app/store';
 import { EOrder } from '@domain/base.dto';
-import { IRecipeFilter } from '@domain/filter.dto';
+import { CBlankFilter, IRecipeFilter } from '@domain/filter.dto';
 import { useGetReferencesQuery } from '@features/api/apiSlice';
 import { ActionIcon, Button, CloseButton, Flex, MultiSelect, Select, Space, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -36,8 +36,12 @@ const RecipeFilter = () => {
 
   const submitForm = (values: IRecipeFilter) => {
     console.log('submit form', values);
-    dispatch(setNewFilter({ ...values, order: sortOrder }));
+    dispatch(setNewFilter({ ...values, page: 0, order: sortOrder }));
   };
+
+  const resetFilters = () => {
+    dispatch(setNewFilter(CBlankFilter));
+  }
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === EOrder.ASC ? EOrder.DESC : EOrder.ASC);
@@ -118,6 +122,9 @@ const RecipeFilter = () => {
 
           <Space h="xl" />
           <Button type="submit">Apply Filters</Button>
+          <Button type="button" onClick={resetFilters} variant="outline">
+            Clear Filters
+          </Button>
           <Space h="xl" />
         </Stack>
       </form>
