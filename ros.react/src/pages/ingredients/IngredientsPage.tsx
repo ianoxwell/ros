@@ -2,7 +2,7 @@ import { useAppSelector } from '@app/hooks';
 import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
 import SortAndFilterButton from '@components/SortAndFilterButton/SortAndFilterButton.component';
-import { IIngredient } from '@domain/ingredient.dto';
+import { IIngredientShort } from '@domain/ingredient.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetIngredientsMutation } from '@features/api/apiSlice';
 import { Button, Table, Title } from '@mantine/core';
@@ -29,7 +29,7 @@ export const IngredientsPage = () => {
     }
   }, [ingredientFilter, getIngredients]);
 
-  const openModal = (ing: IIngredient) => {
+  const openModal = (ing: IIngredientShort) => {
     navigate(`${CRoutes.ingredients}/${ing.id}`);
   };
 

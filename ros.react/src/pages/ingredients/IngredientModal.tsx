@@ -1,4 +1,5 @@
 import { CImageUrlLarge, CRoutes } from '@app/routes.const';
+import { CMacroNutrientRda } from '@domain/vitamin-mineral-const';
 import { useGetIngredientQuery } from '@features/api/apiSlice';
 import { ActionIcon, Flex, Image, Modal, Space, Title } from '@mantine/core';
 import { fixWholeNumber, sentenceCase } from '@utils/stringUtils';
@@ -18,6 +19,10 @@ const IngredientModal = () => {
   };
 
   if (!id) return null;
+
+  const calculateRdaPercent = (rdaAmount: number, value: number) => {
+    return fixWholeNumber((value / rdaAmount) * 100, 2);
+  };
 
   return (
     <Modal
@@ -80,12 +85,53 @@ const IngredientModal = () => {
               </div>
               <div className="minerals">
                 <div className="nutrition--text">
-                  <NutritionText data={ingredient.nutrition?.minerals} reverse/>
+                  <NutritionText data={ingredient.nutrition?.minerals} reverse />
                 </div>
               </div>
             </div>
             <div className="serving-size-label">Serving size: 100 g</div>
+            <Space h="xl" />
+            <Flex direction="row" gap="xl" className="nutrition-summary">
+              <div>
+                <Title order={4}>Protein</Title>
+                <span>
+                  {fixWholeNumber(ingredient.nutrition?.nutrients.protein, 2)} g (
+                  {calculateRdaPercent(CMacroNutrientRda.protein.amount, ingredient.nutrition?.nutrients.protein || 0)}%
+                  rda)
+                </span>
+              </div>
+              <div>
+                <Title order={4}>Carbohydrates</Title>
+                <span>
+                  {fixWholeNumber(ingredient.nutrition?.nutrients.carbohydrates, 1)} g (
+                  {calculateRdaPercent(
+                    CMacroNutrientRda.carbohydrates.amount,
+                    ingredient.nutrition?.nutrients.carbohydrates || 0
+                  )}
+                  % rda)
+                </span>
+              </div>
+              <div>
+                <Title order={4}>Fat</Title>
+                <span>
+                  {fixWholeNumber(ingredient.nutrition?.nutrients.fat, 1)} g (
+                  {calculateRdaPercent(CMacroNutrientRda.fat.amount, ingredient.nutrition?.nutrients.fat || 0)}% rda)
+                </span>
+              </div>
+              <div>
+                <Title order={4}>Dietary fibre</Title>
+                <span>
+                  {fixWholeNumber(ingredient.nutrition?.nutrients.fiber, 1)} g (
+                  {calculateRdaPercent(CMacroNutrientRda.fiber.amount, ingredient.nutrition?.nutrients.fiber || 0)}%
+                  rda)
+                </span>
+              </div>
+            </Flex>
           </Flex>
+
+          <div>List of conversions in text</div>
+
+          <div>Some sort of list of recipes (with links) that this ingredient is in</div>
         </div>
       )}
     </Modal>

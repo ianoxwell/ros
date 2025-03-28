@@ -1,7 +1,7 @@
 // Import the RTK Query methods from the React-specific entry point
 import { IPagedResult } from '@domain/base.dto';
 import { IFilter, IRecipeFilter } from '@domain/filter.dto';
-import { IIngredient } from '@domain/ingredient.dto';
+import { IIngredient, IIngredientShort } from '@domain/ingredient.dto';
 import { IMessage } from '@domain/message.dto';
 import { IRecipe, IRecipeShort } from '@domain/recipe.dto';
 import { IAllReferences } from '@domain/reference.dto';
@@ -71,7 +71,7 @@ export const apiSlice = createApi({
     getRecipe: builder.query<IRecipe, string | undefined>({
       query: (id) => ({ url: `/recipe/${id}` })
     }),
-    getIngredients: builder.mutation<IPagedResult<IIngredient>, IFilter>({
+    getIngredients: builder.mutation<IPagedResult<IIngredientShort>, IFilter>({
       query: (filter) => ({ url: '/ingredient/search', method: 'POST', body: filter })
     }),
     getIngredient: builder.query<IIngredient, string | undefined>({
