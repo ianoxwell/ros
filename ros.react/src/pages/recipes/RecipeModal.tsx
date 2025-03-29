@@ -1,13 +1,17 @@
 import { CImageUrl } from '@app/routes.const';
 import { Plural } from '@components/plural/Plural';
 import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
+import { calculateRdaPercent, CMacroNutrientRda, CVitaminsMinerals } from '@domain/vitamin-mineral-const';
 import { useGetRecipeQuery } from '@features/api/apiSlice';
 import {
   ActionIcon,
   Avatar,
   Badge,
+  Box,
   Button,
+  Center,
   Chip,
+  Divider,
   Flex,
   Group,
   Image,
@@ -16,9 +20,10 @@ import {
   Space,
   Spoiler,
   Stack,
+  Text,
   Title
 } from '@mantine/core';
-import { fractionNumber } from '@utils/numberUtils';
+import { fixWholeNumber, fractionNumber } from '@utils/numberUtils';
 import { parseRecipeInstructions, sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
 import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
@@ -207,6 +212,156 @@ const RecipeModal = () => {
               </>
             )}
             <Space h="xl" />
+
+            {!!data.nutrition && (
+              <Center>
+                <section className="nutrition-facts">
+                  <Title order={2}>Nutrition facts</Title>
+                  <Text size="sm">Amount per serving</Text>
+                  <Flex justify="space-between">
+                    <Title order={3}>Calories</Title>
+                    <Title order={3}>{fixWholeNumber(data.nutrition.nutrients.calories / data.servings, 0)}</Title>
+                  </Flex>
+                  <Divider size="md" />
+
+                  <Flex justify="flex-end">
+                    <b>% Daily Value*</b>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="space-between">
+                    <span>
+                      <b>Total fat</b> {fixWholeNumber(data.nutrition.nutrients.fat / data.servings, 1)} g
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CMacroNutrientRda.fat.amount,
+                        data.nutrition.nutrients.fat / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="flex-start">
+                    <Box w={24} />
+                    <span>
+                      Saturated fat {fixWholeNumber(data.nutrition.nutrients.saturatedFat / data.servings, 1)} g
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="space-between">
+                    <span>
+                      <b>Cholesterol</b> {fixWholeNumber(data.nutrition.nutrients.cholesterol / data.servings, 1)} mg
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="space-between">
+                    <span>
+                      <b>Total carbohydrate</b>{' '}
+                      {fixWholeNumber(data.nutrition.nutrients.carbohydrates / data.servings, 1)} g
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CMacroNutrientRda.carbohydrates.amount,
+                        data.nutrition.nutrients.carbohydrates / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="flex-start">
+                    <Box w={24} />
+                    <span>Dietary fiber {fixWholeNumber(data.nutrition.nutrients.fiber / data.servings, 1)} g</span>
+                  </Flex>
+                  <Divider size="xs" />
+                  <Flex justify="flex-start">
+                    <Box w={24} />
+                    <span>Total sugars {fixWholeNumber(data.nutrition.nutrients.sugar / data.servings, 1)} g</span>
+                  </Flex>
+                  <Divider size="xs" />
+                  <Flex justify="space-between">
+                    <span>
+                      <b>Protein</b> {fixWholeNumber(data.nutrition.nutrients.protein / data.servings, 1)} g
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CMacroNutrientRda.protein.amount,
+                        data.nutrition.nutrients.protein / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="lg" />
+                  <Flex justify="space-between">
+                    <span>
+                      Vitamin D {fixWholeNumber(data.nutrition.vitamins.vitaminD / data.servings, 1)}{' '}
+                      {CVitaminsMinerals.vitaminD.measure}
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CVitaminsMinerals.vitaminD.rda,
+                        data.nutrition.vitamins.vitaminD / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+                  <Flex justify="space-between">
+                    <span>
+                      Calcium {fixWholeNumber(data.nutrition.minerals.calcium / data.servings, 1)}{' '}
+                      {CVitaminsMinerals.calcium.measure}
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CVitaminsMinerals.calcium.rda,
+                        data.nutrition.minerals.calcium / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+                  <Flex justify="space-between">
+                    <span>
+                      Iron {fixWholeNumber(data.nutrition.minerals.iron / data.servings, 1)}{' '}
+                      {CVitaminsMinerals.iron.measure}
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CVitaminsMinerals.iron.rda,
+                        data.nutrition.minerals.iron / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+                  <Flex justify="space-between">
+                    <span>
+                      Potassium {fixWholeNumber(data.nutrition.minerals.potassium / data.servings, 1)}{' '}
+                      {CVitaminsMinerals.potassium.measure}
+                    </span>
+                    <span>
+                      {calculateRdaPercent(
+                        CVitaminsMinerals.potassium.rda,
+                        data.nutrition.minerals.potassium / data.servings || 0
+                      )}
+                      %
+                    </span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Text size="sm">
+                    *The % Daily Value (DV) tells you how much a nutrient in a food serving contributes to a daily diet.
+                    2,000 calorie a day is used for general nutrition advice.
+                  </Text>
+                </section>
+              </Center>
+            )}
+
+            {/* Close button */}
             <Group justify="flex-end" mt="lg">
               <Button variant="outline" onClick={closeModal} type="button">
                 Close

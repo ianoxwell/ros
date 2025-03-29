@@ -1,5 +1,5 @@
 import { CImageUrlLarge, CRoutes } from '@app/routes.const';
-import { CMacroNutrientRda } from '@domain/vitamin-mineral-const';
+import { calculateRdaPercent, CMacroNutrientRda } from '@domain/vitamin-mineral-const';
 import { useGetIngredientQuery } from '@features/api/apiSlice';
 import {
   ActionIcon,
@@ -14,7 +14,8 @@ import {
   Space,
   Title
 } from '@mantine/core';
-import { fixWholeNumber, sentenceCase } from '@utils/stringUtils';
+import { fixWholeNumber } from '@utils/numberUtils';
+import { sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
 import { ChevronLeft } from 'lucide-react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
@@ -32,10 +33,6 @@ const IngredientModal = () => {
   };
 
   if (!id) return null;
-
-  const calculateRdaPercent = (rdaAmount: number, value: number) => {
-    return fixWholeNumber((value / rdaAmount) * 100, 2);
-  };
 
   return (
     <Modal

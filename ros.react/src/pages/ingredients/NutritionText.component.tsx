@@ -1,6 +1,7 @@
 import { IMinerals, IVitamins } from '@domain/ingredient.dto';
 import { CVitaminsMinerals } from '@domain/vitamin-mineral-const';
-import { fixWholeNumber } from '@utils/stringUtils';
+import { fixWholeNumber } from '@utils/numberUtils';
+
 
 interface IDisplayVitMin {
   value: string;

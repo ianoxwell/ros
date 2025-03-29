@@ -74,4 +74,11 @@
       color: var(--darker-accent);
     }
   }
+
+  .nutrition-facts {
+    width: 22rem;
+    padding: 1rem;
+    border: 2px solid var(--muted-text);
+    border-radius: 0.25rem;
+  }
 }

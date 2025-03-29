@@ -27,3 +27,13 @@ export const fractionNumber = (value: number | string | undefined): string => {
 
   return num.toFixed(2);
 };
+
+/** Takes the nutrient values 24.000, 0.1234 and returns '24' or '0.123' */
+export const fixWholeNumber = (value: number | string | undefined, length = 3): string => {
+  if (!value || isNaN(Number(value))) {
+    return '0';
+  }
+
+  const num = Number(value);
+  return Number.isInteger(num) ? num.toString() : num.toFixed(length);
+};
