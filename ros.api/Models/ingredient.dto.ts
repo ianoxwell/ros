@@ -10,13 +10,9 @@ export interface IIngredientShort extends IBaseDto {
   originalName: string;
   image?: string;
   aisle?: string;
-  nutrition?: {
-    nutrients: INutrients;
-    vitamins: IVitamins;
-    minerals: IMinerals;
-    properties: INutritionProperties;
-    caloricBreakdown: ICaloricBreakdown;
-  };
+  nutrition?: INutrition;
+  /** Many to one relationship */
+  conversions?: IConversion[];
 }
 
 export interface IIngredientRecipeVeryShort {
@@ -35,9 +31,6 @@ export interface IIngredient extends IIngredientShort {
 
   /** many to many reference back to allergy reference */
   allergies: IReferenceShort[];
-
-  /** Many to one relationship */
-  conversions?: IConversion[];
 
   /** Linked many to many table */
   recipeIngredientList?: IRecipe[];
@@ -61,6 +54,14 @@ export enum EPurchasedBy {
   volume,
   individual,
   bunch
+}
+
+export interface INutrition {
+  nutrients: INutrients;
+  vitamins: IVitamins;
+  minerals: IMinerals;
+  properties: INutritionProperties;
+  caloricBreakdown: ICaloricBreakdown;
 }
 
 export interface IVitamins {

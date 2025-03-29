@@ -1,5 +1,5 @@
 import { IBaseDto } from './base.dto';
-import { IIngredientShort } from './ingredient.dto';
+import { IIngredientShort, INutrition } from './ingredient.dto';
 import { IRecipeIngredient } from './recipe-ingredient.dto';
 import { IRecipeSteppedInstruction } from './recipe-stepped-instructions.dto';
 import { IUserProfile } from './user.dto';
@@ -82,6 +82,7 @@ export interface IRecipe extends IRecipeShort {
   createdBy?: IUserProfile;
   editedBy?: IUserProfile;
   favoriteBy?: IUserProfile[];
+  nutrition?: INutrition;
 }
 export interface ISimpleReference {
   id: number;

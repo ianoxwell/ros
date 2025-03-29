@@ -98,7 +98,9 @@ export class IngredientService {
       [id]
     );
 
-    return this.mapIngredientToIIngredientDTO(ingredient[0]);
+    const measures = await this.measurementRepository.find();
+
+    return this.mapIngredientToIIngredientDTO(ingredient[0], measures);
   }
   /** Filter ingredients and paginate the results. */
   async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredientShort>> {
@@ -213,8 +215,8 @@ export class IngredientService {
     );
   }
 
-  mapIngredientToIIngredientShort(i: Ingredient): IIngredientShort {
-    return {
+  mapIngredientToIIngredientShort(i: Ingredient, measures?: Measurement[]): IIngredientShort {
+    const iShort: IIngredientShort = {
       id: i.id,
       name: i.name,
       originalName: i.originalName,
@@ -228,11 +230,27 @@ export class IngredientService {
         caloricBreakdown: this.mapIngredientToICaloricBreakdown(i)
       }
     };
+
+    if (i.conversions && measures) {
+      iShort.conversions = i.conversions.map((c) => ({
+        ingredientId: c.ingredientId,
+        sourceAmount: c.sourceAmount,
+        sourceUnitId: c.sourceUnitId,
+        sourceUnit: measures.find((m) => m.id === c.sourceUnitId),
+
+        targetAmount: c.targetAmount,
+        targetUnitId: c.targetUnitId,
+        targetUnit: measures.find((m) => m.id === c.targetUnitId),
+        answer: c.answer
+      }));
+    }
+
+    return iShort;
   }
 
-  mapIngredientToIIngredientDTO(i: IIngredientEntityExtended): IIngredient {
+  mapIngredientToIIngredientDTO(i: IIngredientEntityExtended, measures?: Measurement[]): IIngredient {
     const ing: IIngredient = {
-      ...this.mapIngredientToIIngredientShort(i),
+      ...this.mapIngredientToIIngredientShort(i, measures),
       externalId: i.externalId,
       estimatedCost: {
         value: i.estimatedCost,
@@ -241,7 +259,6 @@ export class IngredientService {
       createdAt: i.createdAt,
       updatedAt: i.updatedAt,
       possibleUnits: i.possibleUnits,
-      conversions: i.conversions || [],
       allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
       recipes: i.recipes
     };
@@ -344,18 +361,18 @@ export class IngredientService {
     };
   }
 
-  private mapConversionToIConversion(convert: Conversion, ingredientId: number, measures: Measurement[]): IConversion {
-    return {
-      id: convert.id,
-      ingredientId,
-      sourceAmount: convert.sourceAmount,
-      sourceUnit: this.mapMeasurementToIMeasurement(this.findMeasure(convert.sourceUnitId, measures)),
-      targetAmount: convert.targetAmount,
-      targetUnit: this.mapMeasurementToIMeasurement(this.findMeasure(convert.targetUnitId, measures)),
-      answer: convert.answer,
-      type: convert.answer
-    };
-  }
+  // private mapConversionToIConversion(convert: Conversion, ingredientId: number, measures: Measurement[]): IConversion {
+  //   return {
+  //     id: convert.id,
+  //     ingredientId,
+  //     sourceAmount: convert.sourceAmount,
+  //     sourceUnit: this.mapMeasurementToIMeasurement(this.findMeasure(convert.sourceUnitId, measures)),
+  //     targetAmount: convert.targetAmount,
+  //     targetUnit: this.mapMeasurementToIMeasurement(this.findMeasure(convert.targetUnitId, measures)),
+  //     answer: convert.answer,
+  //     type: convert.answer
+  //   };
+  // }
 
   private findMeasure(id: number, measures: Measurement[]): Measurement {
     return measures.find((m: Measurement) => m.id === id) || measures[0];

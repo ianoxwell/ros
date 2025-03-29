@@ -49,3 +49,17 @@ export const CMacroNutrientRda = {
   fat: { amount: 78, measure: 'g', note: 'Based on a 2000-calorie diet' },
   fiber: { amount: 28, measure: 'g', note: 'For adults, varies by age & sex' }
 };
+
+/** Takes the nutrient values 24.000, 0.1234 and returns '24' or '0.123' */
+const fixWholeNumber = (value: number | string | undefined, length = 3): string => {
+  if (!value || isNaN(Number(value))) {
+    return '0';
+  }
+
+  const num = Number(value);
+  return Number.isInteger(num) ? num.toString() : num.toFixed(length);
+};
+
+export const calculateRdaPercent = (rdaAmount: number, value: number) => {
+  return fixWholeNumber((value / rdaAmount) * 100, 1);
+};

@@ -23,6 +23,7 @@ import { DishType } from './dish-type/dish-type.entity';
 import { Equipment } from './equipment/equipment.entity';
 import { HealthLabel } from './health-label/health-label.entity';
 import { RecipeIngredient } from './recipe-ingredient/recipe-ingredient.entity';
+import { calculateRecipeNutrition } from './recipe-nutrition-calculator';
 import { IEquipmentStepDto, IRecipeSteppedInstructionDto } from './recipe-stepped-instructions/recipe-stepped-instructions.model';
 import { Recipe } from './recipe.entity';
 
@@ -131,9 +132,10 @@ export class RecipeService {
   async getRecipeById(id: number): Promise<IRecipe | CMessage> {
     console.time('get recipe start');
 
-    const rawRecipe: Recipe[] = await this.repository.query(
+    const rawRecipe: any[] = await this.repository.query(
       `SELECT r.*, 
       json_agg(DISTINCT i.*) FILTER (WHERE i.id IS NOT NULL) AS ingredients,
+      jsonb_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL) AS "ingredientConversions", 
       json_agg(DISTINCT ri.*) FILTER (WHERE ri.id IS NOT NULL) AS "ingredientList",
       json_agg(DISTINCT e.*) FILTER (WHERE e.id IS NOT NULL) AS equipment,
       ARRAY_AGG(DISTINCT ct."name") FILTER (WHERE ct.id IS NOT NULL) AS "cuisineType",
@@ -142,6 +144,7 @@ export class RecipeService {
       FROM recipe r
       LEFT JOIN recipe_ingredient ri ON ri."recipeId" = r.id
       LEFT JOIN ingredient i on i.id = ri."ingredientId"
+      LEFT JOIN conversion c on c."ingredientId" = i.id
       LEFT JOIN recipe_equipment_equipment ree ON ree."recipeId" = r.id
       LEFT JOIN equipment e ON e.id = ree."equipmentId"
       LEFT JOIN recipe_cuisine_type_cuisine_type rct ON rct."recipeId" = r.id
@@ -161,8 +164,15 @@ export class RecipeService {
       return new CMessage('Recipe by id not found, ' + queryTime + 'ms', HttpStatus.NOT_FOUND);
     }
 
+    if (!!rawRecipe[0].ingredients && !!rawRecipe[0].ingredientConversions) {
+      rawRecipe[0].ingredients = rawRecipe[0].ingredients.map((i) => ({
+        ...i,
+        conversions: rawRecipe[0].ingredientConversions.filter((ic) => ic.ingredientId === i.id)
+      }));
+    }
+
     // raw query is wrapped in an array
-    const getRecipe: Recipe = rawRecipe[0];
+    const getRecipe: Recipe = rawRecipe[0] as Recipe;
 
     getRecipe.cuisineType = getRecipe.cuisineType ?? [];
     getRecipe.dishType = getRecipe.dishType ?? [];
@@ -423,7 +433,7 @@ export class RecipeService {
     const measures = await this.measurementRepository.find();
 
     const ingredients: IIngredientShort[] = recipe.ingredients.map((i: Ingredient) =>
-      this.ingredientService.mapIngredientToIIngredientShort(i)
+      this.ingredientService.mapIngredientToIIngredientShort(i, measures)
     );
     const ingredientList: IRecipeIngredient[] = recipe.ingredientList.map((il: RecipeIngredient) =>
       this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto(il, recipe.id, measures, recipe.ingredients)
@@ -434,13 +444,14 @@ export class RecipeService {
       )
       .sort((a, b) => a.stepNumber - b.stepNumber);
 
-    const mappedRecipe = {
+    const mappedRecipe: IRecipe = {
       ...this.mapRecipeToShortRecipeDto(recipe),
       ingredients,
       ingredientList,
       steppedInstructions,
       equipment: recipe.equipment.map((equip) => ({ id: equip.id, name: equip.name, image: equip.image }))
     };
+    mappedRecipe.nutrition = calculateRecipeNutrition(mappedRecipe.ingredientList, mappedRecipe.ingredients);
     return mappedRecipe;
   }
 
