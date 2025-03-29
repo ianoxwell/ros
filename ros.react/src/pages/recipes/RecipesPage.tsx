@@ -14,7 +14,7 @@ import './recipe.scss';
 import RecipeFilter from './RecipeFilter';
 import RecipeGrid from './RecipeGrid';
 
-export const Recipes = () => {
+export const RecipesPage = () => {
   const recipeFilter = useSelector((store: RootState) => store.recipeFilter);
   const [getRecipes, { data, isLoading }] = useGetRecipesMutation();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;

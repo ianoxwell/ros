@@ -7,7 +7,7 @@ import { IngredientsPage } from '@pages/ingredients/IngredientsPage';
 import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';
-import { Recipes } from '@pages/recipes/Recipes';
+import { RecipesPage } from '@pages/recipes/RecipesPage';
 import AccountWrapper from '@pages/register/AccountWrapper';
 import ForgotPassword from '@pages/register/ForgotPassword';
 import Login from '@pages/register/Login';
@@ -51,13 +51,13 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Recipes />} />
+            <Route index element={<RecipesPage />} />
             <Route path={CRoutes.orders} element={<Orders />} />
             <Route path={CRoutes.schedule} element={<Schedules />} />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
             <Route path={`${CRoutes.ingredients}/:id`} element={<><IngredientsPage /><IngredientModal /></>} />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
-            <Route path="/:id" element={<><Recipes /><RecipeModal /></>} />
+            <Route path="/:id" element={<><RecipesPage /><RecipeModal /></>} />
             </Route>
           <Route path="/" element={<AccountWrapper />}>
             <Route path={CRoutes.login} element={<Login />} />
