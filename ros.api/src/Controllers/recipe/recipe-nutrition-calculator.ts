@@ -2,7 +2,7 @@ import { ICaloricBreakdown, IIngredientShort, INutrition } from '@models/ingredi
 import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
 
 function scaleValues<T>(values: T, amount: number): T {
-  return Object.fromEntries(Object.entries(values).map(([key, value]) => [key, value * amount])) as T;
+  return Object.fromEntries(Object.entries(values).map(([key, value]) => [key, (value / 100) * amount])) as T;
 }
 
 function addValues<T>(target: T, source: T): T {
@@ -10,6 +10,7 @@ function addValues<T>(target: T, source: T): T {
 }
 
 function normalizeCaloricBreakdown(breakdown: ICaloricBreakdown): ICaloricBreakdown {
+  // the percents at this point are actually total g of protein, fat and carbs
   const total = breakdown.percentProtein + breakdown.percentFat + breakdown.percentCarbs;
   return {
     percentProtein: (breakdown.percentProtein / total) * 100,
@@ -18,7 +19,7 @@ function normalizeCaloricBreakdown(breakdown: ICaloricBreakdown): ICaloricBreakd
   };
 }
 
-function convertIngredientAmounts(ingredientList: IRecipeIngredient[], ingredients: IIngredientShort[]) {
+function convertIngredientAmounts(ingredientList: IRecipeIngredient[], ingredients: IIngredientShort[], servings: number) {
   return ingredientList.map((item) => {
     const ingredient = ingredients.find((ing) => ing.id === item.ingredientId);
     if (!ingredient) {
@@ -28,18 +29,22 @@ function convertIngredientAmounts(ingredientList: IRecipeIngredient[], ingredien
 
     const conversion = ingredient.conversions.find((conv) => conv.sourceUnitId === item.measure.id);
     if (conversion) {
-      return { ...item, convertedAmount: conversion.targetAmount };
+      return { ...item, convertedAmount: (conversion.targetAmount * item.amount) / servings };
     } else {
       console.log(`No conversion found for ${ingredient.name} using measure ID ${item.measure.id}. Falling back to measure.quantity.`);
-      return { ...item, convertedAmount: 1 };
+      return { ...item, convertedAmount: item.amount / servings };
     }
   });
 }
 
-export function calculateRecipeNutrition(ingredientList: IRecipeIngredient[], ingredients: IIngredientShort[]): INutrition {
+export function calculateRecipeNutrition(
+  ingredientList: IRecipeIngredient[],
+  ingredients: IIngredientShort[],
+  servings: number
+): INutrition {
   const totalNutrition = { ...CBlankNutritionValues };
 
-  const convertedIngredients = convertIngredientAmounts(ingredientList, ingredients);
+  const convertedIngredients = convertIngredientAmounts(ingredientList, ingredients, servings);
 
   convertedIngredients.forEach((item) => {
     const ingredient = ingredients.find((ing) => ing.id === item.ingredientId);

@@ -220,7 +220,7 @@ const RecipeModal = () => {
                   <Text size="sm">Amount per serving</Text>
                   <Flex justify="space-between">
                     <Title order={3}>Calories</Title>
-                    <Title order={3}>{fixWholeNumber(data.nutrition.nutrients.calories / data.servings, 0)}</Title>
+                    <Title order={3}>{fixWholeNumber(data.nutrition.nutrients.calories, 0)}</Title>
                   </Flex>
                   <Divider size="md" />
 
@@ -231,7 +231,7 @@ const RecipeModal = () => {
 
                   <Flex justify="space-between">
                     <span>
-                      <b>Total fat</b> {fixWholeNumber(data.nutrition.nutrients.fat / data.servings, 1)} g
+                      <b>Total fat</b> {fixWholeNumber(data.nutrition.nutrients.fat, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
@@ -246,14 +246,14 @@ const RecipeModal = () => {
                   <Flex justify="flex-start">
                     <Box w={24} />
                     <span>
-                      Saturated fat {fixWholeNumber(data.nutrition.nutrients.saturatedFat / data.servings, 1)} g
+                      Saturated fat {fixWholeNumber(data.nutrition.nutrients.saturatedFat, 1)} g
                     </span>
                   </Flex>
                   <Divider size="xs" />
 
                   <Flex justify="space-between">
                     <span>
-                      <b>Cholesterol</b> {fixWholeNumber(data.nutrition.nutrients.cholesterol / data.servings, 1)} mg
+                      <b>Cholesterol</b> {fixWholeNumber(data.nutrition.nutrients.cholesterol, 1)} mg
                     </span>
                   </Flex>
                   <Divider size="xs" />
@@ -261,7 +261,7 @@ const RecipeModal = () => {
                   <Flex justify="space-between">
                     <span>
                       <b>Total carbohydrate</b>{' '}
-                      {fixWholeNumber(data.nutrition.nutrients.carbohydrates / data.servings, 1)} g
+                      {fixWholeNumber(data.nutrition.nutrients.carbohydrates, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
@@ -275,17 +275,17 @@ const RecipeModal = () => {
 
                   <Flex justify="flex-start">
                     <Box w={24} />
-                    <span>Dietary fiber {fixWholeNumber(data.nutrition.nutrients.fiber / data.servings, 1)} g</span>
+                    <span>Dietary fiber {fixWholeNumber(data.nutrition.nutrients.fiber, 1)} g</span>
                   </Flex>
                   <Divider size="xs" />
                   <Flex justify="flex-start">
                     <Box w={24} />
-                    <span>Total sugars {fixWholeNumber(data.nutrition.nutrients.sugar / data.servings, 1)} g</span>
+                    <span>Total sugars {fixWholeNumber(data.nutrition.nutrients.sugar, 1)} g</span>
                   </Flex>
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      <b>Protein</b> {fixWholeNumber(data.nutrition.nutrients.protein / data.servings, 1)} g
+                      <b>Protein</b> {fixWholeNumber(data.nutrition.nutrients.protein, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
@@ -298,7 +298,7 @@ const RecipeModal = () => {
                   <Divider size="lg" />
                   <Flex justify="space-between">
                     <span>
-                      Vitamin D {fixWholeNumber(data.nutrition.vitamins.vitaminD / data.servings, 1)}{' '}
+                      Vitamin D {fixWholeNumber(data.nutrition.vitamins.vitaminD, 1)}{' '}
                       {CVitaminsMinerals.vitaminD.measure}
                     </span>
                     <span>
@@ -312,7 +312,7 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Calcium {fixWholeNumber(data.nutrition.minerals.calcium / data.servings, 1)}{' '}
+                      Calcium {fixWholeNumber(data.nutrition.minerals.calcium, 1)}{' '}
                       {CVitaminsMinerals.calcium.measure}
                     </span>
                     <span>
@@ -326,7 +326,7 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Iron {fixWholeNumber(data.nutrition.minerals.iron / data.servings, 1)}{' '}
+                      Iron {fixWholeNumber(data.nutrition.minerals.iron, 1)}{' '}
                       {CVitaminsMinerals.iron.measure}
                     </span>
                     <span>
@@ -340,7 +340,7 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Potassium {fixWholeNumber(data.nutrition.minerals.potassium / data.servings, 1)}{' '}
+                      Potassium {fixWholeNumber(data.nutrition.minerals.potassium, 1)}{' '}
                       {CVitaminsMinerals.potassium.measure}
                     </span>
                     <span>
