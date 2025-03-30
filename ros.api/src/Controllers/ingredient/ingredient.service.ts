@@ -105,7 +105,7 @@ export class IngredientService {
   async getIngredients(pageOptionsDto: IFilterBase): Promise<PaginatedDto<IIngredientShort>> {
     const [result, itemCount] = await this.repository.findAndCount({
       where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`), isActive: true },
-      order: { name: pageOptionsDto.order || EOrder.DESC },
+      order: { [pageOptionsDto.sort || 'name']: pageOptionsDto.order || EOrder.DESC },
       take: pageOptionsDto.take,
       skip: pageOptionsDto.skip,
       relations: {
