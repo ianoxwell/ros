@@ -10,8 +10,8 @@ import { ISpoonSuggestions } from './models/spoon-suggestions.dto';
 import { SpoonService } from './spoon.service';
 
 @ApiTags('Spoonfed')
-@UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth('JWT-auth')
+// @UseGuards(AuthGuard('jwt'))
+// @ApiBearerAuth('JWT-auth')
 @Controller('spoon')
 export class SpoonController {
   constructor(private spoonService: SpoonService, private measureService: MeasurementService) {}

@@ -6,7 +6,6 @@ import { EOrder } from '@models/base.dto';
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IConversion } from 'Models/conversion.dto';
 import {
   EPurchasedBy,
   ICaloricBreakdown,
@@ -17,9 +16,9 @@ import {
   INutritionProperties,
   IReferenceShort,
   IVitamins
-} from 'Models/ingredient.dto';
-import { IMeasurement } from 'Models/measurement.dto';
-import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
+} from '@models/ingredient.dto';
+import { IMeasurement } from '@models/measurement.dto';
+import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
 import { ILike, In, Like, Raw, Repository, UpdateResult } from 'typeorm';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';

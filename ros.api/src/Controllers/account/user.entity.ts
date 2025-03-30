@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { RosBaseEntity } from '@base/base.entity';
+import { Recipe } from '@controllers/recipe/recipe.entity';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
-import { Recipe } from '../recipe/recipe.entity';
 
 @Entity()
 @Unique(['email'])

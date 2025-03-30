@@ -47,7 +47,7 @@ export class ReferenceService {
 
   async getAllReferences(): Promise<IAllReferences> {
     const rawReferences = await this.referenceRepository.find();
-    const measurements = (await this.measurementService.findAll()) as IMeasurement[];
+    const measurements = await this.measurementService.findAll();
     const equipment = await this.equipmentRepository.find();
     const healthLabel = await this.healthLabelRepository.find();
     const cuisineType = await this.cuisineTypeRepository.find();

@@ -1,4 +1,4 @@
-import { ISimpleEquipment } from 'Models/equipment.dto';
+import { ISimpleEquipment } from '@models/equipment.dto';
 
 export class CSimpleEquipment implements ISimpleEquipment {
   equipmentId: number;

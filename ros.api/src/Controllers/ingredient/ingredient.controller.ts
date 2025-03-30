@@ -3,14 +3,13 @@ import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { Measurement } from '@controllers/measurement/measurement.entity';
 import { IFilter } from '@models/filter.dto';
+import { IIngredient, IIngredientShort } from '@models/ingredient.dto';
 import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { Delete, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IIngredient, IIngredientShort } from 'Models/ingredient.dto';
 import { Repository } from 'typeorm';
-import { Ingredient } from './ingredient.entity';
 import { IngredientService } from './ingredient.service';
 
 @ApiTags('Ingredient')

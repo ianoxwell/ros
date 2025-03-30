@@ -1,5 +1,5 @@
 // import { HttpService } from '@nestjs/axios';
-import { EPurchasedBy } from 'Models/ingredient.dto';
+import { EPurchasedBy } from '@models/ingredient.dto';
 import { CMessage } from '@base/message.class';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
@@ -177,7 +177,7 @@ export class SpoonService {
 
   /** This is the big one - creates the recipe from the spoonacular result. */
   private async createSpoonRecipe(spoonRecipe: ISpoonRecipe): Promise<CMessage> {
-    const measurements: Measurement[] = await this.measurementService.findAll();
+    const measurements: Measurement[] = await this.measurementService.findAllAsEntity();
 
     const diets: HealthLabel[] = await Promise.all(
       spoonRecipe.diets.map(async (diet: string) => await this.recipeService.createHealthLabel(diet))
@@ -398,7 +398,7 @@ export class SpoonService {
 
   /** Attempts to associate/link the possible measurements for a spoon ingredient through to known measurement units. */
   private async mapPossibleUnitsMeasurements(units: string[]): Promise<Measurement[]> {
-    const measures = await this.measurementService.findAll();
+    const measures = await this.measurementService.findAllAsEntity();
 
     const matchedMeasures: Measurement[] = [];
     units.forEach((unit: string) => {

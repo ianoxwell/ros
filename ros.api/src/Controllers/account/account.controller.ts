@@ -1,10 +1,10 @@
 import { CMessage } from '@base/message.class';
+import { IResetPasswordRequest } from '@models/reset-password-request.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { Body, Get, Headers, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
-import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
+import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from '@models/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';

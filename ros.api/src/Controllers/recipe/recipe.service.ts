@@ -6,12 +6,12 @@ import { EOrder } from '@models/base.dto';
 import { IRecipeFilter } from '@models/filter.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IEquipmentSteppedInstruction } from 'Models/equipment-stepped-instruction.dto';
-import { ISimpleEquipment } from 'Models/equipment.dto';
-import { IIngredientShort } from 'Models/ingredient.dto';
-import { IRecipeIngredient } from 'Models/recipe-ingredient.dto';
-import { IRecipeSteppedInstruction } from 'Models/recipe-stepped-instructions.dto';
-import { IRecipe, IRecipeShort, THealthBooleanLabels } from 'Models/recipe.dto';
+import { IEquipmentSteppedInstruction } from '@models/equipment-stepped-instruction.dto';
+import { ISimpleEquipment } from '@models/equipment.dto';
+import { IIngredientShort } from '@models/ingredient.dto';
+import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
+import { IRecipeSteppedInstruction } from '@models/recipe-stepped-instructions.dto';
+import { IRecipe, IRecipeShort, THealthBooleanLabels } from '@models/recipe.dto';
 import { ILike, In, Raw, Repository } from 'typeorm';
 import { CIngredientShort } from '../ingredient/ingredient-short.dto';
 import { Ingredient } from '../ingredient/ingredient.entity';
@@ -449,9 +449,9 @@ export class RecipeService {
       ingredients,
       ingredientList,
       steppedInstructions,
-      equipment: recipe.equipment.map((equip) => ({ id: equip.id, name: equip.name, image: equip.image }))
+      equipment: recipe.equipment?.map((equip) => ({ id: equip.id, name: equip.name, image: equip.image }))
     };
-    mappedRecipe.nutrition = calculateRecipeNutrition(mappedRecipe.ingredientList, mappedRecipe.ingredients);
+    mappedRecipe.nutrition = calculateRecipeNutrition(mappedRecipe.ingredientList, mappedRecipe.ingredients, recipe.servings);
     return mappedRecipe;
   }
 

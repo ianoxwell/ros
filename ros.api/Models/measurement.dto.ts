@@ -1,4 +1,3 @@
-import { IBaseDto } from './base.dto';
 import { EPurchasedBy } from './ingredient.dto';
 
 export enum ECountryCode {
@@ -7,12 +6,13 @@ export enum ECountryCode {
   ALL
 }
 
-export interface IMeasurement extends IBaseDto {
+export interface IMeasurement {
+  id?: number;
   title: string;
   measurementType: EPurchasedBy;
   shortName: string;
   altShortName?: string;
-  convertsToId: number;
+  convertsToId?: number;
   quantity: number;
   countryCode: ECountryCode;
 }

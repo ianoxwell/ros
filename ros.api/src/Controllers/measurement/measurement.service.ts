@@ -12,11 +12,22 @@ export class MeasurementService {
     private readonly repository: Repository<Measurement>
   ) {}
 
-  async findAll(): Promise<Measurement[]> {
-    return await this.repository.find({
-      relations: ['convertsToId'],
-      loadRelationIds: true
-    });
+  async findAll(): Promise<IMeasurement[]> {
+    const measures = await this.repository.find();
+    return measures.map((m) => ({
+      id: m.id,
+      title: m.title,
+      measurementType: m.measurementType,
+      shortName: m.shortName,
+      altShortName: m.altShortName,
+      convertsToId: m['convertsToIdId'],
+      quantity: Number(m),
+      countryCode: m.countryCode
+    }));
+  }
+
+  async findAllAsEntity(): Promise<Measurement[]> {
+    return await this.repository.find();
   }
 
   /** Finds only grams (the basis for all conversions) */

@@ -1,12 +1,12 @@
 import { CMessage } from '@base/message.class';
+import { IResetPasswordRequest } from '@models/reset-password-request.dto';
+import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from '@models/user.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from '@services/mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { IResetPasswordRequest } from 'Models/reset-password-request.dto';
-import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from 'Models/user.dto';
-import { MailService } from 'src/Services/mail/mail.service';
 import { IsNull, Not, Repository } from 'typeorm';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
@@ -29,6 +29,7 @@ export class UserService {
 
   async registerUser(user: IRegisterUser, host: string): Promise<IUserToken | User> {
     const isSocial = user.loginProvider?.toLowerCase() === 'google';
+
     let existNonVerifiedUser = await this.repository.findOne({ where: { email: user.email, verified: Not(IsNull()), isActive: true } });
     if (existNonVerifiedUser) {
       existNonVerifiedUser = {

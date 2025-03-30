@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { RosBaseEntity } from '@base/base.entity';
-import { Measurement } from 'src/Controllers/measurement/measurement.entity';
+import { Measurement } from '@controllers/measurement/measurement.entity';
+import { IConversion } from '@models/conversion.dto';
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { IConversion } from '../../../../Models/conversion.dto';
 import { Ingredient } from '../ingredient.entity';
 
 @Entity()

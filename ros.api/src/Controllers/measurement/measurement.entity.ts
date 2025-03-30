@@ -1,10 +1,10 @@
+import { RosBaseEntity } from '@base/base.entity';
 import { Conversion } from '@controllers/ingredient/conversion/conversion.entity';
 import { Ingredient } from '@controllers/ingredient/ingredient.entity';
 import { RecipeIngredient } from '@controllers/recipe/recipe-ingredient/recipe-ingredient.entity';
-import { EPurchasedBy } from 'Models/ingredient.dto';
-import { RosBaseEntity } from '@base/base.entity';
+import { EPurchasedBy } from '@models/ingredient.dto';
+import { ECountryCode, IMeasurement } from '@models/measurement.dto';
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
-import { ECountryCode, IMeasurement } from '../../../Models/measurement.dto';
 
 @Entity()
 @Unique(['title'])

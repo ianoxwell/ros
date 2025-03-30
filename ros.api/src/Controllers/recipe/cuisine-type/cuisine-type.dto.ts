@@ -1,4 +1,4 @@
-import { ICuisineType } from 'Models/cuisine-type.dto';
+import { ICuisineType } from '@models/cuisine-type.dto';
 import { CRecipeTease } from '../recipe-tease.class';
 
 export class CCuisineType implements ICuisineType {
