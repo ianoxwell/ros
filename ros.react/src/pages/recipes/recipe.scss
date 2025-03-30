@@ -14,14 +14,13 @@
   margin-bottom: 1rem;
   color: var(--text-on-normal);
 }
-
+.sort-by--select {
+  flex-grow: 1;
+}
 .recipes-wrapper {
   .filter-content {
     width: 100%;
     margin-bottom: 1.5rem;
-    .sort-by--select {
-      flex-grow: 1;
-    }
   }
 
   .recipe-card {

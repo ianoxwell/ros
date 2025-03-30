@@ -2,7 +2,6 @@ import { IMinerals, IVitamins } from '@domain/ingredient.dto';
 import { CVitaminsMinerals } from '@domain/vitamin-mineral-const';
 import { fixWholeNumber } from '@utils/numberUtils';
 
-
 interface IDisplayVitMin {
   value: string;
   percentRda: number;
@@ -35,7 +34,7 @@ const NutritionText = ({ data, reverse }: { data: IMinerals | IVitamins | undefi
   return (
     <>
       {keyValuePair.map((item, index) => {
-        if (index > 8) return <></>;
+        if (index > 8) return null;
 
         const spacingArray = [11, 13, 14.5, 15.5, 16.25, 15.5, 14.5, 13, 11];
         const marginStyle = reverse

@@ -13,12 +13,12 @@ const recipeFilterSlice = createSlice({
     setRecipePageNumber: (state, { payload }: { payload: number }) => {
         state.page = payload;
     },
-    setNewFilter: (state, { payload }: { payload: IRecipeFilter}) => {
+    setNewRecipeFilter: (state, { payload }: { payload: IRecipeFilter}) => {
         state = payload;
         return payload;
     }
   }
 });
 
-export const { setRecipeTakeSize, setRecipePageNumber, setNewFilter } = recipeFilterSlice.actions;
+export const { setRecipeTakeSize, setRecipePageNumber, setNewRecipeFilter } = recipeFilterSlice.actions;
 export default recipeFilterSlice.reducer;

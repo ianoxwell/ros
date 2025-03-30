@@ -9,7 +9,7 @@ import { sortLabels } from '@utils/stringUtils';
 import { ArrowDownWideNarrow, ArrowUpWideNarrow, Search } from 'lucide-react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { setNewFilter } from './recipeFilter.slice';
+import { setNewRecipeFilter } from './recipeFilter.slice';
 
 const RecipeFilter = () => {
   const filter = useSelector((store: RootState) => store.recipeFilter);
@@ -18,7 +18,6 @@ const RecipeFilter = () => {
   const cuisineTypes = sortLabels(references.data?.cuisineType);
   const dishTypes = sortLabels(references.data?.dishType);
   const equipment = sortLabels(references.data?.equipment);
-
   const dispatch = useAppDispatch();
   const [sortOrder, setSortOrder] = useState(filter.order);
   const sortBy = [
@@ -35,13 +34,12 @@ const RecipeFilter = () => {
   });
 
   const submitForm = (values: IRecipeFilter) => {
-    console.log('submit form', values);
-    dispatch(setNewFilter({ ...values, page: 0, order: sortOrder }));
+    dispatch(setNewRecipeFilter({ ...values, page: 0, order: sortOrder }));
   };
 
   const resetFilters = () => {
-    dispatch(setNewFilter(CBlankFilter));
-  }
+    dispatch(setNewRecipeFilter(CBlankFilter));
+  };
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === EOrder.ASC ? EOrder.DESC : EOrder.ASC);

@@ -148,8 +148,8 @@ const IngredientModal = () => {
             <section>
               <Title order={2}>Typical conversions in grams</Title>
               <List>
-                {ingredient.conversions.map((convert) => (
-                  <List.Item>{convert.answer}</List.Item>
+                {ingredient.conversions.map((convert, index) => (
+                  <List.Item key={index}>{convert.answer}</List.Item>
                 ))}
               </List>
             </section>
