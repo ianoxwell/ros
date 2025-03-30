@@ -16,6 +16,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Seeder } from './seeder';
+import { ScheduleRecipe } from '@controllers/schedule/schedule-recipe.entity';
+import { Schedule } from '@controllers/schedule/schedule.entity';
 
 /**
  * Modified from the medium article on seeding https://medium.com/the-crowdlinker-chronicle/seeding-databases-using-nestjs-cd6634e8efc5
@@ -43,7 +45,9 @@ import { Seeder } from './seeder';
         DishType,
         Equipment,
         HealthLabel,
-        RecipeIngredient
+        RecipeIngredient,
+        Schedule,
+        ScheduleRecipe
       ],
       migrations: [],
       synchronize: true,

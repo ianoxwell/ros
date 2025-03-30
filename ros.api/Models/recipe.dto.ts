@@ -9,10 +9,6 @@ export interface IRecipeTease {
   name: string;
   shortSummary: string;
   images: string[];
-  dishType: string[];
-  cuisineType: string[];
-  equipment: string[];
-  ingredientList: string[];
 }
 
 export interface IRecipeShort extends IBaseDto {

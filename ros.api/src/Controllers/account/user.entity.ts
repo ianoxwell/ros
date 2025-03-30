@@ -1,5 +1,6 @@
 import { RosBaseEntity } from '@base/base.entity';
 import { Recipe } from '@controllers/recipe/recipe.entity';
+import { Schedule } from '@controllers/schedule/schedule.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
 
@@ -86,4 +87,7 @@ export class User extends RosBaseEntity {
   @ManyToMany(() => Recipe, (recipe) => recipe.favoriteBy)
   @JoinTable()
   favoriteRecipes: Recipe[];
+
+  @OneToMany(() => Schedule, (schedule) => schedule.user)
+  schedules: Schedule[];
 }

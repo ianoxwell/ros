@@ -14,6 +14,8 @@ import { Recipe } from '@controllers/recipe/recipe.entity';
 import { RecipeModule } from '@controllers/recipe/recipe.module';
 import { Reference } from '@controllers/reference/reference.entity';
 import { ReferenceModule } from '@controllers/reference/reference.module';
+import { ScheduleRecipe } from '@controllers/schedule/schedule-recipe.entity';
+import { Schedule } from '@controllers/schedule/schedule.entity';
 import { SpoonModule } from '@controllers/spoon/spoon.module';
 import { StatusModule } from '@controllers/status/status.module';
 import { Module } from '@nestjs/common';
@@ -43,7 +45,9 @@ import { MailModule } from '@services/mail/mail.module';
         DishType,
         Equipment,
         HealthLabel,
-        RecipeIngredient
+        RecipeIngredient,
+        Schedule,
+        ScheduleRecipe
       ],
       migrations: [],
       synchronize: false,
