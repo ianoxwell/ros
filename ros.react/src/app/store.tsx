@@ -6,6 +6,7 @@ import recipeFilterSlice from '@pages/recipes/recipeFilter.slice';
 import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import { listenerMiddleware } from './listenerMiddleware';
+import scheduleFilterSlice from '@pages/schedules/scheduleFilter.slice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     references: referenceSlice,
     recipeFilter: recipeFilterSlice,
     ingredientFilter: ingredientFilterSlice,
+    scheduleFilter: scheduleFilterSlice,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>

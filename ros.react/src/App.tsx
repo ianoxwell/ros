@@ -13,7 +13,7 @@ import ForgotPassword from '@pages/register/ForgotPassword';
 import Login from '@pages/register/Login';
 import ResetPassword from '@pages/register/ResetPassword';
 import VerifyEmail from '@pages/register/VerifyEmail';
-import { Schedules } from '@pages/Schedules';
+import { SchedulesPage } from '@pages/schedules/SchedulesPage';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { CRoutes } from './app/routes.const';
@@ -53,7 +53,7 @@ function App() {
           >
             <Route index element={<RecipesPage />} />
             <Route path={CRoutes.orders} element={<Orders />} />
-            <Route path={CRoutes.schedule} element={<Schedules />} />
+            <Route path={CRoutes.schedule} element={<SchedulesPage />} />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
             <Route path={`${CRoutes.ingredients}/:id`} element={<><IngredientsPage /><IngredientModal /></>} />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />

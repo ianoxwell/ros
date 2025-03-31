@@ -1,0 +1,43 @@
+export function getUtcDateTime(targetDate?: Date): Date {
+  let date: Date;
+  if (targetDate) {
+    date = new Date(targetDate);
+  } else {
+    date = new Date();
+  }
+
+  const utcYear = date.getUTCFullYear();
+  const utcMonth = date.getUTCMonth();
+  const utcDay = date.getUTCDate();
+  const utcHour = date.getUTCHours();
+  const utcMinute = date.getUTCMinutes();
+  const utcSecond = date.getUTCSeconds();
+
+  const utcDate = new Date(utcYear, utcMonth, utcDay, utcHour, utcMinute, utcSecond);
+
+  return utcDate;
+}
+
+export function getDateObject(targetDate?: Date): Date {
+  const date = getUtcDateTime(targetDate);
+  return new Date(date.getTime());
+}
+
+export function getIncrementalDateObject(increment: number): Date {
+  const today = getDateObject();
+  today.setDate(today.getDate() + increment);
+  return getDateObject(today);
+}
+
+export function getDateIndex(date: Date): string {
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return year + month + day;
+}
+
+export function getIncrementedDateIndex(increment: number): string {
+  const today = getDateObject();
+  today.setDate(today.getDate() + increment);
+  return getDateIndex(today);
+}
