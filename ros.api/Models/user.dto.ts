@@ -6,6 +6,13 @@ export interface IUserProfile extends IBaseDto {
   email: string;
 }
 
+export interface IUserJwtPayload {
+  userId: number;
+  username: string;
+  name: string;
+  isAdmin: boolean;
+}
+
 export interface INewUser {
   givenNames: string;
   familyName: string;

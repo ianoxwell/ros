@@ -1,6 +1,6 @@
 import { IRecipeShort, IRecipeTease } from './recipe.dto';
 
-export enum TTimeSlot {
+export enum ETimeSlot {
   BREAKFAST = 'breakfast',
   MORNING_SNACK = 'morning_snack',
   LUNCH = 'lunch',
@@ -12,14 +12,17 @@ export enum TTimeSlot {
 export interface ISchedule {
   id?: number;
   date: Date;
-  timeSlot: TTimeSlot;
+  timeSlot: ETimeSlot;
   scheduleRecipes: IScheduleRecipe[];
-  userId: number;
-  notes: string;
+  notes?: string;
 }
 
 export interface IScheduleRecipe {
   id?: number;
-  recipe: IRecipeTease;
+  recipeId: number | string;
   quantity: number;
+
+  name?: string;
+  shortSummary?: string;
+  images?: string[];
 }

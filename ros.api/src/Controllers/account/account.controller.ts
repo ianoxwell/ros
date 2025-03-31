@@ -1,10 +1,10 @@
 import { CMessage } from '@base/message.class';
 import { IResetPasswordRequest } from '@models/reset-password-request.dto';
+import { IUserJwtPayload, IUserLogin, IUserProfile, IUserSummary, IUserToken } from '@models/user.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { Body, Get, Headers, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { IUserLogin, IUserProfile, IUserSummary, IUserToken } from '@models/user.dto';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
@@ -153,7 +153,7 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('JWT-auth')
   @Get('profile')
-  async whoAmI(@CurrentUser() user): Promise<IUserSummary | CMessage> {
+  async whoAmI(@CurrentUser() user: IUserJwtPayload): Promise<IUserSummary | CMessage> {
     const result = this.userService.findById(user.userId);
     if (!result) {
       return { message: 'You have an existential crisis - your not real', status: HttpStatus.AMBIGUOUS };

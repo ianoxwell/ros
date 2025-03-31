@@ -1,3 +1,4 @@
+import { IUserJwtPayload } from '@models/user.dto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -13,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: any): unknown {
+  validate(payload: any): IUserJwtPayload {
     return { userId: payload.sub, username: payload.username, name: payload.name, isAdmin: payload.admin };
   }
 }

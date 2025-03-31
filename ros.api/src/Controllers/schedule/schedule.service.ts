@@ -1,10 +1,11 @@
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { ISchedule } from '@models/schedule.dto';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { Schedule } from './schedule.entity';
 import { CPageOptionsDto } from '@base/filter.const';
+import { CMessage } from '@base/message.class';
 
 @Injectable()
 export class ScheduleService {
@@ -27,22 +28,106 @@ export class ScheduleService {
     return new PaginatedDto(fullResult, pageMetaDto);
   }
 
-  private mapScheduleToIScheduleDto(s: Schedule): ISchedule {
+  async findByDateRange(userId: number, from: Date, to: Date): Promise<ISchedule[]> {
+    const result: ISchedule[] = await this.repository.query(
+      `SELECT s.id, s.date, s."timeSlot", s.notes, 
+      json_agg(DISTINCT jsonb_build_object(
+          'id', sr.id, 
+          'quantity', sr.quantity, 
+          'recipeId', r.id, 
+          'recipeName', r.name, 
+          'shortSummary', r."shortSummary", 
+          'recipeImages', r."images"
+       )) as scheduleRecipes
+       FROM schedule s
+       LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
+       LEFT JOIN recipe r ON r.id = sr."recipeId"
+       WHERE s."userId" = $1 AND s.date BETWEEN $2 AND $3
+       GROUP BY s.id`,
+      [userId, from, to]
+    );
+
+    return result;
+  }
+
+  async findScheduleById(scheduleId: number): Promise<ISchedule> {
+    const result: ISchedule[] = await this.repository.query(
+      `SELECT s.id, s.date, s."timeSlot", s.notes, 
+        json_agg(DISTINCT jsonb_build_object(
+            'id', sr.id, 
+            'quantity', sr.quantity, 
+            'recipeId', r.id, 
+            'recipeName', r.name, 
+            'shortSummary', r."shortSummary", 
+            'recipeImages', r."images"
+         )) as scheduleRecipes
+         FROM schedule s
+         LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
+         LEFT JOIN recipe r ON r.id = sr."recipeId"
+         WHERE s.id = $1
+         GROUP BY s.id`,
+      [scheduleId]
+    );
+
+    return result[0];
+  }
+
+  async createSchedule(userId: number, schedule: ISchedule): Promise<ISchedule> {
+    const entity: Schedule = this.repository.create({
+      date: schedule.date,
+      timeSlot: schedule.timeSlot,
+      notes: schedule.notes,
+      user: { id: userId },
+      scheduleRecipes: schedule.scheduleRecipes.map((sr) => ({
+        quantity: sr.quantity,
+        recipe: { id: sr.recipeId }
+      }))
+    });
+
+    const savedEntity = await this.repository.save(entity);
+    return this.findScheduleById(savedEntity.id);
+  }
+
+  async updateSchedule(updatedSchedule: ISchedule): Promise<ISchedule | CMessage> {
+    const existingSchedule = await this.repository.findOne({
+      where: { id: updatedSchedule.id },
+      relations: ['scheduleRecipes', 'scheduleRecipes.recipe']
+    });
+
+    if (!existingSchedule) {
+      return new CMessage('Schedule not found', HttpStatus.NOT_FOUND);
+    }
+
+    const updatedEntity = this.repository.merge(existingSchedule, {
+      date: updatedSchedule.date,
+      timeSlot: updatedSchedule.timeSlot,
+      notes: updatedSchedule.notes,
+      scheduleRecipes: updatedSchedule.scheduleRecipes.map((sr) => ({
+        id: sr.id,
+        quantity: sr.quantity,
+        recipeId: sr.recipeId
+      }))
+    });
+
+    const savedEntity = await this.repository.save(updatedEntity);
+    return this.mapScheduleToIScheduleDto(savedEntity);
+  }
+
+  private mapScheduleToIScheduleDto(s: Partial<Schedule>): ISchedule {
+    console.log('s', s);
     return {
       id: s.id,
       date: s.date,
       timeSlot: s.timeSlot,
-      scheduleRecipes: s.scheduleRecipes.map((sr) => ({
-        id: sr.id,
-        quantity: sr.quantity,
-        recipe: {
-          id: sr.recipe.id,
-          name: sr.recipe.name,
-          shortSummary: sr.recipe.shortSummary,
-          images: sr.recipe.images
-        }
-      })),
-      userId: s.user.id,
+      scheduleRecipes: [],
+      //   s.scheduleRecipes.map((sr) => ({
+      // id: sr.id,
+      // quantity: sr.quantity,
+      // recipeId: sr.recipeId,
+      // name: sr.name,
+      // shortSummary: sr.shortSummary,
+      // images: sr.images
+      //   })),
       notes: s.notes
     };
   }

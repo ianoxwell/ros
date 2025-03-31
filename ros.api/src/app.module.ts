@@ -16,6 +16,7 @@ import { Reference } from '@controllers/reference/reference.entity';
 import { ReferenceModule } from '@controllers/reference/reference.module';
 import { ScheduleRecipe } from '@controllers/schedule/schedule-recipe.entity';
 import { Schedule } from '@controllers/schedule/schedule.entity';
+import { ScheduleModule } from '@controllers/schedule/schedule.module';
 import { SpoonModule } from '@controllers/spoon/spoon.module';
 import { StatusModule } from '@controllers/status/status.module';
 import { Module } from '@nestjs/common';
@@ -70,7 +71,8 @@ import { MailModule } from '@services/mail/mail.module';
     MeasurementModule,
     MailModule,
     AuthModule,
-    SpoonModule
+    SpoonModule,
+    ScheduleModule
   ],
   controllers: [],
   providers: []

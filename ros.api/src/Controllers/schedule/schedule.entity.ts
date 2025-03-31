@@ -1,4 +1,4 @@
-import { TTimeSlot } from '@models/schedule.dto';
+import { ETimeSlot } from '@models/schedule.dto';
 import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../account/user.entity';
 import { ScheduleRecipe } from './schedule-recipe.entity';
@@ -12,8 +12,8 @@ export class Schedule {
   @Column({ type: 'date' })
   date: Date;
 
-  @Column({ type: 'enum', enum: TTimeSlot })
-  timeSlot: TTimeSlot;
+  @Column({ type: 'enum', enum: ETimeSlot })
+  timeSlot: ETimeSlot;
 
   @OneToMany(() => ScheduleRecipe, (scheduleRecipe) => scheduleRecipe.schedule, { cascade: true })
   scheduleRecipes: ScheduleRecipe[];
