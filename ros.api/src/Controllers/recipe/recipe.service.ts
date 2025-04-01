@@ -128,6 +128,10 @@ export class RecipeService {
     return getRecipe || false;
   }
 
+  async getRecipeEntityById(id: number): Promise<Recipe> {
+    return await this.repository.findOne({ where: { id } });
+  }
+
   /** Gets a single recipe */
   async getRecipeById(id: number): Promise<IRecipe | CMessage> {
     console.time('get recipe start');

@@ -1,15 +1,16 @@
+import { CPageOptionsDto } from '@base/filter.const';
+import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
+import { RecipeService } from '@controllers/recipe/recipe.service';
 import { ISchedule } from '@models/schedule.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Schedule } from './schedule.entity';
-import { CPageOptionsDto } from '@base/filter.const';
-import { CMessage } from '@base/message.class';
 
 @Injectable()
 export class ScheduleService {
-  constructor(@InjectRepository(Schedule) private readonly repository: Repository<Schedule>) {}
+  constructor(@InjectRepository(Schedule) private readonly repository: Repository<Schedule>, private recipeService: RecipeService) {}
 
   async findAllForUser(id: number): Promise<PaginatedDto<ISchedule>> {
     const today = new Date();
@@ -78,10 +79,12 @@ export class ScheduleService {
       timeSlot: schedule.timeSlot,
       notes: schedule.notes,
       user: { id: userId },
-      scheduleRecipes: schedule.scheduleRecipes.map((sr) => ({
-        quantity: sr.quantity,
-        recipe: { id: sr.recipeId }
-      }))
+      scheduleRecipes: await Promise.all(
+        schedule.scheduleRecipes.map(async (sr) => ({
+          quantity: sr.quantity,
+          recipe: await this.recipeService.getRecipeEntityById(parseInt(sr.recipeId.toString())) // { id: sr.recipeId }
+        }))
+      )
     });
 
     const savedEntity = await this.repository.save(entity);
