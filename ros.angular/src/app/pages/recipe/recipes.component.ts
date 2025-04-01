@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
@@ -7,19 +6,18 @@ import { ComponentBase } from '@components/base/base.component.base';
 import { IPagedResult } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
 import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
+import { IAllReferences } from '@DomainModels/reference.dto';
 import { IUserSummary } from '@DomainModels/user.dto';
 import { CBlankPagedMeta } from '@models/common.model';
 import { RecipeFilterQuery } from '@models/filter-queries.model';
-import { IMeasurement } from '@models/ingredient/ingredient-model';
-import { IReferenceAll } from '@models/reference.model';
 import { DialogService } from '@services/dialog.service';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { CRouteList } from '@services/navigation/route-list.const';
-import { ReferenceService } from '@services/reference.service';
 import { StateService } from '@services/state.service';
 import { UserProfileService } from '@services/user-profile.service';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { AppStore } from 'src/app/app.store';
 import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 
 @Component({
@@ -31,8 +29,7 @@ import { RecipeService } from 'src/app/pages/recipe/recipe.service';
 export class RecipesComponent extends ComponentBase implements OnInit {
   readonly panelOpenState = signal(false);
   recipes: IRecipeShort[] = [];
-  refDataAll: IReferenceAll | undefined;
-  measurementRef: IMeasurement[] = [];
+  refDataAll: IAllReferences | undefined;
   isLoading = false;
   /** Full recipe loaded from the API */
   selectedRecipe: IRecipe | undefined;
@@ -53,12 +50,11 @@ export class RecipesComponent extends ComponentBase implements OnInit {
     private userProfileService: UserProfileService,
     private dialogService: DialogService,
     private stateService: StateService,
-    private referenceService: ReferenceService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private appStore: AppStore
   ) {
     super();
-    this.refDataAll = this.referenceService.getAllReferences();
-    this.measurementRef = this.referenceService.getMeasurements();
+    this.refDataAll = this.appStore.$references();
   }
 
   ngOnInit(): void {

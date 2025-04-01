@@ -5,23 +5,10 @@
       <span class="mat-subheading-2">Provisioners CookBook</span>
     </h1>
 
-    <span class="page-title">
-      @if (pageSymbol$ | async; as pageSymbol) {
-        <mat-icon class="mr-2">{{ pageSymbol }}</mat-icon>
-      }
-      <h1>{{ pageTitle$ | async }}</h1>
-    </span>
-
     @if (isLoggedIn && !!profile) {
       <!-- Users individual menu -->
       <mat-menu #appMenu="matMenu" style="width: 100%" role="navigation">
         <ng-template matMenuContent>
-          <button type="button" mat-menu-item routerLink="/savoury/user/favourites" aria-label="Personal Favourites">
-            <mat-icon>loyalty</mat-icon> Personal Favourites
-          </button>
-          <button type="button" mat-menu-item routerLink="/savoury/user/recipes" aria-label="My Recipes">
-            <mat-icon>local_pizza</mat-icon> My Recipes
-          </button>
           <button type="button" mat-menu-item routerLink="/savoury/user/settings" aria-label="My Settings">
             <mat-icon>cake</mat-icon> {{ profile.givenNames }}
           </button>

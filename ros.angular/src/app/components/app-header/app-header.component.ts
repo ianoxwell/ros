@@ -33,8 +33,6 @@ import { UserProfileService } from '../../services/user-profile.service';
 export class AppHeaderComponent implements OnInit {
   profile: IUserSummary | null = null;
   currentUrl = '';
-  pageTitle$: Observable<string>;
-  pageSymbol$: Observable<string>;
   readonly routeList = CRouteList;
 
   mainMenuItems = [
@@ -53,11 +51,8 @@ export class AppHeaderComponent implements OnInit {
     private userProfileService: UserProfileService,
     private loginService: LoginService,
     private navigationService: NavigationService,
-    private pageTitleService: PageTitleService
   ) {
     this.listenCurrentRoute().subscribe();
-    this.pageTitle$ = this.pageTitleService.pageTitle$;
-    this.pageSymbol$ = this.pageTitleService.pageSymbol$;
   }
 
   ngOnInit(): void {

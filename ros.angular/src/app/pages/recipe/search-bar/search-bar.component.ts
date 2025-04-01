@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
 import { ComponentBase } from '@components/base/base.component.base';
 import { EOrder } from '@DomainModels/base.dto';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { IReferenceItemFull } from '@models/reference.model';
+import { IAllReferences } from '@DomainModels/reference.dto';
 import { OrderRecipesBy } from '@models/static-variables';
-import { ReferenceService } from '@services/reference.service';
 import { StateService } from '@services/state.service';
 import { firstValueFrom } from 'rxjs';
 import { debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { AppStore } from 'src/app/app.store';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -23,16 +22,16 @@ export class SearchBarComponent extends ComponentBase implements OnInit {
   filterQuery: IFilter = CBlankFilter;
   @Input() dataLength = 0;
   orderRecipesBy = OrderRecipesBy;
-  allergies: IReferenceItemFull[];
+  references: IAllReferences | undefined;
 
   constructor(
     private fb: UntypedFormBuilder,
-    private referenceService: ReferenceService,
-    private stateService: StateService
+    private stateService: StateService,
+    private appStore: AppStore
   ) {
     super();
 
-    this.allergies = this.referenceService.getAllReferences().AllergyWarning || [];
+    this.references = this.appStore.$references();
   }
 
   async ngOnInit() {

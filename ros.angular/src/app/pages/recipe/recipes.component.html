@@ -8,7 +8,10 @@
       [hideToggle]="true"
     >
       <mat-expansion-panel-header class="sort-filter--header">
-        <mat-panel-title class="sort-filter--title"><mat-icon>sort</mat-icon>Sort and Filter</mat-panel-title>
+        <mat-panel-title class="sort-filter--title">
+          <mat-icon>sort</mat-icon>
+          <span>Sort and Filter</span>
+        </mat-panel-title>
         <div>{{ dataLength }} recipes</div>
       </mat-expansion-panel-header>
       <app-search-bar [dataLength]="dataLength"></app-search-bar>

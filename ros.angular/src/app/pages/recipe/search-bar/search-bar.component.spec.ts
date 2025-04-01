@@ -7,11 +7,10 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PaginatorComponent } from '@components/paginator/paginator.component';
-import { ReferenceService } from '@services/reference.service';
+import { ReferenceService } from '@services/references/reference.service';
 import { StateService } from '@services/state.service';
 import { autoSpy, Spy } from '@tests/auto-spy';
 import { MockComponent } from 'ng-mocks';
-import { of } from 'rxjs';
 import { SearchBarComponent } from './search-bar.component';
 
 describe('SearchBarComponent', () => {
@@ -19,7 +18,6 @@ describe('SearchBarComponent', () => {
   let fixture: ComponentFixture<SearchBarComponent>;
 
   const referenceServiceSpy: Spy<ReferenceService> = autoSpy(ReferenceService);
-  referenceServiceSpy.getAllReferences.and.returnValue(of());
   const stateServiceSpy: Spy<StateService> = autoSpy(StateService);
 
   beforeEach(async () => {

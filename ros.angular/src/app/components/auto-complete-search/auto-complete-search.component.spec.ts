@@ -5,7 +5,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReferenceService } from '@services/reference.service';
+import { ReferenceService } from '@services/references/reference.service';
 import { autoSpy, Spy } from '@tests/auto-spy';
 import { of } from 'rxjs';
 import { AutoCompleteSearchComponent } from './auto-complete-search.component';
