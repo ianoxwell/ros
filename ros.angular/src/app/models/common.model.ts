@@ -1,6 +1,7 @@
 import { SortDirection } from '@angular/material/sort';
 import { environment } from 'src/environments/environment';
 import { IIngredientFilterObject, IRecipeFilterQuery } from './filter-queries.model';
+import { FormControl } from '@angular/forms';
 
 /** Generic key/values */
 export interface IDictionary<T> {
@@ -131,3 +132,12 @@ export enum PicturePosition {
   left,
   right
 }
+
+/**
+ * Create a simple (form controls only) using an existing interface
+ * Credit to RcoderNY for his answer https://stackoverflow.com/questions/72507263/angular-14-strictly-typed-reactive-forms-how-to-type-formgroup-model-using-exi
+ * @example: searchForm: FormGroup<TFormControlMap<ISearchRequestDTO>> | undefined;
+ */
+export type TypedControls<T> = {
+  [K in keyof T]: FormControl<T[K]>;
+};
