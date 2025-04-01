@@ -107,7 +107,7 @@
       <h3>Equipment Required</h3>
       <mat-chip-listbox aria-label="Equipment Required">
         @for (item of selectedRecipe.equipment; track item) {
-          <mat-chip>{{ item | sentenceCase }}</mat-chip>
+          <mat-chip>{{ item.name | sentenceCase }}</mat-chip>
         }
       </mat-chip-listbox>
     </div>

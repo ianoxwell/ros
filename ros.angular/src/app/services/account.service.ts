@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { INewUser } from '@models/accounts.model';
+import { INewUser } from '@DomainModels/user.dto';
 import { MessageResult } from '@models/common.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
