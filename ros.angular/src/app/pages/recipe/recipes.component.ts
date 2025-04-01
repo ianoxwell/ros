@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentBase } from '@components/base/base.component.base';
 import { IPagedResult } from '@DomainModels/base.dto';
@@ -28,6 +29,7 @@ import { RecipeService } from 'src/app/pages/recipe/recipe.service';
   standalone: false
 })
 export class RecipesComponent extends ComponentBase implements OnInit {
+  readonly panelOpenState = signal(false);
   recipes: IRecipeShort[] = [];
   refDataAll: IReferenceAll | undefined;
   measurementRef: IMeasurement[] = [];
@@ -80,6 +82,22 @@ export class RecipesComponent extends ComponentBase implements OnInit {
       }),
       takeUntil(this.ngUnsubscribe)
     );
+  }
+
+  // triggers from the MatPaginator - emits the filterQuery object
+  pageChange(ev: PageEvent): void {
+    if (!this.filterQuery) {
+      return;
+    }
+
+    console.log('page event', ev);
+    if (ev.previousPageIndex !== ev.pageIndex) {
+      this.filterQuery.page = ev.pageIndex;
+    } else {
+      this.filterQuery.page = 0;
+      this.filterQuery.take = ev.pageSize;
+    }
+    this.stateService.setRecipeFilterQuery(this.filterQuery);
   }
 
   routeParamSubscribe(): Observable<null | IRecipe> {

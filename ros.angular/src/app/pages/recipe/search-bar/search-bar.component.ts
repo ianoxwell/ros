@@ -65,21 +65,7 @@ export class SearchBarComponent extends ComponentBase implements OnInit {
   }
 
 
-  // triggers from the MatPaginator - emits the filterQuery object
-  pageChange(ev: PageEvent): void {
-    if (!this.filterQuery) {
-      return;
-    }
 
-    console.log('page event', ev);
-    if (ev.previousPageIndex !== ev.pageIndex) {
-      this.filterQuery.page = ev.pageIndex;
-    } else {
-      this.filterQuery.page = 0;
-      this.filterQuery.take = ev.pageSize;
-    }
-    this.stateService.setRecipeFilterQuery(this.filterQuery);
-  }
 
   /**
    * Patches the form with external values.

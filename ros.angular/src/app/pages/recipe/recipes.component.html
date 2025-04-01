@@ -1,15 +1,20 @@
 <section class="main-wrapper">
   @if (!selectedRecipeId) {
     <!-- action bar -->
-    <div class="action-bar">
-      <button mat-flat-button type="button" color="accent" (click)="createOrEdit('new')">
-        <mat-icon class="mr-1">add</mat-icon> New
-      </button>
-    </div>
-    <div class="recipes-view">
-      <div class="filter-side-bar">
-        <app-search-bar [dataLength]="dataLength"></app-search-bar>
-      </div>
+    <mat-expansion-panel
+      class="sort-filter"
+      (opened)="panelOpenState.set(true)"
+      (closed)="panelOpenState.set(false)"
+      [hideToggle]="true"
+    >
+      <mat-expansion-panel-header class="sort-filter--header">
+        <mat-panel-title class="sort-filter--title"><mat-icon>sort</mat-icon>Sort and Filter</mat-panel-title>
+        <div>{{ dataLength }} recipes</div>
+      </mat-expansion-panel-header>
+      <app-search-bar [dataLength]="dataLength"></app-search-bar>
+    </mat-expansion-panel>
+
+    <div>
       @if (!isLoading) {
         <div class="container grid-parent">
           @for (recipe of recipes; track recipe; let i = $index) {
@@ -19,6 +24,18 @@
             <div>Sorry I can't find any recipes that match the filters</div>
           }
         </div>
+        <mat-paginator
+          #paginator
+          class="recipe-filter-paginator"
+          (page)="pageChange($event)"
+          [length]="dataLength"
+          [pageSize]="filterQuery.take"
+          [showFirstLastButtons]="true"
+          [hidePageSize]="true"
+          [pageIndex]="filterQuery.page"
+          aria-label="Select page"
+        >
+        </mat-paginator>
       } @else {
         <app-loading-indicator></app-loading-indicator>
       }

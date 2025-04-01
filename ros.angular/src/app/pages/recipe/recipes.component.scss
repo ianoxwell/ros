@@ -2,14 +2,16 @@
 .main-wrapper {
   min-height: 20rem;
   position: relative;
-}
-.action-bar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-  padding: 0 1rem;
+  .sort-filter {
+    &--header {
+      display: flex;
+      justify-content: space-between;
+    }
+    &--title {
+      display: flex;
+      gap: 1rem;
+    }
+  }
 }
 
 .recipes-view {
@@ -21,9 +23,7 @@
   padding: 0;
 }
 
-.filter-side-bar {
-  max-width: 16rem;
-}
+
 .grid-parent {
   @include mixins.display-grid;
   @include mixins.flex-grow(1);

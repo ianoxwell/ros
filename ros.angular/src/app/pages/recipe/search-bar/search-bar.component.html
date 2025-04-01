@@ -24,18 +24,7 @@
         <input matInput type="text" placeholder="Name" Title="Name" formControlName="keyword" />
       </mat-form-field>
 
-      <app-paginator
-        class="bottom-sticky"
-        class="recipe-filter-paginator"
-        [length]="dataLength"
-        [horizontalLayout]="false"
-        [pageSize]="filterQuery.take"
-        [pageIndex]="filterQuery.page"
-        [showFirstLastButtons]="true"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="pageChange($event)"
-      >
-      </app-paginator>
+
     </div>
 
     <!-- <mat-form-field class="ml-2">
