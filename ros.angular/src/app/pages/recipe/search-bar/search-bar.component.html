@@ -1,30 +1,25 @@
 @if (searchForm) {
   <form [formGroup]="searchForm">
-    <!-- Order/sort by -->
     <mat-form-field>
-      <mat-label>Sort By</mat-label>
-      <mat-select formControlName="sort">
-        @for (item of orderRecipesBy; track item) {
-          <mat-option [value]="item.value">
-            {{ item.key }}
-          </mat-option>
-        }
-      </mat-select>
+      <!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
+      <input matInput type="text" placeholder="Name" Title="Name" formControlName="keyword" />
     </mat-form-field>
-    <!-- Refine section -->
-    <mat-toolbar>
-      <span class="refine-text">Refine</span>
-      <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
-        <span class="clear-all-text">Clear all</span>
-      </button>
-    </mat-toolbar>
-    <div class="refine-section">
+
+    <!-- Order/sort by -->
+    <div class="sort-and-order">
       <mat-form-field>
-        <!-- <mat-icon matPrefix class="pr-1">beach_access</mat-icon> -->
-        <input matInput type="text" placeholder="Name" Title="Name" formControlName="keyword" />
+        <mat-label>Sort By</mat-label>
+        <mat-select formControlName="sort">
+          @for (item of sortBy; track item) {
+            <mat-option [value]="item.value">
+              {{ item.label }}
+            </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
-
-
+      <button type="button" mat-mini-fab (click)="toggleSortOrder()" aria-label="Sort order">
+        <mat-icon [ngClass]="{ 'rotated-icon': searchOrder.getRawValue() === eOrder.ASC }">sort</mat-icon>
+      </button>
     </div>
 
     <!-- <mat-form-field class="ml-2">
@@ -35,8 +30,7 @@
 		<mat-icon matPrefix class="pr-1">person</mat-icon>
 		<input matInput type="text" placeholder="Author" Title="Author" formControlName="author" >
 		</mat-form-field> -->
-    <div class="ml-2">
-      <!-- <div>
+    <!-- <div>
         <label>Cooking Time </label>
         <mat-slider max="60" step="5" min="0">
           <input [value]="totalTime.value" matSliderThumb />
@@ -58,7 +52,7 @@
           }
         </mat-select>
       </mat-form-field> -->
-      <!-- <mat-form-field>
+    <!-- <mat-form-field>
 			<mat-label>Recipe Type</mat-label>
 			<mat-select formControlName="recipeType" multiple>
 			<mat-option *ngFor="let item of allergyArray" [value]="item.name">
@@ -67,7 +61,14 @@
 			</mat-select>
 		</mat-form-field> -->
 
-      <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div class="filter-button-group">
+      <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
+        <span class="clear-all-text">Clear all</span>
+      </button>
+      <button mat-flat-button color="accent" type="button" aria-label="Apply filter" (click)="applyFilter()">
+        <span class="clear-all-text">Apply</span>
+      </button>
     </div>
   </form>
 }

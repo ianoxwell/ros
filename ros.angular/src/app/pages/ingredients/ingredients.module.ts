@@ -15,6 +15,7 @@ import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
 import { ToTitleCasePipe } from '@pipes/title-case.pipe';
 import { IngredientFilterComponent } from './ingredient-filter/ingredient-filter.component';
 import { IngredientTableComponent } from './ingredient-table/ingredient-table.component';
+import { IngredientViewComponent } from './ingredient-view/ingredient-view.component';
 import { IngredientsRoutingModule } from './ingredients-routing.module';
 import { IngredientsComponent } from './ingredients.component';
 
@@ -34,9 +35,10 @@ import { IngredientsComponent } from './ingredients.component';
     MatSortModule,
     MatTableModule,
     SentenceCasePipe,
-    PaginatorComponent
+    PaginatorComponent,
+    LoadingIndicatorComponent
   ],
-  declarations: [IngredientsComponent, IngredientFilterComponent, IngredientTableComponent],
+  declarations: [IngredientsComponent, IngredientFilterComponent, IngredientTableComponent, IngredientViewComponent],
   exports: [IngredientsComponent]
 })
 export class IngredientsModule {}

@@ -25,3 +25,21 @@ mat-toolbar {
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+
+.sort-and-order {
+  display: flex;
+  flex-grow: 1;
+  gap: 1rem;
+  align-items: center;
+}
+
+.rotated-icon {
+  transform: rotate(180deg);
+}
+.filter-button-group {
+  display: flex;
+  gap: 1rem;
+  button {
+    flex-grow: 1;
+  }
+}
