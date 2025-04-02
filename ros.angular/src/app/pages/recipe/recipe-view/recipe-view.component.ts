@@ -1,13 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IRecipe } from '@DomainModels/recipe.dto';
-import { IMeasurement } from '@models/ingredient/ingredient-model';
-import { IRecipeIngredient } from '@models/recipe-ingredient.model';
-import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
 import { CRouteList } from '@services/navigation/route-list.const';
-import { RecipeService } from '../recipe.service';
 import { catchError, firstValueFrom, of, timer } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { RecipeService } from '../recipe.service';
 
 @Component({
   selector: 'app-recipe-view',
@@ -17,7 +14,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class RecipeViewComponent implements OnInit {
   selectedRecipe: IRecipe | undefined;
-  @Input() measurements: IMeasurement[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -31,8 +27,6 @@ export class RecipeViewComponent implements OnInit {
       // Load the recipe using the recipeId
       this.selectedRecipe = (await this.loadRecipeSelect(parseInt(recipeId))) || undefined;
       if (this.selectedRecipe) {
-        console.log('recipe view', this.selectedRecipe);
-
         return;
       }
     }

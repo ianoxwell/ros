@@ -3,8 +3,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BaseTableComponent } from '@components/base/table.component.base';
 import { IIngredientFilter } from '@DomainModels/filter.dto';
 import { IIngredient, IIngredientShort } from '@DomainModels/ingredient.dto';
-import { PurchasedBy } from '@models/ingredient/ingredient.model';
-import { AppStore } from 'src/app/app.store';
 
 @Component({
   selector: 'app-ingredient-table',
@@ -18,7 +16,6 @@ export class IngredientTableComponent
 {
   @Output() editRow = new EventEmitter<IIngredient>();
   displayedColumns = ['name', 'aisle', 'carbs', 'fats', 'proteins'];
-  purchasedBy = PurchasedBy;
 
   constructor() {
     super();

@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Suggestion } from '@models/suggestion';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
@@ -30,8 +29,8 @@ export class RecipeService {
     });
   }
 
-  public getRecipeSuggestion(queryString: string): Observable<Suggestion[]> {
-    return this.httpClient.get<Suggestion[]>(`${this.apiUrl}recipe/suggestion${queryString}`, {
+  public getRecipeSuggestion(queryString: string): Observable<IPagedResult<IRecipeShort>> {
+    return this.httpClient.get<IPagedResult<IRecipeShort>>(`${this.apiUrl}recipe/suggestion${queryString}`, {
       headers: this.defaultHeader
     });
   }

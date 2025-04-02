@@ -1,7 +1,5 @@
-import { SortDirection } from '@angular/material/sort';
-import { environment } from 'src/environments/environment';
-import { IIngredientFilterObject, IRecipeFilterQuery } from './filter-queries.model';
 import { FormControl } from '@angular/forms';
+import { SortDirection } from '@angular/material/sort';
 
 /** Generic key/values */
 export interface IDictionary<T> {
@@ -70,23 +68,6 @@ export interface ISortPageObj {
   order: SortDirection;
   perPage: number;
   page: number;
-}
-
-export class SortPageObj implements ISortPageObj {
-  orderby = 'name';
-  order: SortDirection = 'asc';
-  page = 0;
-  perPage = environment.resultsPerPage;
-
-  public update(filterObj: IIngredientFilterObject | IRecipeFilterQuery) {
-    if (filterObj) {
-      this.orderby = filterObj.orderby;
-      this.order = filterObj.order;
-      this.page = filterObj.page;
-      this.perPage = filterObj.perPage;
-    }
-    return this;
-  }
 }
 
 export interface AdminRights {

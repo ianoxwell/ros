@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { CBlankFilter, IFilter, IIngredientFilter } from '@DomainModels/filter.dto';
-import { IIngredient, IIngredientShort } from '@DomainModels/ingredient.dto';
-import { SortPageObj } from '@models/common.model';
+import { IIngredientFilter } from '@DomainModels/filter.dto';
+import { IIngredientShort } from '@DomainModels/ingredient.dto';
 import { NavigationService } from '@services/navigation/navigation.service';
 import { CRouteList } from '@services/navigation/route-list.const';
-import { Observable } from 'rxjs';
 import { AppStore } from 'src/app/app.store';
 
 @Component({
