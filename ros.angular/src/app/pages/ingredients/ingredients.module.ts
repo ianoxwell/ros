@@ -1,4 +1,3 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +13,6 @@ import { PageTitleComponent } from '@components/page-title/page-title.component'
 import { PaginatorComponent } from '@components/paginator/paginator.component';
 import { SentenceCasePipe } from '@pipes/sentence-case.pipe';
 import { ToTitleCasePipe } from '@pipes/title-case.pipe';
-import { DigitOnlyModule } from '@uiowa/digit-only';
 import { IngredientFilterComponent } from './ingredient-filter/ingredient-filter.component';
 import { IngredientTableComponent } from './ingredient-table/ingredient-table.component';
 import { IngredientsRoutingModule } from './ingredients-routing.module';
@@ -29,8 +27,6 @@ import { IngredientsComponent } from './ingredients.component';
     LoadingIndicatorComponent,
     GraphDoughnutComponent,
     ToTitleCasePipe,
-    DigitOnlyModule,
-    DragDropModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
