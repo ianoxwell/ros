@@ -34,10 +34,9 @@ export abstract class BaseTableComponent<T = any, F = IFilter | IIngredientFilte
 
   /** Triggers when there is a sorting change in the template, resets page */
   onSortChange(ev: Sort): void {
-    const sort = ev.active === 'carbs' ? 'percentCarbs' : ev.active === 'fats' ? 'percentFat' : 'percentProtein';
     const tempFilter = {
       ...this.filter(),
-      sort,
+      sort: ev.active,
       order: ev.direction.toUpperCase() as EOrder,
       page: 0
     } as F;

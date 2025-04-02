@@ -1,15 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ComponentBase } from '@components/base/base.component.base';
 import { EOrder } from '@DomainModels/base.dto';
-import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { IIngredientFilterObject, IngredientFilterObject } from '@models/filter-queries.model';
-import { IReferenceAll } from '@models/reference.model';
-import { StateService } from '@services/state.service';
-import { firstValueFrom, Observable, of } from 'rxjs';
-import { debounceTime, map, take, takeUntil, tap } from 'rxjs/operators';
+import { CBlankFilter } from '@DomainModels/filter.dto';
 import { AppStore } from 'src/app/app.store';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-ingredient-filter',
