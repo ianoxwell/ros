@@ -19,6 +19,8 @@ import { IngredientFilterComponent } from './ingredient-filter/ingredient-filter
 import { IngredientTableComponent } from './ingredient-table/ingredient-table.component';
 import { IngredientsRoutingModule } from './ingredients-routing.module';
 import { IngredientsComponent } from './ingredients.component';
+import { IngredientViewComponent } from './ingredient-view/ingredient-view.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -34,17 +36,14 @@ import { IngredientsComponent } from './ingredients.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatButtonModule,
     MatSelectModule,
     MatSortModule,
     MatTableModule,
     SentenceCasePipe,
     PaginatorComponent
   ],
-  declarations: [
-    IngredientsComponent,
-    IngredientFilterComponent,
-    IngredientTableComponent
-  ],
+  declarations: [IngredientsComponent, IngredientFilterComponent, IngredientTableComponent, IngredientViewComponent],
   exports: [IngredientsComponent]
 })
 export class IngredientsModule {}

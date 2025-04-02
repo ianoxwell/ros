@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RecipesComponent } from './recipes.component';
+import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 
 const recipeRoutes = [
   {
@@ -10,7 +11,7 @@ const recipeRoutes = [
   },
   {
     path: 'item/:recipeId',
-    component: RecipesComponent,
+    component: RecipeViewComponent,
     data: { title: `Recipe` }
   }
 ];

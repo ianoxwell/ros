@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IngredientsComponent } from './ingredients.component';
+import { IngredientViewComponent } from './ingredient-view/ingredient-view.component';
 
 const ingredientsRoutes = [
   {
@@ -10,7 +11,7 @@ const ingredientsRoutes = [
   },
   {
     path: 'item/:ingredientId',
-    component: IngredientsComponent,
+    component: IngredientViewComponent,
     data: { title: `Ingredient Edit`, symbol: `edit` }
   }
 ];

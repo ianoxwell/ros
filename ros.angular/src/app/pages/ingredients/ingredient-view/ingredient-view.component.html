@@ -1,0 +1,10 @@
+@if (!!ingredient) {
+  <div>
+    <button mat-stroked-button type="button" (click)="backToIngredients()"><mat-icon>back</mat-icon></button>
+  </div>
+  <article>
+    <h2>{{ ingredient.name }}</h2>
+  </article>
+} @else {
+  <app-loading-indicator></app-loading-indicator>
+}

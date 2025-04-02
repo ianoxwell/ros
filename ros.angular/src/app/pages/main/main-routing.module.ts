@@ -37,25 +37,10 @@ const mainRoutes: Routes = [
         data: { title: `Shopping list` }
       },
       {
-        path: 'user/favourites',
-        component: FavouritesComponent,
-        data: { title: `Favourites list` }
-      },
-      {
-        path: 'user/recipes',
-        component: UserRecipesComponent,
-        data: { title: `My Recipes` }
-      },
-      {
         path: 'user/settings',
         component: UserSettingsComponent,
         data: { title: `My Settings` }
       }
-      // {
-      // 	path: 'app/settings',
-      // 	component: ScriptsComponent,
-      // 	data: { title: `App Settings` }
-      // },
     ]
   }
 ];

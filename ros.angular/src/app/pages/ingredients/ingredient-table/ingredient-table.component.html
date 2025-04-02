@@ -3,7 +3,7 @@
     mat-table
     [dataSource]="dataSource"
     matSort
-    [matSortActive]="filter.sort || 'name'"
+    [matSortActive]="filter().sort || 'name'"
     matSortDisableClear
     [matSortDirection]="sortDirection"
     aria-label="Ingredients"
@@ -78,6 +78,7 @@
       [length]="data.meta.itemCount"
       [count]="dataSource.data.length"
       [pageSize]="data.meta.take"
+      [hidePageSize]="true"
       [showFirstLastButtons]="true"
       [pageIndex]="data.meta.page"
     >

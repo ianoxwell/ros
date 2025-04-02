@@ -1,10 +1,9 @@
-@if (isFormReady$ | async) {
 <form [formGroup]="searchForm">
-	<div class="flex-box flex-row flex-align-center">
-		<mat-form-field class="ml-2 mr-2 w-14em">			
-			<input matInput type="text" placeholder="Name" Title="Name" formControlName="name" >
-		</mat-form-field>
-		<!-- <mat-form-field class="mr-2 w-14em">
+  <div class="flex-box flex-row flex-align-center">
+    <mat-form-field class="ml-2 mr-2 w-14em">
+      <input matInput type="text" placeholder="Name" Title="Name" formControlName="keyword" />
+    </mat-form-field>
+    <!-- <mat-form-field class="mr-2 w-14em">
 			<mat-label>Parent Type</mat-label>
 			<mat-select role="" formControlName="parent" >
 				<mat-option role="option" *ngFor="let item of refData.IngredientFoodGroup" [value]="item.title">
@@ -20,11 +19,11 @@
 				</mat-option>
 			</mat-select>
 		</mat-form-field> -->
-		<mat-slide-toggle formControlName="isUsdaFoodIdNull" color="accent" class="mr-2">No Usda data</mat-slide-toggle>
-		<button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
-			<span class="clear-all-text">Clear all</span>
-		</button>
-	</div>
+    <button mat-button type="button" aria-label="Clear filter terms" (click)="clearFilterTerms()">
+      <span class="clear-all-text">Clear all</span>
+    </button>
+    <button mat-flat-button type="button" aria-label="Apply search" (click)="applyFilterTerms()">
+      <span class="clear-all-text">Apply</span>
+    </button>
+  </div>
 </form>
-}
-

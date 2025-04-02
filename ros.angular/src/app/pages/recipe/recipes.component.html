@@ -1,90 +1,44 @@
 <section class="main-wrapper">
-  @if (!selectedRecipeId) {
-    <!-- action bar -->
-    <mat-expansion-panel
-      class="sort-filter"
-      (opened)="panelOpenState.set(true)"
-      (closed)="panelOpenState.set(false)"
-      [hideToggle]="true"
-    >
-      <mat-expansion-panel-header class="sort-filter--header">
-        <mat-panel-title class="sort-filter--title">
-          <mat-icon>sort</mat-icon>
-          <span>Sort and Filter</span>
-        </mat-panel-title>
-        <div>{{ dataLength }} recipes</div>
-      </mat-expansion-panel-header>
-      <app-search-bar [dataLength]="dataLength"></app-search-bar>
-    </mat-expansion-panel>
+  <!-- action bar -->
+  <mat-expansion-panel
+    class="sort-filter"
+    (opened)="panelOpenState.set(true)"
+    (closed)="panelOpenState.set(false)"
+    [hideToggle]="true"
+  >
+    <mat-expansion-panel-header class="sort-filter--header">
+      <mat-panel-title class="sort-filter--title">
+        <mat-icon>sort</mat-icon>
+        <span>Sort and Filter</span>
+      </mat-panel-title>
+      <div>{{ this.appStore.$recipes().meta.itemCount }} recipes</div>
+    </mat-expansion-panel-header>
+    <app-search-bar [dataLength]="this.appStore.$recipes().meta.itemCount"></app-search-bar>
+  </mat-expansion-panel>
 
-    <div>
-      @if (!isLoading) {
-        <div class="container grid-parent">
-          @for (recipe of recipes; track recipe; let i = $index) {
-            <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event)"> </app-recipe-card>
-          }
-          @if (recipes.length === 0) {
-            <div>Sorry I can't find any recipes that match the filters</div>
-          }
-        </div>
-        <mat-paginator
-          #paginator
-          class="recipe-filter-paginator"
-          (page)="pageChange($event)"
-          [length]="dataLength"
-          [pageSize]="filterQuery.take"
-          [showFirstLastButtons]="true"
-          [hidePageSize]="true"
-          [pageIndex]="filterQuery.page"
-          aria-label="Select page"
-        >
-        </mat-paginator>
-      } @else {
-        <app-loading-indicator></app-loading-indicator>
-      }
-    </div>
-  } @else {
-    @if (selectedRecipe) {
-      <div class="action-bar">
-        <span>
-          <button
-            type="button"
-            mat-flat-button
-            title="Previous"
-            (click)="changeRecipe({ direction: 'prev', id: selectedRecipe.id })"
-          >
-            <mat-icon class="color-on-primary">chevron_left</mat-icon> Prev
-          </button>
-          <button
-            type="button"
-            mat-flat-button
-            title="Next"
-            (click)="changeRecipe({ direction: 'next', id: selectedRecipe.id })"
-            class="ml-2"
-          >
-            Next <mat-icon class="color-on-primary">chevron_right</mat-icon>
-          </button>
-        </span>
-        <span>
-          <h1>{{ selectedRecipe.name }}</h1>
-        </span>
-
-        <button mat-flat-button type="button" color="accent" (click)="backToRecipeView()">
-          <mat-icon class="mr-1">keyboard_return</mat-icon> Back
-        </button>
+  <div>
+    @if (!this.appStore.$loading()) {
+      <div class="container grid-parent">
+        @for (recipe of this.appStore.$recipes().results; track recipe; let i = $index) {
+          <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event)"> </app-recipe-card>
+        }
+        @if (this.appStore.$recipes().results.length === 0) {
+          <div>Sorry I can't find any recipes that match the filters</div>
+        }
       </div>
-      <!-- <mat-toolbar>
-      <h1>{{ 'Recipe ' + selectedRecipe.name }}</h1>
-      <button mat-flat-button aria-label="Search Recipes" (click)="selectedRecipe = undefined">
-        <mat-icon>back</mat-icon>
-        Search Recipes
-      </button>
-    </mat-toolbar> -->
-      <app-recipe-view [selectedRecipe]="selectedRecipe"></app-recipe-view>
+      <mat-paginator
+        class="recipe-filter-paginator"
+        (page)="pageChange($event)"
+        [length]="this.appStore.$recipes().meta.itemCount"
+        [pageSize]="this.appStore.$recipes().meta.take"
+        [showFirstLastButtons]="true"
+        [hidePageSize]="true"
+        [pageIndex]="this.appStore.$recipes().meta.page"
+        aria-label="Select page"
+      >
+      </mat-paginator>
     } @else {
-      <div class="recipes-view">
-        <app-loading-indicator></app-loading-indicator>
-      </div>
+      <app-loading-indicator></app-loading-indicator>
     }
-  }
+  </div>
 </section>

@@ -1,6 +1,9 @@
 @if (!!selectedRecipe) {
+  <div>
+    <button mat-stroked-button type="button" (click)="backToRecipes()"><mat-icon>back</mat-icon></button>
+  </div>
   <article>
-    <h2 class="print-only">{{ selectedRecipe.name }}</h2>
+    <h2>{{ selectedRecipe.name }}</h2>
     <!-- Additional details -->
     <mat-chip-listbox class="mt-2 mb-2">
       @for (tag of selectedRecipe.dishType; track tag) {
@@ -133,4 +136,6 @@
     </section>
     <!-- <h3>Nutrition</h3> -->
   </article>
+} @else {
+  <app-loading-indicator></app-loading-indicator>
 }
