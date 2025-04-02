@@ -87,7 +87,7 @@ export const IngredientsPage = () => {
           </Table.Th>
         </Table.Tr>
       </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
+      {!isLoading && <Table.Tbody>{rows}</Table.Tbody>}
     </Table>
   );
 

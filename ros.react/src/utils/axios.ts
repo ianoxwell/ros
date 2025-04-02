@@ -1,5 +1,6 @@
 import { clearStore } from '@features/user/userSlice';
-import axios from 'axios';
+import { GetThunkAPI } from '@reduxjs/toolkit';
+import axios, { AxiosError } from 'axios';
 import { getUserFromLocalStorage, isTokenFresh } from './localStorage';
 
 const customFetch = axios.create({
@@ -20,12 +21,13 @@ customFetch.interceptors.request.use((config) => {
   return config;
 });
 
-export const checkForUnauthorizedResponse = (error, thunkAPI) => {
-  if (error.response.status === 401) {
-    thunkAPI.dispatch(clearStore);
+export const checkForUnauthorizedResponse = (error: AxiosError, thunkAPI: GetThunkAPI<unknown>) => {
+  if (error.response?.status === 401) {
+    thunkAPI.dispatch(clearStore('Unauthorized'));
     return thunkAPI.rejectWithValue('Unauthorized! Logging Out...');
   }
-  return thunkAPI.rejectWithValue(error.response.data.msg);
+  const errorMessage = (error.response?.data as { msg?: string })?.msg || 'An error occurred';
+  return thunkAPI.rejectWithValue(errorMessage);
 };
 
 export default customFetch;

@@ -1,13 +1,13 @@
 import { RootState } from '@app/store';
-import { useGetMyScheduledRecipesQuery, useSaveScheduleMutation } from '@features/api/apiSlice';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { DatePickerInput } from '@mantine/dates';
-import { ActionIcon, Button, Group, NumberInput, Select, Space, Title } from '@mantine/core';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
+import { useGetMyScheduledRecipesQuery, useSaveScheduleMutation } from '@features/api/apiSlice';
+import { ActionIcon, Button, Group, NumberInput, Select, Space, Title } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import { Trash } from 'lucide-react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export const SchedulesPage = () => {
   const scheduleFilter = useSelector((store: RootState) => store.scheduleFilter);
@@ -97,6 +97,7 @@ export const SchedulesPage = () => {
         value={value}
         onChange={setValue}
       />
+      <div>Length {schedule?.length || 0}</div>
       <Space h="xl" />
       <Title order={2}>Create a booking</Title>
       <form onSubmit={form.onSubmit((values) => submitForm(values))}>

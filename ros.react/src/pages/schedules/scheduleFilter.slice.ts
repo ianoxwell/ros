@@ -17,7 +17,7 @@ const scheduleFilterSlice = createSlice({
   reducers: {
     setScheduleFilter: (state, { payload }: { payload: IScheduleFilter }) => {
       state = payload;
-      return payload;
+      return state;
     }
   }
 });

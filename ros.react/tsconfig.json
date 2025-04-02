@@ -4,7 +4,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "allowSyntheticDefaultImports": true,
-    "target": "esnext",
+    "target": "es2019",
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
@@ -25,6 +25,8 @@
 
     /* Linting */
     "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true

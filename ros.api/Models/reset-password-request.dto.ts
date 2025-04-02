@@ -1,8 +1,8 @@
-export class IUserBasicAuth {
+export interface IUserBasicAuth {
   email: string;
   password: string;
 }
 
-export class IResetPasswordRequest extends IUserBasicAuth {
+export interface IResetPasswordRequest extends IUserBasicAuth {
   token: string;
 }

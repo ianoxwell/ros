@@ -1,5 +1,3 @@
-import { IRecipeShort, IRecipeTease } from './recipe.dto';
-
 export enum ETimeSlot {
   BREAKFAST = 'breakfast',
   MORNING_SNACK = 'morning_snack',

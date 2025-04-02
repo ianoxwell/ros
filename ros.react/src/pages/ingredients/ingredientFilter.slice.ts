@@ -11,8 +11,7 @@ const ingredientFilterSlice = createSlice({
       state.page = payload;
     },
     setNewIngredientFilter: (state, { payload }: { payload: IIngredientFilter }) => {
-      state = payload;
-      return payload;
+      Object.assign(state, payload);
     }
   }
 });

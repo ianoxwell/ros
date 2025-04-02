@@ -8,13 +8,12 @@
  */
 
 import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
-import { INewUser, IUserSummary, IVerifyUserEmail } from '@domain/user.dto';
+import { INewUser, IVerifyUserEmail } from '@domain/user.dto';
 import { GetThunkAPI } from '@reduxjs/toolkit';
-import customFetch, { checkForUnauthorizedResponse } from '@utils/axios';
+import customFetch from '@utils/axios';
 import axios from 'axios';
 import { logoutUser } from './userSlice';
 
-// TODO This is crazy wasteful replication - will RTK remove all of this?
 export const registerUserThunk = async (user: INewUser, thunkAPI: GetThunkAPI<unknown>) => {
   const url = '/account/register';
   try {
@@ -42,15 +41,6 @@ export const forgotPasswordEmailThunk = async (email: string, thunkAPI: GetThunk
     return resp.data;
   } catch (error: unknown) {
     return axios.isAxiosError(error) ? thunkAPI.rejectWithValue(error.response?.data) : thunkAPI.rejectWithValue(error);
-  }
-};
-
-export const updateUserThunk = async (url: string, user: IUserSummary, thunkAPI: GetThunkAPI<unknown>) => {
-  try {
-    const resp = await customFetch.patch(url, user);
-    return resp.data;
-  } catch (error) {
-    return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
 

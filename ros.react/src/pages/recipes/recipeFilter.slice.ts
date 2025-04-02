@@ -15,7 +15,7 @@ const recipeFilterSlice = createSlice({
     },
     setNewRecipeFilter: (state, { payload }: { payload: IRecipeFilter}) => {
         state = payload;
-        return payload;
+        return state;
     }
   }
 });
