@@ -68,7 +68,6 @@ export class AppStore {
   }
 
   setIngredientFilter(filter: IIngredientFilter) {
-    console.log('filter change', filter);
     this.state.$ingredientFilter.set(filter);
   }
 

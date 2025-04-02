@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { BaseTableComponent } from '@components/base/table.component.base';
+import { IIngredientFilter } from '@DomainModels/filter.dto';
 import { IIngredient, IIngredientShort } from '@DomainModels/ingredient.dto';
 import { PurchasedBy } from '@models/ingredient/ingredient.model';
 import { AppStore } from 'src/app/app.store';
@@ -11,7 +12,10 @@ import { AppStore } from 'src/app/app.store';
   styleUrls: ['./ingredient-table.component.scss'],
   standalone: false
 })
-export class IngredientTableComponent extends BaseTableComponent<IIngredientShort> implements OnInit {
+export class IngredientTableComponent
+  extends BaseTableComponent<IIngredientShort, IIngredientFilter>
+  implements OnInit
+{
   @Output() editRow = new EventEmitter<IIngredient>();
   displayedColumns = ['name', 'aisle', 'carbs', 'fats', 'proteins'];
   purchasedBy = PurchasedBy;
@@ -19,7 +23,6 @@ export class IngredientTableComponent extends BaseTableComponent<IIngredientShor
   constructor() {
     super();
   }
-
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.data.results);

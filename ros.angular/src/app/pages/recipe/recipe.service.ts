@@ -18,32 +18,6 @@ export class RecipeService {
 
   constructor(private httpClient: HttpClient) {}
   public getRecipe(filterQuery: IFilter | null): Observable<IPagedResult<IRecipeShort>> {
-    // if (!filterQuery) {
-    //   filterQuery = new RecipeFilterQuery();
-    // }
-
-    // sanity checks
-    // if (!filterQuery.perPage || filterQuery.perPage < 1) {
-    //   filterQuery.perPage = 25;
-    // }
-
-    // if (filterQuery.page < 0) {
-    //   filterQuery.page = 0;
-    // }
-
-    // let queryString = `?pageSize=${filterQuery.perPage}&page=${filterQuery.page * filterQuery.perPage}&sort=${
-    //   filterQuery.orderby
-    // }&`;
-    // if (filterQuery.order) {
-    //   queryString += `order=${filterQuery.order}`;
-    // }
-
-    // if (filterQuery.name) {
-    //   queryString += `filter=${filterQuery.name}&`;
-    // }
-
-    // queryString = queryString.slice(0, -1);
-    console.log('ready the query', filterQuery);
     return this.httpClient.post<IPagedResult<IRecipe>>(`${this.apiUrl}recipe/search`, filterQuery, {
       headers: this.defaultHeader
     });

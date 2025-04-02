@@ -39,10 +39,8 @@ export class MainComponent extends ComponentBase {
 
     effect(async () => {
       const ingredientFilter = this.appStore.$ingredientFilter();
-      console.log('new ingredient filer', ingredientFilter);
       this.appStore.setLoadingIngredients(true);
       const ingredientResult = await firstValueFrom(this.ingredientService.getIngredientList(ingredientFilter));
-      console.log('set the ingredientResult', ingredientResult);
       this.appStore.setIngredients(ingredientResult);
       this.appStore.setLoadingIngredients(false);
     });

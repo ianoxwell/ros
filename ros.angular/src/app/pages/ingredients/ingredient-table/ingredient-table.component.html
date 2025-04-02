@@ -15,51 +15,28 @@
       <td mat-cell *matCellDef="let row">{{ row.name | sentenceCase }}</td>
     </ng-container>
 
-    <!-- estimatedCost Column -->
-    <!-- <ng-container matColumnDef="estimatedCost">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estimated Cost</th>
-      <td mat-cell *matCellDef="let row">{{ row.estimatedCost.value }} {{ row.estimatedCost.unit }}</td>
-    </ng-container> -->
-
-    <!-- <ng-container matColumnDef="purchasedBy">
-      <th mat-header-cell *matHeaderCellDef>Purchased By</th>
-      <td mat-cell *matCellDef="let row">{{ purchasedBy[row.purchasedBy] }}</td>
-    </ng-container> -->
-
     <ng-container matColumnDef="aisle">
       <th mat-header-cell *matHeaderCellDef>Aisle</th>
       <td mat-cell *matCellDef="let row">{{ row.aisle }}</td>
     </ng-container>
 
-    <!-- name Column -->
+    <!-- carbs Column -->
     <ng-container matColumnDef="carbs">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Carbs</th>
       <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentCarbs }}%</td>
     </ng-container>
 
-    <!-- name Column -->
+    <!-- fats Column -->
     <ng-container matColumnDef="fats">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fats</th>
-      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentFat }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentFat }}%</td>
     </ng-container>
 
-    <!-- name Column -->
+    <!-- protein Column -->
     <ng-container matColumnDef="proteins">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Proteins</th>
-      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentProtein }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.nutrition.caloricBreakdown.percentProtein }}%</td>
     </ng-container>
-
-    <!-- Allergies Column -->
-    <!-- <ng-container matColumnDef="allergies">
-      <th mat-header-cell *matHeaderCellDef>Allergies</th>
-      <td mat-cell *matCellDef="let row">
-        @for (allergy of row.allergies; track allergy) {
-          <span>{{ allergy.title }}; </span>
-        }
-      </td>
-    </ng-container> -->
-
-    <!-- Purchased By Column hide on smaller size-->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
