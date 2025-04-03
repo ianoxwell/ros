@@ -1,6 +1,6 @@
 {
     "scripts": {
-      "build:angular": "cd ros.angular && ng build --output-path ../dist/angular-app --base-href '/angular-app/'",
+      "build:angular": "cd ros.angular && ng build --output-path ../dist/angular-app --base-href /angular-app/",
       "build:react": "cd ros.react && npm run build && move .\\dist ..\\dist\\react-app",
       "build": "npm run build:angular && npm run build:react && copy index.html .\\dist",
       "deploy": "gh-pages -d dist",
