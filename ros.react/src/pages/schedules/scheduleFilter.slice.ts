@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getIncrementalDateObject } from '@utils/dateUtils';
+import { getIncrementedDateIndex } from '@utils/dateUtils';
 
 export interface IScheduleFilter {
-  dateFrom: Date;
-  dateTo: Date;
+  dateFrom: string;
+  dateTo: string;
 }
 
 const initialState: IScheduleFilter = {
-  dateFrom: getIncrementalDateObject(3),
-  dateTo: getIncrementalDateObject(8)
+  dateFrom: getIncrementedDateIndex(3),
+  dateTo: getIncrementedDateIndex(8)
 };
 
 const scheduleFilterSlice = createSlice({

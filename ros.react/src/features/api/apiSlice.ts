@@ -11,7 +11,6 @@ import { INewUser, IUserLogin, IUserToken, IVerifyUserEmail } from '@domain/user
 import { logoutUser } from '@features/user/userSlice';
 import { IScheduleFilter } from '@pages/schedules/scheduleFilter.slice';
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { getDateIndex } from '@utils/dateUtils';
 import { getUserFromLocalStorage, isTokenFresh } from '@utils/localStorage';
 
 const baseQuery = fetchBaseQuery({
@@ -81,7 +80,7 @@ export const apiSlice = createApi({
       query: (id) => ({ url: `/ingredient/${id}` })
     }),
     getMyScheduledRecipes: builder.query<ISchedule[], IScheduleFilter>({
-      query: (filter) => `/schedule?from=${getDateIndex(filter.dateFrom)}&to=${getDateIndex(filter.dateTo)}`
+      query: (filter) => `/schedule?from=${filter.dateFrom}&to=${filter.dateTo}`
     }),
     saveSchedule: builder.mutation<ISchedule, ISchedule>({
       query: (schedule) => ({ url: '/schedule', method: 'POST', body: schedule })
@@ -101,6 +100,6 @@ export const {
   useGetRecipeQuery,
   useGetIngredientsMutation,
   useGetIngredientQuery,
- useGetMyScheduledRecipesQuery,
- useSaveScheduleMutation
+  useGetMyScheduledRecipesQuery,
+  useSaveScheduleMutation
 } = apiSlice;

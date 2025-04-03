@@ -6,12 +6,11 @@ import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
 import { Trash } from 'lucide-react';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export const SchedulesPage = () => {
   const scheduleFilter = useSelector((store: RootState) => store.scheduleFilter);
-  const [value, setValue] = useState<[Date | null, Date | null]>([scheduleFilter.dateFrom, scheduleFilter.dateTo]);
+  // const [value, setValue] = useState<[string, string]>([scheduleFilter.dateFrom, scheduleFilter.dateTo]);
   const { data: schedule, isLoading } = useGetMyScheduledRecipesQuery(scheduleFilter, { skip: !scheduleFilter });
   const [saveSchedule, { isLoading: scheduleIsSaving }] = useSaveScheduleMutation();
 
@@ -90,13 +89,13 @@ export const SchedulesPage = () => {
   ) : (
     <section>
       It is the schedules page - probably a calendar thing
-      <DatePickerInput
+      {/* <DatePickerInput
         type="range"
         label="Pick dates range"
         placeholder="Pick dates range"
         value={value}
         onChange={setValue}
-      />
+      /> */}
       <div>Length {schedule?.length || 0}</div>
       <Space h="xl" />
       <Title order={2}>Create a booking</Title>

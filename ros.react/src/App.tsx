@@ -36,6 +36,8 @@ const theme = createTheme({
 });
 
 function App() {
+  const base = import.meta.env.VITE_BASE_URL;
+  console.log('test 0.0012', import.meta.env.VITE_API_URL, base);
   return (
     <>
       <MantineProvider theme={theme}>
@@ -44,7 +46,7 @@ function App() {
 
         <Routes>
           <Route
-            path="/"
+            path={base}
             element={
               <ProtectedRoute>
                 <SharedLayout />
@@ -55,11 +57,27 @@ function App() {
             <Route path={CRoutes.orders} element={<Orders />} />
             <Route path={CRoutes.schedule} element={<SchedulesPage />} />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
-            <Route path={`${CRoutes.ingredients}/:id`} element={<><IngredientsPage /><IngredientModal /></>} />
+            <Route
+              path={`${CRoutes.ingredients}/:id`}
+              element={
+                <>
+                  <IngredientsPage />
+                  <IngredientModal />
+                </>
+              }
+            />
             <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
-            <Route path="/:id" element={<><RecipesPage /><RecipeModal /></>} />
-            </Route>
-          <Route path="/" element={<AccountWrapper />}>
+            <Route
+              path={`${CRoutes.ingredients}/:id`}
+              element={
+                <>
+                  <RecipesPage />
+                  <RecipeModal />
+                </>
+              }
+            />
+          </Route>
+          <Route path={base} element={<AccountWrapper />}>
             <Route path={CRoutes.login} element={<Login />} />
             <Route path={CRoutes.forgotPassword} element={<ForgotPassword />} />
             <Route path={CRoutes.verifyEmail} element={<VerifyEmail />} />
@@ -67,7 +85,6 @@ function App() {
           </Route>
           {/* TODO add in the rest of the registration bits here */}
           {/* TODO - make sure the registration flow in the API does not send back anything useful like logging in - should show something about email should be sent... */}
-          {/* TODO review the lessons on Redux Toolkit - chapter 14 */}
           <Route path="*" element={<NotFoundErrorPage />} />
         </Routes>
       </MantineProvider>
