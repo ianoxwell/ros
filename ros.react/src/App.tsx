@@ -37,7 +37,6 @@ const theme = createTheme({
 
 function App() {
   const base = import.meta.env.VITE_BASE_URL;
-  console.log('test 0.0012', import.meta.env.VITE_API_URL, base);
   return (
     <>
       <MantineProvider theme={theme}>
@@ -66,9 +65,8 @@ function App() {
                 </>
               }
             />
-            <Route path={CRoutes.ingredients} element={<IngredientsPage />} />
             <Route
-              path={`${CRoutes.ingredients}/:id`}
+              path={`${CRoutes.recipe}/:id`}
               element={
                 <>
                   <RecipesPage />

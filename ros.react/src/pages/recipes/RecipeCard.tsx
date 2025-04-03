@@ -6,7 +6,6 @@ import { Timer, UserRound } from 'lucide-react';
 
 const RecipeCard = ({ recipe, openModal }: { recipe: IRecipeShort; openModal: (recipeShort: IRecipeShort) => void }) => {
   const viewRecipe = () => {
-    console.log('time to view this recipe', recipe.id);
     openModal(recipe);
   };
 

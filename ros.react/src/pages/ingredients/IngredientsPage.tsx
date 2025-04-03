@@ -18,6 +18,8 @@ import IngredientFilter from './IngredientFilter';
 import { fixWholeNumber } from '@utils/numberUtils';
 
 export const IngredientsPage = () => {
+  const base = import.meta.env.VITE_BASE_URL;
+
   const ingredientFilter = useSelector((store: RootState) => store.ingredientFilter);
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const [getIngredients, { data, isLoading }] = useGetIngredientsMutation();
@@ -35,7 +37,7 @@ export const IngredientsPage = () => {
   }, [ingredientFilter, getIngredients]);
 
   const openModal = (ing: IIngredientShort) => {
-    navigate(`${CRoutes.ingredients}/${ing.id}`);
+    navigate(`${base}${CRoutes.ingredients}/${ing.id}`);
   };
 
   const openFilter = () => {

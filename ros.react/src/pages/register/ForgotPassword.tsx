@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
+  const base = import.meta.env.VITE_BASE_URL;
   const { isLoading } = useSelector((store: RootState) => store.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const ForgotPassword = () => {
   });
 
   const cancelButton = () => {
-    navigate(CRoutes.login);
+    navigate(`${base}${CRoutes.login}`);
   };
 
   const submitButton = () => {

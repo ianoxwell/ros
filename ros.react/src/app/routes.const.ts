@@ -6,6 +6,7 @@ export const CRoutes = {
 
   // protected routes
   recipes: '',
+  recipe: 'recipe',
   orders: 'orders',
   schedule: 'schedule',
   ingredients: 'ingredients'

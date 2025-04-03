@@ -24,12 +24,14 @@ import NutritionCurveRight from './nutritionCurveRight';
 import NutritionText from './NutritionText.component';
 
 const IngredientModal = () => {
+  const base = import.meta.env.VITE_BASE_URL;
+
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { data: ingredient, isLoading } = useGetIngredientQuery(id, { skip: !id });
 
   const closeModal = () => {
-    navigate(CRoutes.ingredients);
+    navigate(`${base}${CRoutes.ingredients}`);
   };
 
   if (!id) return null;

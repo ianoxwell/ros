@@ -8,6 +8,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import './register.scss';
 
 const AccountWrapper = () => {
+  const base = import.meta.env.VITE_BASE_URL;
   const { user, activePage } = useSelector((store: RootState) => store.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -15,13 +16,12 @@ const AccountWrapper = () => {
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/');
+        navigate(base);
       }, 500);
     }
-  }, [user, navigate]);
+  }, [base, user, navigate]);
 
   useEffect(() => {
-    console.log('checking activePage', activePage);
     if (activePage) {
       setTimeout(() => {
         navigate(activePage);

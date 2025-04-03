@@ -1,4 +1,5 @@
 import { useAppSelector } from '@app/hooks';
+import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
 import SortAndFilterButton from '@components/SortAndFilterButton/SortAndFilterButton.component';
 import { IRecipeShort } from '@domain/recipe.dto';
@@ -15,6 +16,7 @@ import RecipeFilter from './RecipeFilter';
 import RecipeGrid from './RecipeGrid';
 
 export const RecipesPage = () => {
+  const base = import.meta.env.VITE_BASE_URL;
   const recipeFilter = useSelector((store: RootState) => store.recipeFilter);
   const [getRecipes, { data, isLoading }] = useGetRecipesMutation();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
@@ -31,7 +33,7 @@ export const RecipesPage = () => {
   }, [recipeFilter, getRecipes]);
 
   const openModal = (recipeShort: IRecipeShort) => {
-    navigate(`/${recipeShort.id}`)
+    navigate(`${base}${CRoutes.recipe}/${recipeShort.id}`);
   };
 
   return (
@@ -80,7 +82,7 @@ export const RecipesPage = () => {
               <Collapse in={filterOpen}>
                 <RecipeFilter />
               </Collapse>
-              <RecipeGrid data={data} isLoading={isLoading} openModal={openModal}  />
+              <RecipeGrid data={data} isLoading={isLoading} openModal={openModal} />
             </>
           );
         })()}

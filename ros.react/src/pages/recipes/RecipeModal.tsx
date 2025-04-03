@@ -30,6 +30,7 @@ import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const RecipeModal = () => {
+  const base = import.meta.env.VITE_BASE_URL;
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { data, isLoading } = useGetRecipeQuery(id, { skip: !id });
@@ -39,7 +40,7 @@ const RecipeModal = () => {
   };
 
   const closeModal = () => {
-    navigate('/');
+    navigate(base);
   };
 
   if (!id) return null;
