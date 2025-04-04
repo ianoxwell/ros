@@ -1,52 +1,57 @@
 # Recipe Ordering Simplified (ROS)
 
-This full stack project is designed to assist in stocking up your pantry to enable you to create many meals, converting cups to kg etc. Originally intended for multiple school's Food Science programs it has been adapted for the long term planner / provisioner.  
-Over the years it has essentially been a project to continue to hone skills and techniques outside of any work projects. Previously called Provisioners Cookbook.
+**Recipe Ordering Simplified (ROS)** is a full-stack application designed to streamline pantry management and meal planning. Originally developed for multiple schools' Food Science programs, it has since evolved into a tool for long-term planners and provisioners. The application helps users calculate ingredient quantities for recipes, convert measurements (e.g., cups to kilograms), and plan meals efficiently. Over the years, this project has served as a platform to refine skills and experiment with new technologies.
 
-Mono repo style with everything strictly typed from the BE through to the front end sharing models/interfaces
-Angular and React pages hosted on GH-pages using gh-page deploy from prebuilt folder
+This mono-repo project ensures strict typing across the backend and frontend, sharing models and interfaces for consistency. It includes both Angular and React implementations, showcasing the same functionality with different frameworks.
 
-Why was it interesting building same thing in Angular and React
-Benefits of controlling the whole stack
+![Ingredient Nutrition](/assets/ingredient-screen.png "Ingredient nutrition")
 
-## API - NextJS and Postgres
+## Why Build the Same Project in Angular and React?
+
+Having extensive experience with Angular, this project was an opportunity to explore React for a larger application. React's intuitive nature made the transition straightforward. The mono-repo structure, with shared interfaces and models, significantly reduced development time and ensured consistency across the stack.
+
+### Features
+
+* **Meal Planning**: Book recipes into time slots (e.g., breakfast, lunch) and calculate ingredient quantities for specific durations.
+* **Measurement Conversion**: Convert between units like cups, kilograms, and more.
+* **Dark and Light Themes**: Angular implementation features a WCAG 2.0 AA contrast-friendly dark theme, while React offers a light, mobile-first design.
+* **Social Login**: Auth0 integration for secure authentication.
+* **API Documentation**: Swagger documentation for the backend API.
+
+## API - NestJS and Postgres
+
+The backend API is built with NestJS and PostgreSQL, providing a robust and scalable foundation for the application.
+
+### API Features
+
+* Controllers: Built with NestJS 11+.
+* Database: PostgreSQL with TypeORM for database management.
+* External API Communication: Axios for seamless integration with external services.
+* Hosting: Deployed on Fly.io.
+* Authentication: Auth0 for social login.
 
 [API Swagger Page](https://api-ros.fly.dev/api)  
 [Further details](https://github.com/ianoxwell/ros/blob/main/ros.api/README.md)
 
-### API Technologies used
-
-* NestJs 11+ - The api controllers
-* TypeOrm - The connector to the database
-* PostGres - The database
-* Axios - external api communication
-* Fly.io - where it is hosted
-* Auth0 - social logon provider
-
 ## Angular - Provisioner's Cookbook
+
+The Angular implementation, Provisioner's Cookbook, was the original version of this project. It features a dark, coffee-colored theme that is WCAG 2.0 AA contrast-friendly. The implementation focuses only on recipes and ingredients.
+
+### Angular Technologies
+
+* **Angular 19+**: The core framework.
+* **Angular Material 19+** - Angular implementation of Google Material 3
+* **Signals** - simplifies observable use in a lot of cases.
+* **RxJs** - Reactive programming backbone
+* **Jasmine/Karma**: Unit testing framework.
+* **Auth0**: Authentication provider
 
 [Provisioners Cookbook](https://ianoxwell.github.io/ros/angular-app)  
 [Further Details](https://github.com/ianoxwell/ros/blob/main/ros.angular/README.md)
   
-Provisioners Cookbook was started as a personal project many years ago with a dark and coffee coloured theme. Although now a somewhat dated design it show cases that a dark theme can still be WCAG 2.0 AA contrast friendly. The project's scope has been limited to effectively Recipes and Ingredients
-
-As a sailor we often provision for months at a time, so the concept here was to create a base of recipes that we like to cook in order to find out how many kg, jars or bags of a certain item that we would need in order to cook for the entire crew for the period of time we are offshore.
-
-### Angular Technologies used
-
-* Angular 19+
-* Angular Material 19+ - Angular implementation of Google Material 3
-* Signals - really simplifies a lot of use cases of observables
-* RxJs - the observable backbone pattern of Angular up to v16
-* Jasmine/Karma unit tests
-* Auth0
-
 ## ROS - React current version of ROS
 
-[ROS](https://ianoxwell.github.io/ros/react-app)  
-[Further Details](https://github.com/ianoxwell/ros/blob/main/ros.react/README.md)
-
-ROS was built essentially to learn latest react and the design is a light contrast friendly themed mobile first with a bottom aligned toolbar
+The React implementation, ROS, was built to explore React's capabilities. It features a light, mobile-first design with a bottom-aligned toolbar for easy navigation.
 
 ### React Technologies used
 
@@ -55,3 +60,20 @@ ROS was built essentially to learn latest react and the design is a light contra
 * Reduxjs toolkit 2+ - really lightweight way of building the redux pattern
 * Lucide - for icons (How to know that one is a Front end focused developer - well they get exited about icon sets)
 * Vite - build tool
+
+### Future roadmap
+
+* Complete development of scheduling
+  * User will be able to schedule a recipe and quantity on a given day
+  * User will be abele to edit an existing scheduled recipe
+  * User to be able to add a recipe directly for scheduling from recipe vie
+* Complete the implementation of the ordering/shopping calculation
+  * User will be able to see all the recipes scheduled in time period (1 || 2 || 4 weeks)
+  * User will have a printable list of shopping summary, e.g. 6 kg of potatoes, 3 medium pineapples
+* User will be able to add a new recipe
+* User will be able to edit a recipe
+* Complete user settings
+  * User will be able to edit their own settings including changing password
+
+[ROS](https://ianoxwell.github.io/ros/react-app)  
+[Further Details](https://github.com/ianoxwell/ros/blob/main/ros.react/README.md)
