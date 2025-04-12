@@ -1,23 +1,50 @@
-
 @import './app/styles/variables.scss';
 @import './app/styles/angular-theme.scss';
 @import './app/styles/common.scss';
 
-html, body {
-	height: 100%;
+:root {
+  --accent: #417b97;
+  --accent-lighter: #c6d7e0;
+  --accent-darker: #2a5e7a;
+  --text-on-accent: #ffffff;
+  --primary: #c6a072;
+  --primary-lighter: #eee3d5;
+  --primary-darker: #b18455;
+
+  --warn: #ce352e;
+  --warn-lighter: #f0c2c0;
+  --warn-darker: #bc221d;
+
+  --success: #28a745;
+  --text-on-success: #F5F5F5;
+  
+  --dark-background: #1f1f1f;
+  --default-background: #3F3F3F;
+  --alert-yellow: #f7bd29;
+  --burnt-orange: #e6600b; // (some titles?)
+  --light-text: #FFFFFF;
+  --dark-text: #000000;
+  --muted: : rgba(255, 255, 255, 0.7);
+  --light-grey: #2c2c2c;
 }
-body { 
-	margin: 0;
-	font-family: Roboto, "Helvetica Neue", sans-serif;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .outer-wrapper p {
-  	margin: 1em 0 1em 0 !important;
+  margin: 1em 0 1em 0 !important;
 }
-.full-background, .outer-wrapper {
-	min-height: 100%;
-	min-width: 100%;
+.full-background,
+.outer-wrapper {
+  min-height: 100%;
+  min-width: 100%;
 }
 .absolute-position {
-	position: absolute;
+  position: absolute;
 }

@@ -39,11 +39,11 @@ mat-form-field {
 }
 
 .mat-flat-button.warning {
-	background-color: $warn;
-	color: $colour-text-on-success;
+	background-color: var(--warn);
+	color: var(--text-on-success);
 }
 
 .mat-flat-button.success {
-	background-color: $success;
-	color: $colour-text-on-success;
+	background-color: var(--success);
+	color: var(--text-on-success);
 }

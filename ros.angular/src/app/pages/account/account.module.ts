@@ -9,7 +9,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { LoadingIndicatorComponent } from '@components/loading-indicator/loading-indicator.component';
-import { PageTitleComponent } from '@components/page-title/page-title.component';
 import { SaveButtonComponent } from '@components/save-button/save-button.component';
 import { SiteLogoComponent } from '@components/site-logo/site-logo.component';
 import { AccountService } from '@services/account.service';
@@ -35,7 +34,6 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
     MatCheckboxModule,
     LoadingIndicatorComponent,
     SaveButtonComponent,
-    PageTitleComponent,
     SiteLogoComponent    
   ],
   declarations: [

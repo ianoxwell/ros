@@ -1,4 +1,5 @@
-@use "sass:math";
+@use 'sass:math';
+@use 'sass:string';
 @use './mixins.scss';
 @import './variables.scss';
 
@@ -15,216 +16,217 @@
 // mr-6 : [ margin-right: 3em ]
 
 @each $space in $spaces {
-	.m-#{$space} {
-		margin: #{math.div($space, 2)}rem;
-	}
+  .m-#{$space} {
+    margin: #{math.div($space, 2)}rem;
+  }
 
-	.p-#{$space} {
-		padding: #{math.div($space, 2)}rem;
-	}
+  .p-#{$space} {
+    padding: #{math.div($space, 2)}rem;
+  }
 
-	@each $side in $sides {
-		.m#{str-slice($side, 0, 1)}-#{$space} {
-			margin-#{$side}: #{math.div($space, 2)}rem !important;
-		}
+  @each $side in $sides {
+    .m#{string.slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{math.div($space, 2)}rem !important;
+    }
 
-		.p#{str-slice($side, 0, 1)}-#{$space} {
-			padding-#{$side}: #{math.div($space, 2)}rem !important;
-		}
-	}
+    .p#{string.slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{math.div($space, 2)}rem !important;
+    }
+  }
 }
 @each $width in $widthsEm {
-	.w-#{$width}em {
-		width: #{$width}em;
-	}
+  .w-#{$width}em {
+    width: #{$width}em;
+  }
 }
 
 @each $width in $widthsPercent {
-	.w-#{$width} {
-		width: percentage(math.div($width, 100));
-	}
+  .w-#{$width} {
+    width: math.percentage(math.div($width, 100));
+  }
 }
 
 .text- {
-	&small {
-		font-size: 0.8em;
-	}
-	&really-small {
-		font-size: 0.65em;
-	}
-	&extra-small {
-		font-size: 0.55em;
-	}
-	&muted {
-		color: $muted;
-	}
-	&success {
-		color: $success;
-	}
-	&red {
-		color: $warn;
-	}
-	&warning {
-		color: $alert;
-	}
+  &small {
+    font-size: 0.8em;
+  }
+  &really-small {
+    font-size: 0.65em;
+  }
+  &extra-small {
+    font-size: 0.55em;
+  }
+  &muted {
+    color: var(--muted);
+  }
+  &success {
+    color: var(--success);
+  }
+  &red {
+    color: var(--warn);
+  }
+  &warning {
+    color: var(--alert-yellow);
+  }
 }
 b {
-	font-weight: 500;
+  font-weight: 500;
 }
 
 @mixin margin-padding-dialog-box-header() {
-	margin: -1.5rem -1.5rem 1rem -1.5rem;
-	padding: 0.5rem 1.5rem;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 
 .mat-dialog-title.warning {
-	background: $warn;
-	@include margin-padding-dialog-box-header();
+  background: var(--warn);
+  @include margin-padding-dialog-box-header();
 }
 .mat-dialog-title.success {
-	background: $success;
-	@include margin-padding-dialog-box-header();
+  background: var(--success);
+  @include margin-padding-dialog-box-header();
 }
 
 .selected {
-	background: $accent;
-	padding: 1rem;
+  background: var(--accent);
+  padding: 1rem;
 }
 .hover {
-	background: $light-grey;
+  background: var(--light-grey);
 }
 
 .ingredients-list-tabs {
-	mat-tab-header {
-		display: none;
-	}
+  mat-tab-header {
+    display: none;
+  }
 }
 
 .flex-row-column {
-	@include mixins.breakpoint(xs) {
-		@include mixins.flex-direction(column);
-	}
+  @include mixins.breakpoint(xs) {
+    @include mixins.flex-direction(column);
+  }
 
-	@include mixins.breakpoint(sm) {
-		@include mixins.flex-direction(column);
-	}
+  @include mixins.breakpoint(sm) {
+    @include mixins.flex-direction(column);
+  }
 
-	@include mixins.breakpoint($min: md) {
-		@include mixins.flex-direction(row);
+  @include mixins.breakpoint($min: md) {
+    @include mixins.flex-direction(row);
 
-		.max-width-45-large-screens {
-			padding-bottom: 0;
-		}
-	}
+    .max-width-45-large-screens {
+      padding-bottom: 0;
+    }
+  }
 }
 .max-width-45-large-screens {
-	@include mixins.breakpoint($min: md) {
-		max-width: 45%;
-		width: 45%;
-	}
-	padding-bottom: 2rem;
+  padding-bottom: 2rem;
+  @include mixins.breakpoint($min: md) {
+    max-width: 45%;
+    width: 45%;
+  }
 }
 
 .print-only {
-	display: none;
-	visibility: hidden;
+  display: none;
+  visibility: hidden;
 }
 
 // https://www.w3.org/WAI/tutorials/forms/labels/#note-on-hiding-elements
-.visually-hidden, .cdk-visually-hidden {
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
+.visually-hidden,
+.cdk-visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }
 
 .background-bar-light-grey {
-	background-color: $light-grey;
+  background-color: var(--light-grey);
 }
 .accent-left {
-	border-left: 2px $accent solid;
+  border-left: 2px var(--accent) solid;
 }
 
 .svg-icon {
-	width: $title;
+  width: $title;
 }
 
 .recipe-filter-paginator {
-	.mat-paginator-outer-container {
-		.mat-paginator-container {
-			@include mixins.justify-content(center);
-			.mat-paginator-range-actions {
-				@include mixins.flex-wrap(wrap);
-				@include mixins.justify-content(center);
-				.mat-paginator-range-label {
-					width: 100%;
-					text-align: center;
-				}
-			}
-		}
-	}
+  .mat-paginator-outer-container {
+    .mat-paginator-container {
+      @include mixins.justify-content(center);
+      .mat-paginator-range-actions {
+        @include mixins.flex-wrap(wrap);
+        @include mixins.justify-content(center);
+        .mat-paginator-range-label {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
 }
 
 .bottom-sticky {
-	position: sticky;
-	bottom: 0;
-	z-index: 1;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
 }
 .table-footer {
-	margin-bottom: 4em;
+  margin-bottom: 4em;
 }
 
 body .ui-toast .ui-toast-message {
-	-webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-	-moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-	margin: 0 0 1em 0;
-	padding: 1em;
-	.ui-toast-close-icon {
-		margin-top: -2em;
-		margin-right: -0.7em;
-	}
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  margin: 0 0 1em 0;
+  padding: 1em;
+  .ui-toast-close-icon {
+    margin-top: -2em;
+    margin-right: -0.7em;
+  }
 }
 body .ui-toast .ui-toast-message.ui-toast-message-info {
-	background-color: $accent-lighter;
-	border: 0 none;
-	color: #212121;
+  background-color: var(--accent-lighter);
+  border: 0 none;
+  color: #212121;
 }
 body .ui-toast .ui-toast-message.ui-toast-message-info .ui-toast-close-icon {
-	color: #212121;
+  color: #212121;
 }
 body .ui-toast .ui-toast-message.ui-toast-message-success {
-	background-color: $success;
-	border: 0 none;
-	color: $colour-text-on-success;
+  background-color: var(--success);
+  border: 0 none;
+  color: var(--text-on-success);
 }
 
 body .ui-toast .ui-toast-message.ui-toast-message-warn {
-	background-color: $alert;
-	border: 0 none;
-	color: $colour-text-on-success;
+  background-color: var(--alert-yellow);
+  border: 0 none;
+  color: var(--text-on-success);
 }
 
 body .ui-toast .ui-toast-message.ui-toast-message-error {
-	background-color: $warn;
-	border: 0 none;
-	color: $colour-text-on-success;
+  background-color: var(--warn);
+  border: 0 none;
+  color: var(--text-on-success);
 }
 
 .footer {
-	background-color: $primary;
-	color: $dark-text;
+  background-color: var(--primary);
+  color: var(--dark-text);
 }
 
 .error-message {
-	padding-bottom: 1rem;
+  padding-bottom: 1rem;
 }
 
 button.mdc-button {
-	padding: 0.5rem;
-	height: unset;
+  padding: 0.5rem;
+  height: unset;
 }

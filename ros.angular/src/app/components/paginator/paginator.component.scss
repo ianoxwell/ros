@@ -5,7 +5,7 @@
 }
 
 button:disabled, .mat-icon-button.mat-button-disabled {
-	background-color: $default-background;
+	background-color: var(--default-background);
     font-size: 16px;
 	cursor: not-allowed;
 	.color-on-primary {

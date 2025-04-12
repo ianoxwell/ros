@@ -1,8 +1,8 @@
 @if (isGettingJwt) {
   <app-loading-indicator></app-loading-indicator>
 } @else {
-  <app-page-title [isLoginPage]="true"></app-page-title>
   <main role="main">
+    <app-site-logo></app-site-logo>
     <mat-card class="login-boxes">
       <router-outlet></router-outlet>
     </mat-card>

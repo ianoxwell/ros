@@ -11,11 +11,15 @@
   @if (!isSaving) {
     <span class="save-logo">
       @if (iconPosition === 'left') {
-        <mat-icon class="mr-1" [attr.aria-label]="label + ' icon'">{{ iconName }}</mat-icon>
+        <mat-icon class="mr-1" [ngClass]="{ accent: color === 'accent' }" [attr.aria-label]="label + ' icon'">{{
+          iconName
+        }}</mat-icon>
       }
       {{ label }}
       @if (iconPosition === 'right') {
-        <mat-icon class="ml-1" [attr.aria-label]="label + ' icon'">{{ iconName }}</mat-icon>
+        <mat-icon class="ml-1" [ngClass]="{ accent: color === 'accent' }" [attr.aria-label]="label + ' icon'">{{
+          iconName
+        }}</mat-icon>
       }
     </span>
   } @else {

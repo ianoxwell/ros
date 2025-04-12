@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     templateUrl: './save-button.component.html',
     styleUrls: ['./save-button.component.scss'],
     standalone: true,
-    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule]
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule]
 })
 export class SaveButtonComponent {
   @Input() dirty = true;

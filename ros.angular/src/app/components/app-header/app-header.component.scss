@@ -28,7 +28,7 @@
   &.active-link {
     border-bottom-style: solid;
     border-bottom-width: 3px;
-    border-bottom-color: $accent;
+    border-bottom-color: var(--accent);
   }
 }
 .accent-button {

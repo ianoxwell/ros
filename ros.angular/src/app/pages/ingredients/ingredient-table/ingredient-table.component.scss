@@ -1,7 +1,7 @@
 @import '../../../styles/variables.scss';
 
 .highlight {
-  background-color: $accent-darker !important;
+  background-color: var(--accent-darker) !important;
 }
 .responsive-table {
 	margin: 1rem;
