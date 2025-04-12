@@ -19,7 +19,7 @@ import { catchError, filter, first, switchMap, takeUntil, tap } from 'rxjs/opera
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.scss'],
+  styleUrls: ['../login.component.scss'],
   standalone: false
 })
 export class RegisterFormComponent extends ComponentBase implements OnInit {

@@ -14,7 +14,7 @@ import { catchError, takeUntil, tap } from 'rxjs/operators';
 @Component({
     selector: 'app-forgot-password',
     templateUrl: './forgot-password.component.html',
-    styleUrls: ['./forgot-password.component.scss'],
+    styleUrls: ['../login.component.scss'],
     standalone: false
 })
 export class ForgotPasswordComponent extends ComponentBase implements OnInit {
