@@ -54,9 +54,6 @@ export class LoginFormComponent extends ComponentBase {
       remember: false
     });
   }
-  rememberChange(ev: MatCheckboxChange) {
-    console.log('Im not going to remember you, terrible with names', ev);
-  }
 
   login(): void {
     this.isSubmitting = true;

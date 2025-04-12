@@ -1,9 +1,23 @@
+@use '../../styles/mixins.scss';
+
 .login-boxes {
-	min-width: 30rem;
-	max-width: 30rem;
-	position: fixed;
-	left: 50%;
-	right: 50%;
-	transform: translate(-50%, 0);
-	padding: 1.5rem;
+  min-width: 20rem;
+  max-width: 30rem;
+  width: 100%;
+  position: fixed;
+  padding: 1rem;
+  padding-top: 0;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, 0);
+  @include mixins.breakpoint(xs) {
+    border-radius: unset;
+    border: none;
+	margin-top: 1.5rem;
+	max-width: unset;
+  }
+  @include mixins.breakpoint(sm) {
+    padding: 1.5rem;
+    padding-top: 0;
+  }
 }

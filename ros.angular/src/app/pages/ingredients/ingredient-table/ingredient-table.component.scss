@@ -1,16 +1,14 @@
-@import '../../../styles/variables.scss';
-
 .highlight {
   background-color: var(--accent-darker) !important;
 }
 .responsive-table {
-	margin: 1rem;
-	margin-bottom: 2rem;
-	table {
-		width: 100%;
-		margin-bottom: 1rem;
-	}
-	.paginator-container {
-		margin-top: 1rem;
-	}
+  margin: 1rem;
+  margin-bottom: 2rem;
+  table {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .paginator-container {
+    margin-top: 1rem;
+  }
 }

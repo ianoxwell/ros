@@ -1,5 +1,3 @@
-@import '../../../styles/variables.scss';
-
 mat-card-header {
   padding: 0;
 }
@@ -19,8 +17,8 @@ form {
   .remember-password {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
   }
   .continue-google {
     display: flex;
@@ -64,4 +62,7 @@ mat-card-footer {
 .pcb-divider:after {
   left: 0.5em;
   margin-right: -50%;
+}
+.svg-icon {
+  width: 1.6rem;
 }

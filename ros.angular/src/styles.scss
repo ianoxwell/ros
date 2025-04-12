@@ -1,4 +1,4 @@
-@import './app/styles/variables.scss';
+@use './app/styles/mixins.scss';
 @import './app/styles/angular-theme.scss';
 @import './app/styles/common.scss';
 
@@ -26,6 +26,8 @@
   --dark-text: #000000;
   --muted: : rgba(255, 255, 255, 0.7);
   --light-grey: #2c2c2c;
+  
+  --input: 0.875rem;
 }
 
 html,

@@ -40,11 +40,8 @@
     }
   </div>
   <div class="remember-password">
-    <mat-checkbox aria-label="Remember Me" formControlName="remember" (change)="rememberChange($event)">
-      Remember Me</mat-checkbox
-    >
     <button
-      mat-flat-button
+      mat-button
       type="button"
       aria-label="Need an email password reminder?"
       routerLink="/account/forgot-password"
@@ -52,7 +49,7 @@
       Forgot password?
     </button>
   </div>
-  <div class="mt-4 mb-4 flex-box flex-column">
+  <div class="mt-2 mb-4 flex-box flex-column">
     <app-save-button
       color="accent"
       [valid]="loginForm.valid"
@@ -62,7 +59,6 @@
       iconPosition="right"
       (save)="login()"
     ></app-save-button>
-    <!-- <button mat-flat-button type="button" (click)="login()" color="accent" aria-label="Login Button">Login</button> -->
     <div class="pcb-divider">OR</div>
     <button
       mat-flat-button
@@ -83,7 +79,7 @@
 
 <mat-card-footer>
   <span class="pl-2">New to Provisioner's CookBook?</span>
-  <button mat-flat-button type="button" routerLink="/account/register" aria-label="Sign up Button">
+  <button mat-button type="button" routerLink="/account/register" aria-label="Sign up Button">
     Register now!
   </button>
 </mat-card-footer>

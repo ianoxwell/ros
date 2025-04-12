@@ -1,16 +1,23 @@
 @use '../../styles/mixins.scss';
+@use '@angular/material' as mat;
 
 .save-button {
-	min-width: 7em;
-	min-height: 36px;
-	width: 100%;
-	.save-logo {
-		@include mixins.flex-box;
-		@include mixins.align-items(center);
-		@include mixins.justify-content(center);
-	}
+  min-width: 7em;
+  min-height: 36px;
+  width: 100%;
+  .save-logo {
+    @include mixins.flex-box;
+    @include mixins.align-items(center);
+    @include mixins.justify-content(center);
+  }
+  &.accent {
+	@include mat.button-overrides((
+		filled-container-color: var(--accent),
+		filled-label-text-color: var(--text-on-accent),
+	))
+  }
 }
 .inner-spinner {
-	@include mixins.flex-box;
-	@include mixins.justify-content(center);
+  @include mixins.flex-box;
+  @include mixins.justify-content(center);
 }

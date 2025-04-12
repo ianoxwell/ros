@@ -9,11 +9,11 @@
   
     @if $type == string {
       @if $min == xs {
-        @media (max-width: 599px) {
+        @media (max-width: 499px) {
           @content;
         } // Mobile Devices
       } @else if $min == sm {
-        @media (min-width: 600px) {
+        @media (min-width: 500px) {
           @content;
         } // Tablet Devices
       } @else if $min == md {
