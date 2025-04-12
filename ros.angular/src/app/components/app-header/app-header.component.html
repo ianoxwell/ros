@@ -1,8 +1,8 @@
 <header>
-  <mat-toolbar color="primary" class="nav-bar">
-    <h1 class="pr-2">
+  <mat-toolbar class="nav-bar">
+    <h1 class="pr-2 app-title">
       <mat-icon class="accent accent-button">loupe</mat-icon>
-      <span class="mat-subheading-2">Provisioners CookBook</span>
+      <span class="mat-subheading-2">Provisioners Cook Book</span>
     </h1>
 
     @if (isLoggedIn && !!profile) {
@@ -10,7 +10,7 @@
       <mat-menu #appMenu="matMenu" style="width: 100%" role="navigation">
         <ng-template matMenuContent>
           <button type="button" mat-menu-item routerLink="/savoury/user/settings" aria-label="My Settings">
-            <mat-icon>cake</mat-icon> {{ profile.givenNames }}
+            <mat-icon class="accent">cake</mat-icon> {{ profile.givenNames }}
           </button>
           <mat-divider></mat-divider>
           <button type="button" mat-menu-item (click)="signOut()" aria-label="Sign out">
@@ -29,7 +29,7 @@
               routerLinkActive="active-link"
               [attr.aria-label]="menuItem.text"
             >
-              <mat-icon class="color-on-primary">{{ menuItem.icon }}</mat-icon>
+              <mat-icon class="accent">{{ menuItem.icon }}</mat-icon>
               {{ menuItem.text }}
             </button>
           }
@@ -43,7 +43,7 @@
           @if (!!profile.photoUrl.length) {
             <img [src]="profile.photoUrl[0]" [alt]="profile.fullName" class="picture-in-icon" />
           } @else {
-            <mat-icon class="color-on-primary">person</mat-icon>
+            <mat-icon class="accent">person</mat-icon>
           }
           <span>Account</span>
         </button>

@@ -1,5 +1,4 @@
 @use '../../styles/mixins.scss';
-@import '../../styles/variables.scss';
 
 .nav-bar {
   display: flex;
@@ -7,6 +6,7 @@
   align-items: center;
   justify-content: space-between;
   height: unset;
+  background-color: var(--default-background);
   @include mixins.breakpoint(md) {
     flex-direction: row;
     height: var(--mat-toolbar-standard-height, 64px);
@@ -16,21 +16,31 @@
     flex-direction: row;
     align-items: center;
   }
-}
-
-.mat-button {
-  border-radius: 0;
-  height: 4.4em;
-  mat-icon {
-    padding-right: 0.2em;
-  }
-
-  &.active-link {
-    border-bottom-style: solid;
+  button {
+    border-radius: 0;
+    height: 3.5rem;
     border-bottom-width: 3px;
-    border-bottom-color: var(--accent);
+    border-bottom-color: transparent;
+    mat-icon {
+      padding-right: 0.2em;
+    }
+    &.active-link {
+      border-bottom-style: solid;
+      border-bottom-color: var(--accent);
+    }
+    @include mixins.breakpoint(md) {
+    height: 4.4em;
+
+    }
+  }
+  .app-title {
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
   }
 }
+
+
 .accent-button {
   margin-top: -0.5em;
 }

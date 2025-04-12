@@ -3,6 +3,9 @@
   min-height: 20rem;
   position: relative;
   .sort-filter {
+    margin: 1.5rem 0;
+    border-radius: 0;
+    background-color: var(--default-background);
     &--header {
       display: flex;
       justify-content: space-between;
@@ -34,8 +37,5 @@
   }
   @include mixins.breakpoint(lg) {
     @include mixins.grid-template-columns(repeat(4, 24.5%));
-  }
-  @include mixins.breakpoint(xl) {
-    @include mixins.grid-template-columns(repeat(5, 19.75%));
   }
 }

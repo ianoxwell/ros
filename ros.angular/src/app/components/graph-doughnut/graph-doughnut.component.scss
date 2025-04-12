@@ -77,7 +77,7 @@
 
 
 @each $slice in $doughnut-slices {
-	$name: nth($slice, 1);
+	$name: list.nth($slice, 1);
 	$i: list.index($doughnut-slices, $slice);
 
 	@if $i > 1 {

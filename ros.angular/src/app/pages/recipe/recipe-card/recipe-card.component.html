@@ -1,5 +1,5 @@
 @if (recipeInput) {
-  <mat-card class="recipe-card">
+  <mat-card class="recipe-card" appearance="outlined">
     <!-- <div class="image" [style.backgroundImage]="'url('+recipeInput.picture[0].fileLink+')'" (click)="clickedRecipe.emit(recipeInput)" [title]="recipeInput.picture[0].title">
 	</div> -->
     <div class="relative-position show-pointer" (click)="clickedRecipe.emit(recipeInput)">

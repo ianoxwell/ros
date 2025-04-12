@@ -5,22 +5,22 @@
   .logo-title-line {
     display: flex;
     flex-direction: row;
-	align-items: center;
+    align-items: center;
     .logo-title-splash {
       display: flex;
       flex-direction: column;
       width: 6em;
       height: 6em;
-	  .width-20 {
-		width: 30%;
-	  }
-	  
-	  .width-50 {
-		width: 50%;
-	  }
-	  .flex-grow {
-		flex-grow: 1;
-	  }	  
+      .width-20 {
+        width: 30%;
+      }
+
+      .width-50 {
+        width: 50%;
+      }
+      .flex-grow {
+        flex-grow: 1;
+      }
       .flex-grow {
         flex-grow: 1;
       }
