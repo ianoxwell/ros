@@ -39,10 +39,10 @@
       // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
-      const pathSegmentsToKeep = 1;
+      var pathSegmentsToKeep = 1;
 
       var l = window.location;
-      const newUrl =
+      var newUrl =
         l.protocol +
         '//' +
         l.hostname +
