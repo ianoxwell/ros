@@ -1,5 +1,4 @@
 @use '../../styles/mixins.scss';
-@use '@angular/material' as mat;
 
 .save-button {
   min-width: 7em;
@@ -9,12 +8,6 @@
     @include mixins.flex-box;
     @include mixins.align-items(center);
     @include mixins.justify-content(center);
-  }
-  &.accent {
-	@include mat.button-overrides((
-		filled-container-color: var(--accent),
-		filled-label-text-color: var(--text-on-accent),
-	))
   }
 }
 .inner-spinner {

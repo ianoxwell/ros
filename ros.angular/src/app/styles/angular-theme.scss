@@ -9,17 +9,19 @@
 html {
   // @include mat.all-component-themes($theme);
   color-scheme: dark;
-  font: 300 .95rem/1.1875rem Roboto;
-  letter-spacing: .0179em;
-  @include material.theme((
-    color: (
-      primary: pro-theme.$primary-palette,
-      tertiary: pro-theme.$tertiary-palette
-    ),
-    bold-weight: 700,
-    typography: Roboto,
-    density: -2,
-  ));
+  font: 300 0.95rem/1.1875rem Roboto;
+  letter-spacing: 0.0179em;
+  @include material.theme(
+    (
+      color: (
+        primary: pro-theme.$primary-palette,
+        tertiary: pro-theme.$tertiary-palette
+      ),
+      bold-weight: 700,
+      typography: Roboto,
+      density: -2
+    )
+  );
   @media (prefers-contrast: more) {
     @include pro-theme.high-contrast-overrides(dark);
   }
@@ -81,4 +83,37 @@ html {
 
 a:link {
   color: var(--muted);
+}
+
+button {
+  &.accent {
+    @include material.button-overrides(
+      (
+        filled-container-color: var(--accent),
+        filled-label-text-color: var(--text-on-accent)
+      )
+    );
+    @include material.fab-overrides(
+      (
+        container-color: var(--accent),
+        foreground-color: var(--text-on-accent)
+      )
+    );
+  }
+  &.primary {
+    @include material.button-overrides(
+      (
+        filled-container-color: var(--primary),
+        filled-label-text-color: var(--dark-background)
+      )
+    );
+    @include material.fab-overrides(
+      (
+        container-color: var(--primary),
+        foreground-color: var(--dark-background),
+        small-container-color: var(--primary),
+        small-foreground-color: var(--dark-background)
+      )
+    );
+  }
 }

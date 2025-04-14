@@ -11,10 +11,6 @@ form {
     margin-bottom: 1rem;
   }
 }
-.clear-all-text {
-  font-weight: 200;
-  font-size: 0.7rem;
-}
 
 mat-form-field,
 mat-toolbar {
@@ -28,9 +24,8 @@ mat-toolbar {
 
 .sort-and-order {
   display: flex;
-  flex-grow: 1;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .rotated-icon {
@@ -40,6 +35,6 @@ mat-toolbar {
   display: flex;
   gap: 1rem;
   button {
-    flex-grow: 1;
+    width: 50%;
   }
 }
