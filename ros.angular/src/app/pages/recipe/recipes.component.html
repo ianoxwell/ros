@@ -20,7 +20,7 @@
     @if (!this.appStore.$loading()) {
       <div class="container grid-parent">
         @for (recipe of this.appStore.$recipes().results; track recipe; let i = $index) {
-          <app-recipe-card [recipeInput]="recipe" (clickedRecipe)="selectThisRecipe($event)"> </app-recipe-card>
+          <app-recipe-card [recipeInput]="recipe"> </app-recipe-card>
         }
         @if (this.appStore.$recipes().results.length === 0) {
           <div>Sorry I can't find any recipes that match the filters</div>

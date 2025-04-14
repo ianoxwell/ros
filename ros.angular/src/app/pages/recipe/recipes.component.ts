@@ -1,9 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { CBlankFilter, IFilter } from '@DomainModels/filter.dto';
-import { IRecipeShort } from '@DomainModels/recipe.dto';
-import { NavigationService } from '@services/navigation/navigation.service';
-import { CRouteList } from '@services/navigation/route-list.const';
 import { AppStore } from 'src/app/app.store';
 
 @Component({
@@ -18,10 +15,7 @@ export class RecipesComponent {
   filterQuery: IFilter = CBlankFilter;
   dataLength = 0;
 
-  constructor(
-    private navigationService: NavigationService,
-    public appStore: AppStore
-  ) {}
+  constructor(public appStore: AppStore) {}
 
   // triggers from the MatPaginator - emits the filterQuery object
   pageChange(ev: PageEvent): void {
@@ -32,13 +26,5 @@ export class RecipesComponent {
       this.filterQuery.take = ev.pageSize;
       this.appStore.setRecipeFilter({ ...this.appStore.$recipeFilter(), page: 0, take: ev.pageSize });
     }
-  }
-
-  selectThisRecipe(recipe: IRecipeShort) {
-    this.navigationService.navigateToUrl(`${CRouteList.recipe}/${recipe.id}`);
-  }
-
-  backToRecipeView() {
-    this.navigationService.navigateToUrl(`${CRouteList.recipes}`);
   }
 }

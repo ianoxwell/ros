@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
+import { Component, Input } from '@angular/core';
+import { IRecipeShort } from '@DomainModels/recipe.dto';
+import { NavigationService } from '@services/navigation/navigation.service';
+import { CRouteList } from '@services/navigation/route-list.const';
 
 @Component({
   selector: 'app-recipe-card',
@@ -8,10 +10,11 @@ import { IRecipe, IRecipeShort } from '@DomainModels/recipe.dto';
   standalone: false
 })
 export class RecipeCardComponent {
-  @Input() recipeInput: IRecipeShort | undefined;
-  @Output() clickedRecipe = new EventEmitter<IRecipeShort>();
+  @Input({ required: true }) recipeInput!: IRecipeShort;
 
-  more() {
-    console.log('guess what - more');
+  constructor(private navigationService: NavigationService) {}
+
+  selectThisRecipe() {
+    this.navigationService.navigateToUrl(`${CRouteList.recipe}/${this.recipeInput.id}`);
   }
 }

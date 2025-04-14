@@ -1,41 +1,67 @@
 .recipe-card {
-	min-width: 180px;
-	margin: 0.75em;
-	padding: 0;
+  min-width: 180px;
+  margin: 0.75em;
+  padding: 0;
 }
 .recipe-card {
-	margin: 0 0.75rem 1.5rem 0.75rem;
-	img {
-		height: 20em;
-		width: 100%;
-		border-top-left-radius: 4px;
-		border-top-right-radius: 4px;
-		object-fit: cover;
-	}
-	mat-card-content {
-		margin: 1em;
-	}
+  margin: 0 0.75rem 1.5rem 0.75rem;
+  img {
+    height: 20em;
+    width: 100%;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    object-fit: cover;
   }
+  .card-contents {
+    padding: 1rem;
+    .time-servings {
+      display: flex;
+      justify-content: flex-end;
+      color: var(--muted);
+      gap: 1rem;
+      margin-bottom: 1rem;
+      span {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .recipe-title,
+    .recipe-description {
+      height: 3.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .recipe-title {
+      line-height: 1.125;
+    }
+    .recipe-description {
+      line-clamp: 3;
+      -webkit-line-clamp: 3;
+	  margin-bottom: 1.5rem;
+    }
+    button {
+      width: 100%;
+    }
+  }
+}
 
 .line-height-icon-adjust {
-	text-align: middle;
-}
-.recipe-title {
-	margin: 0;
-}
-.rating-favourite-position {
-	position: absolute;
-	bottom: 1em;
-	left: 0;
-	right: 0;
-	padding: 0.5em;
-	background-color: rgba(0,0,0,0.2);
-}
-.relative-position {
-	position: relative;
-	height: 20em;
+  text-align: middle;
 }
 
-.show-pointer {
-	cursor: pointer;
+.rating-favourite-position {
+  position: absolute;
+  bottom: 1em;
+  left: 0;
+  right: 0;
+  padding: 0.5em;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.relative-position {
+  position: relative;
+  height: 20em;
 }
