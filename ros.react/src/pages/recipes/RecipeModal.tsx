@@ -236,7 +236,7 @@ const RecipeModal = () => {
                     </span>
                     <span>
                       {calculateRdaPercent(
-                        CMacroNutrientRda.fat.amount,
+                        CMacroNutrientRda.fat.rda,
                         data.nutrition.nutrients.fat / data.servings || 0
                       )}
                       %
@@ -266,7 +266,7 @@ const RecipeModal = () => {
                     </span>
                     <span>
                       {calculateRdaPercent(
-                        CMacroNutrientRda.carbohydrates.amount,
+                        CMacroNutrientRda.carbohydrates.rda,
                         data.nutrition.nutrients.carbohydrates / data.servings || 0
                       )}
                       %
@@ -290,7 +290,7 @@ const RecipeModal = () => {
                     </span>
                     <span>
                       {calculateRdaPercent(
-                        CMacroNutrientRda.protein.amount,
+                        CMacroNutrientRda.protein.rda,
                         data.nutrition.nutrients.protein / data.servings || 0
                       )}
                       %

@@ -112,7 +112,7 @@ const IngredientModal = () => {
                 <Title order={4}>Protein</Title>
                 <span>
                   {fixWholeNumber(ingredient.nutrition?.nutrients.protein, 2)} g (
-                  {calculateRdaPercent(CMacroNutrientRda.protein.amount, ingredient.nutrition?.nutrients.protein || 0)}%
+                  {calculateRdaPercent(CMacroNutrientRda.protein.rda, ingredient.nutrition?.nutrients.protein || 0)}%
                   rda)
                 </span>
               </div>
@@ -121,7 +121,7 @@ const IngredientModal = () => {
                 <span>
                   {fixWholeNumber(ingredient.nutrition?.nutrients.carbohydrates, 1)} g (
                   {calculateRdaPercent(
-                    CMacroNutrientRda.carbohydrates.amount,
+                    CMacroNutrientRda.carbohydrates.rda,
                     ingredient.nutrition?.nutrients.carbohydrates || 0
                   )}
                   % rda)
@@ -131,14 +131,14 @@ const IngredientModal = () => {
                 <Title order={4}>Fat</Title>
                 <span>
                   {fixWholeNumber(ingredient.nutrition?.nutrients.fat, 1)} g (
-                  {calculateRdaPercent(CMacroNutrientRda.fat.amount, ingredient.nutrition?.nutrients.fat || 0)}% rda)
+                  {calculateRdaPercent(CMacroNutrientRda.fat.rda, ingredient.nutrition?.nutrients.fat || 0)}% rda)
                 </span>
               </div>
               <div>
                 <Title order={4}>Dietary fibre</Title>
                 <span>
                   {fixWholeNumber(ingredient.nutrition?.nutrients.fiber, 1)} g (
-                  {calculateRdaPercent(CMacroNutrientRda.fiber.amount, ingredient.nutrition?.nutrients.fiber || 0)}%
+                  {calculateRdaPercent(CMacroNutrientRda.fiber.rda, ingredient.nutrition?.nutrients.fiber || 0)}%
                   rda)
                 </span>
               </div>

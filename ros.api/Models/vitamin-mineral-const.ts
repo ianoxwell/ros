@@ -1,16 +1,21 @@
-import { IMinerals, IVitamins } from './ingredient.dto';
+import { IMinerals, INutrients, IVitamins } from './ingredient.dto';
 
 export interface INutrientInfo {
   name: string;
   measure: string;
-  shortName: string;
+  shortName?: string;
   /** Recommended daily allowance based on general adult male values (actual values may vary by age/gender) */
   rda: number;
+  indent?: boolean;
 }
 
 type TCombinedMinVit = IVitamins & IMinerals;
 export type TVitaminMineralInfo = {
   [P in keyof TCombinedMinVit]: INutrientInfo;
+};
+
+export type TNutrition = {
+  [P in keyof INutrients]: INutrientInfo;
 };
 
 export const CVitaminsMinerals: TVitaminMineralInfo = {
@@ -43,11 +48,18 @@ export const CVitaminsMinerals: TVitaminMineralInfo = {
   zinc: { name: 'Zinc', measure: 'mg', shortName: 'Zn', rda: 11 } // mg // μg
 };
 
-export const CMacroNutrientRda = {
-  protein: { amount: 50, measure: 'g', note: 'Based on a 2000-calorie diet' },
-  carbohydrates: { amount: 275, measure: 'g', note: 'Based on a 2000-calorie diet' },
-  fat: { amount: 78, measure: 'g', note: 'Based on a 2000-calorie diet' },
-  fiber: { amount: 28, measure: 'g', note: 'For adults, varies by age & sex' }
+export const CMacroNutrientRda: Pick<
+  TNutrition,
+  'fat' | 'saturatedFat' | 'monoUnsaturatedFat' | 'cholesterol' | 'carbohydrates' | 'fiber' | 'sugar' | 'protein'
+> = {
+  fat: { rda: 78, name: 'Total fats', measure: 'g' },
+  saturatedFat: { rda: 0, name: 'Saturated fat', measure: 'g', indent: true },
+  monoUnsaturatedFat: { rda: 0, name: 'Mono unsaturated fat', measure: 'g', indent: true },
+  cholesterol: { rda: 0, name: 'Cholesterol', measure: 'mg', indent: true },
+  carbohydrates: { rda: 275, name: 'Total carbohydrates', measure: 'g' },
+  fiber: { rda: 28, name: 'Total fibre', measure: 'g', indent: true },
+  sugar: { rda: 0, name: 'Total sugars', measure: 'g', indent: true },
+  protein: { rda: 50, name: 'Protein', measure: 'g' }
 };
 
 /** Takes the nutrient values 24.000, 0.1234 and returns '24' or '0.123' */
@@ -60,6 +72,10 @@ const fixWholeNumber = (value: number | string | undefined, length = 3): string 
   return Number.isInteger(num) ? num.toString() : num.toFixed(length);
 };
 
-export const calculateRdaPercent = (rdaAmount: number, value: number) => {
+export const calculateRdaPercent = (rdaAmount: number, value: number): string => {
+  if (!rdaAmount) {
+    return '';
+  }
+
   return fixWholeNumber((value / rdaAmount) * 100, 1);
 };
