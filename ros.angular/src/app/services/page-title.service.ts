@@ -44,9 +44,9 @@ export class PageTitleService {
 
   setTitle(title: string) {
     if (title) {
-      const fullTitle = `${title}`;
+      const fullTitle = `${this.defaultTitle} - ${title}`;
       this.title.setTitle(fullTitle);
-      this.pageTitleSubject$.next(fullTitle);
+      this.pageTitleSubject$.next(title);
       this.liveAnnouncer.announce(fullTitle);
     }
   }
