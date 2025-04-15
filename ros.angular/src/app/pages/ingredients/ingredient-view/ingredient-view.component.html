@@ -6,6 +6,9 @@
       </button>
       <h1>{{ ingredient.name | sentenceCase }}</h1>
     </div>
+    <div class="ingredient-image">
+      <img [src]="`${cImageUrlLarge}${ingredient.image}`" [alt]="ingredient.name"  />
+    </div>
     @if (ingredient.nutrition) {
       <section class="nutrition-facts">
         <h2>Nutrition Facts</h2>
@@ -20,7 +23,20 @@
           <b>% Daily Value*</b>
         </div>
         <div class="nutrition-facts--divider"></div>
-        <div>Standard items here</div>
+        @for (item of nutrients; track item; let last = $last) {
+          <div class="nutrition-facts--row" [ngClass]="{ indent: item.indent }">
+            <span
+              ><span [ngClass]="{ 'text-bold': !item.indent }">{{ item.name }}</span> {{ item.value }}
+              {{ item.measure }}</span
+            >
+            @if (item.displayRda) {
+              <span>{{ item.displayRda }}%</span>
+            }
+          </div>
+          @if (!last) {
+            <div class="nutrition-facts--divider"></div>
+          }
+        }
         <div class="nutrition-facts--divider thick"></div>
         <h3>Minerals</h3>
         @for (item of minerals; track item; let last = $last) {

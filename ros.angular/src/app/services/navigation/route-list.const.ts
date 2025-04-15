@@ -12,3 +12,6 @@ export const CRouteList = {
   recipes: '/savoury/recipes/browse',
   recipe: '/savoury/recipes/item'
 };
+
+export const CImageUrl = 'https://img.spoonacular.com/ingredients_100x100/';
+export const CImageUrlLarge = 'https://img.spoonacular.com/ingredients_500x500/';
