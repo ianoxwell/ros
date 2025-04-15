@@ -1,12 +1,17 @@
 
-mat-tab-header{
-	display: none;
-}
-
-.loading-wrapper {
-	min-height: 20rem;
-}
-
-.mat-flat-button.mat-accent {
-	color: var(--light-text);
+section {
+	padding: 1.5rem;
+	.sort-filter {
+		margin: 1.5rem 0;
+		border-radius: 0;
+		background-color: var(--default-background);
+		&--header {
+		  display: flex;
+		  justify-content: space-between;
+		}
+		&--title {
+		  display: flex;
+		  gap: 1rem;
+		}
+	  }
 }

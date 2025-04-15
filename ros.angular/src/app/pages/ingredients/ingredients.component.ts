@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { IIngredientFilter } from '@DomainModels/filter.dto';
 import { IIngredientShort } from '@DomainModels/ingredient.dto';
 import { NavigationService } from '@services/navigation/navigation.service';
@@ -12,6 +12,7 @@ import { AppStore } from 'src/app/app.store';
   standalone: false
 })
 export class IngredientsComponent {
+  readonly panelOpenState = signal(false);
   constructor(
     private navigationService: NavigationService,
 

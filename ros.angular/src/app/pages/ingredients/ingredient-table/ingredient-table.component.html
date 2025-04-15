@@ -50,15 +50,15 @@
   </table>
 
   <div class="paginator-container">
-    <app-paginator
+    <mat-paginator
       (page)="onPageChange($event)"
       [length]="data.meta.itemCount"
-      [count]="dataSource.data.length"
       [pageSize]="data.meta.take"
       [hidePageSize]="true"
       [showFirstLastButtons]="true"
       [pageIndex]="data.meta.page"
+      aria-label="Select page"
     >
-    </app-paginator>
+    </mat-paginator>
   </div>
 </div>

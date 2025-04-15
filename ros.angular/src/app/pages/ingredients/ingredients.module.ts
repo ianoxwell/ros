@@ -18,6 +18,9 @@ import { IngredientTableComponent } from './ingredient-table/ingredient-table.co
 import { IngredientViewComponent } from './ingredient-view/ingredient-view.component';
 import { IngredientsRoutingModule } from './ingredients-routing.module';
 import { IngredientsComponent } from './ingredients.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -31,9 +34,12 @@ import { IngredientsComponent } from './ingredients.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatExpansionModule,
+    MatButtonModule,
     MatSelectModule,
     MatSortModule,
     MatTableModule,
+    MatPaginatorModule,
     SentenceCasePipe,
     PaginatorComponent,
     LoadingIndicatorComponent
