@@ -1,9 +1,51 @@
 @if (!!ingredient) {
-  <div>
-    <button mat-stroked-button type="button" (click)="backToIngredients()"><mat-icon>back</mat-icon></button>
-  </div>
   <article>
-    <h2>{{ ingredient.name }}</h2>
+    <div class="title-row">
+      <button mat-stroked-button type="button" (click)="backToIngredients()" aria-label="Back to ingredients page">
+        <mat-icon class="accent">chevron_left</mat-icon>
+      </button>
+      <h1>{{ ingredient.name | sentenceCase }}</h1>
+    </div>
+    @if (ingredient.nutrition) {
+      <section class="nutrition-facts">
+        <h2>Nutrition Facts</h2>
+        <div class="muted">Amount per serving (100g)</div>
+        <div class="nutrition-facts--row">
+          <h3>Calories</h3>
+          <h3>{{ calories }}</h3>
+        </div>
+        <div class="nutrition-facts--divider thick"></div>
+        <div class="nutrition-facts--row">
+          <span>&nbsp;</span>
+          <b>% Daily Value*</b>
+        </div>
+        <div class="nutrition-facts--divider"></div>
+        <div>Standard items here</div>
+        <div class="nutrition-facts--divider thick"></div>
+        <h3>Minerals</h3>
+        @for (item of minerals; track item; let last = $last) {
+          <div class="nutrition-facts--row">
+            <span>{{ item.name }} {{ item.value }} {{ item.measure }}</span>
+            <span>{{ item.percentRda }}%</span>
+          </div>
+          @if (!last) {
+            <div class="nutrition-facts--divider"></div>
+          }
+        }
+        <div class="nutrition-facts--divider thick"></div>
+        <h3>Vitamins</h3>
+        @for (item of vitamins; track item; let last = $last) {
+          <div class="nutrition-facts--row">
+            <span>{{ item.name }} {{ item.value }} {{ item.measure }}</span>
+            <span>{{ item.percentRda }}%</span>
+          </div>
+          @if (!last) {
+            <div class="nutrition-facts--divider"></div>
+          }
+        }
+        <div class="nutrition-facts--divider thick"></div>
+      </section>
+    }
   </article>
 } @else {
   <app-loading-indicator></app-loading-indicator>

@@ -1,0 +1,35 @@
+article {
+  .title-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    button {
+        min-width: unset;
+        mat-icon {
+            margin: 0;
+        }
+    }
+  }
+  .nutrition-facts {
+    width: 22rem;
+    padding: 1rem;
+    border: 2px solid var(--primary-lighter);
+    border-radius: 0.25rem;
+    margin-bottom: 2.5rem; 
+    &--row {
+      display: flex;
+      justify-content: space-between;
+      h3 {
+        margin: 0.25rem 0;
+      }
+    }
+    &--divider {
+        width: 100%;
+        border-top: solid 1px var(--light-grey);
+        margin: 0.5rem 0;
+        &.thick {
+            border-top-width: 3px;
+        }
+    }
+  }
+}
