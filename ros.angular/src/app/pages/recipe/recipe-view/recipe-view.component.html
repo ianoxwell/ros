@@ -1,9 +1,11 @@
 @if (!!selectedRecipe) {
-  <div>
-    <button mat-stroked-button type="button" (click)="backToRecipes()"><mat-icon>back</mat-icon></button>
-  </div>
   <article>
-    <h1>{{ selectedRecipe.name }}</h1>
+    <div class="title-line">
+      <button mat-stroked-button type="button" (click)="backToRecipes()">
+        <mat-icon class="accent">chevron_left</mat-icon>
+      </button>
+      <h1>{{ selectedRecipe.name }}</h1>
+    </div>
     <!-- Additional details -->
     <mat-chip-listbox class="mt-2 mb-2">
       @for (tag of selectedRecipe.dishType; track tag) {
