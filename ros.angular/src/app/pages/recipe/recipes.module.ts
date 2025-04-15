@@ -26,6 +26,7 @@ import { RecipeRoutingModule } from './recipe-routing.module';
 import { RecipeViewComponent } from './recipe-view/recipe-view.component';
 import { RecipesComponent } from './recipes.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { ReadMoreComponent } from '@components/read-more/read-more.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     LoadingIndicatorComponent,
     SafeHtmlPipe,
     SentenceCasePipe,
-    IconTextComponent
+    IconTextComponent,
+    ReadMoreComponent
   ],
   declarations: [SearchBarComponent, RecipeCardComponent, RecipeViewComponent, RecipesComponent],
   exports: [RecipesComponent]

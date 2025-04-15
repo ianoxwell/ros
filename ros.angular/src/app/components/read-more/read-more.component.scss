@@ -1,0 +1,22 @@
+p {
+  max-height: 50rem;
+  margin: 0.75rem 0;
+  -webkit-transition: max-height 0.5s; 
+  -moz-transition: max-height 0.5s; 
+  -ms-transition: max-height 0.5s; 
+  -o-transition: max-height 0.5s;
+  transition: max-height 0.5s ease-in-out;
+  &.line-clamped {
+    // height: 3.625rem;
+    max-height: 3.625rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+}
+button {
+    margin-bottom: 1rem;
+}

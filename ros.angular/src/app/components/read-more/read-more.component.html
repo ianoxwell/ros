@@ -1,0 +1,2 @@
+<p [innerHTML]="text | safeHtml" [ngClass]="{ 'line-clamped': !readMoreOpenState() }"></p>
+<button type="button" (click)="currentOpenState()">Read {{ readMoreOpenState() ? 'Less' : 'More' }}</button>

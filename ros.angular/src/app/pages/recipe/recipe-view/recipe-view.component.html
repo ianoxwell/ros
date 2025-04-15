@@ -3,7 +3,7 @@
     <button mat-stroked-button type="button" (click)="backToRecipes()"><mat-icon>back</mat-icon></button>
   </div>
   <article>
-    <h2>{{ selectedRecipe.name }}</h2>
+    <h1>{{ selectedRecipe.name }}</h1>
     <!-- Additional details -->
     <mat-chip-listbox class="mt-2 mb-2">
       @for (tag of selectedRecipe.dishType; track tag) {
@@ -12,20 +12,18 @@
     </mat-chip-listbox>
     <section class="top-section">
       <section class="description-ingredients">
-        @if (selectedRecipe.shortSummary && selectedRecipe.shortSummary.length > 0) {
-          <div>
-            <h3>Description</h3>
-            <blockquote>
-              <p [innerHTML]="selectedRecipe.shortSummary | safeHtml"></p>
-              <footer>
-                <cite
-                  ><a [href]="selectedRecipe.sourceUrl" [title]="selectedRecipe.creditsText">{{
-                    selectedRecipe.creditsText
-                  }}</a></cite
-                >
-              </footer>
-            </blockquote>
-          </div>
+        @if (selectedRecipe.summary && selectedRecipe.summary.length > 0) {
+          <h3>Description</h3>
+          <blockquote>
+            <app-read-more [text]="selectedRecipe.summary" />
+            <footer>
+              <cite
+                ><a [href]="selectedRecipe.sourceUrl" [title]="selectedRecipe.creditsText">{{
+                  selectedRecipe.creditsText
+                }}</a></cite
+              >
+            </footer>
+          </blockquote>
         }
         <div class="w-full mt-4">
           <h3>Ingredients</h3>
