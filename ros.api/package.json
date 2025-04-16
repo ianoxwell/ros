@@ -22,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@google-cloud/logging-winston": "^6.0.0",
     "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.16",
@@ -35,6 +36,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
+    "compression": "^1.8.0",
     "dotenv": "^16.5.0",
     "handlebars": "^4.7.8",
     "jwks-rsa": "^3.2.0",
@@ -47,13 +49,15 @@
     "reflect-metadata": "^0.2.2",
     "rimraf": "^6.0.1",
     "rxjs": "^7.8.2",
-    "typeorm": "^0.3.22"
+    "typeorm": "^0.3.22",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.6",
     "@nestjs/schematics": "^11.0.5",
     "@nestjs/testing": "^11.0.16",
     "@types/bcrypt": "^5.0.2",
+    "@types/compression": "^1.7.5",
     "@types/express": "^5.0.1",
     "@types/jest": "29.5.14",
     "@types/node": "^22.14.1",

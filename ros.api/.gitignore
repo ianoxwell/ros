@@ -46,4 +46,5 @@ testem.log
 .ng-dev.user*
 .husky/_
 ormconfig.json
+/secret.assets
 /recipesJson

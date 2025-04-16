@@ -35,6 +35,7 @@ import { MailModule } from '@services/mail/mail.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       database: 'api_ros',
+      url: process.env.DATABASE_URL || process.env.PG_URL,
       entities: [
         Reference,
         User,
@@ -50,9 +51,11 @@ import { MailModule } from '@services/mail/mail.module';
         Schedule,
         ScheduleRecipe
       ],
+      logging: ['error', 'warn'],
+      poolSize: 5,
+      maxQueryExecutionTime: 5000,
       migrations: [],
       synchronize: false,
-      url: process.env.DATABASE_URL || process.env.PG_URL
     }),
     ThrottlerModule.forRoot({
       throttlers: [

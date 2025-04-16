@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CustomLogger } from '@services/logger.service';
+import * as compression from 'compression';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const app = await NestFactory.create(AppModule, {
+    logger: new CustomLogger()
+  });
+  app.enableCors({ origin: process.env.ALLOWED_ORIGINS?.split(',') || [] }); // TODO lock down the cors locations
+  app.use(compression());
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()

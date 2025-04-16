@@ -2,20 +2,25 @@ import { CMessage } from '@base/message.class';
 import { IResetPasswordRequest } from '@models/reset-password-request.dto';
 import { IUserJwtPayload, IUserLogin, IUserProfile, IUserSummary, IUserToken } from '@models/user.dto';
 import { Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
-import { Body, Get, Headers, HttpCode, Query, UseGuards } from '@nestjs/common/decorators';
+import { Body, Get, Headers, HttpCode, Ip, Query, UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { CustomLogger } from '@services/logger.service';
 import { CurrentUser } from './current-user.decorator';
 import { IForgotPassword } from './models/forgot-password-request.dto';
 import { IRegisterUser } from './models/register-user.dto';
 import { IVerifyTokenRequest } from './models/verify-token.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { isMessage } from '@services/utils';
 
 @ApiTags('Accounts')
 @Controller({ path: 'account' })
 export class AccountController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private logger: CustomLogger
+  ) {}
 
   @Get()
   @ApiOkResponse({
@@ -41,10 +46,12 @@ export class AccountController {
     let user: User | IUserToken = await this.userService.registerUser(registerUser, headers.origin);
 
     if (user.hasOwnProperty('token')) {
+      this.logger.warn(`Existing non verified user ${(user as IUserToken).user.email}`);
       return user;
     }
 
     user = user as User;
+    this.logger.warn(`New user created for registration ${user.email}`);
     return {
       id: user.id,
       familyName: user.familyName,
@@ -138,15 +145,22 @@ export class AccountController {
   @Post('login')
   @HttpCode(200)
   @ApiOkResponse({
-    description: 'jwt bearer token my man'
+    description: 'jwt bearer token'
   })
   @ApiBadRequestResponse()
-  async userLogin(@Body() user: IUserLogin): Promise<IUserToken | CMessage> {
+  async userLogin(@Body() user: IUserLogin, @Ip() ip: string): Promise<IUserToken | CMessage> {
     if (!user.email || user.email.length < 4 || !user.email.includes('@')) {
       throw new HttpException({ status: HttpStatus.BAD_REQUEST, message: 'Email address does not look right' }, HttpStatus.BAD_REQUEST);
     }
 
-    return await this.userService.findOneUser(user);
+    const userResponse = await this.userService.findOneUser(user);
+    if (isMessage<IUserToken>(userResponse)) {
+      this.logger.warn(`User log on attempt from ${ip} to ${user.email}`, userResponse);
+    } else {
+      this.logger.warn(`Successful user log on ${userResponse.user.email} from ${ip}`);
+    }
+
+    return userResponse;
   }
 
   // get-account
