@@ -1,8 +1,7 @@
 // logger/logger.service.ts
+import { LoggingWinston } from '@google-cloud/logging-winston';
 import { Injectable, LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
-import { LoggingWinston } from '@google-cloud/logging-winston';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CustomLogger implements LoggerService {

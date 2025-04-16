@@ -29,6 +29,7 @@ The backend API is built with NestJS and PostgreSQL, providing a robust and scal
 * External API Communication: Axios for seamless integration with external services.
 * Hosting: Deployed on Fly.io.
 * Authentication: Auth0 for social login.
+* Logging: Winston is used in conjunction with @google-cloud/logging-winston to record logs for this app
 
 [API Swagger Page](https://api-ros.fly.dev/api)  
 [Further details](https://github.com/ianoxwell/ros/blob/main/ros.api/README.md)
