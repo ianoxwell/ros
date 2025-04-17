@@ -7,6 +7,11 @@ export enum ETimeSlot {
   EVENING_SNACK = 'evening_snack'
 }
 
+/** Wraps the individual schedules in a weekly object e.g. '20251017': [{id: 4, timeSlot: 'breakfast'...}] */
+export interface IWeeklySchedule {
+  [dateIndex: string]: ISchedule[] 
+}
+
 export interface ISchedule {
   id?: number;
   date: Date;
@@ -20,7 +25,7 @@ export interface IScheduleRecipe {
   recipeId: number | string;
   quantity: number;
 
-  name?: string;
+  recipeName?: string;
   shortSummary?: string;
   images?: string[];
 }

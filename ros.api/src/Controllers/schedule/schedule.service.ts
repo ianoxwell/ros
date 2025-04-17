@@ -2,15 +2,19 @@ import { CPageOptionsDto } from '@base/filter.const';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { RecipeService } from '@controllers/recipe/recipe.service';
-import { ISchedule } from '@models/schedule.dto';
+import { ISchedule, IWeeklySchedule } from '@models/schedule.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Schedule } from './schedule.entity';
+import { getDateIndex } from '@services/utils';
 
 @Injectable()
 export class ScheduleService {
-  constructor(@InjectRepository(Schedule) private readonly repository: Repository<Schedule>, private recipeService: RecipeService) {}
+  constructor(
+    @InjectRepository(Schedule) private readonly repository: Repository<Schedule>,
+    private recipeService: RecipeService
+  ) {}
 
   async findAllForUser(id: number): Promise<PaginatedDto<ISchedule>> {
     const today = new Date();
@@ -29,7 +33,7 @@ export class ScheduleService {
     return new PaginatedDto(fullResult, pageMetaDto);
   }
 
-  async findByDateRange(userId: number, from: Date, to: Date): Promise<ISchedule[]> {
+  async findByDateRange(userId: number, from: Date, to: Date): Promise<IWeeklySchedule> {
     const result: ISchedule[] = await this.repository.query(
       `SELECT s.id, s.date, s."timeSlot", s.notes, 
       json_agg(DISTINCT jsonb_build_object(
@@ -39,7 +43,7 @@ export class ScheduleService {
           'recipeName', r.name, 
           'shortSummary', r."shortSummary", 
           'recipeImages', r."images"
-       )) as scheduleRecipes
+       )) as "scheduleRecipes"
        FROM schedule s
        LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
        LEFT JOIN recipe r ON r.id = sr."recipeId"
@@ -47,8 +51,29 @@ export class ScheduleService {
        GROUP BY s.id`,
       [userId, from, to]
     );
+    const weeklySchedule: IWeeklySchedule = {};
 
-    return result;
+    // Generate date indexes for the range using Array.from
+    const dateIndexes = Array.from({ length: Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1 }, (_, i) => {
+      const date = new Date(from);
+      date.setDate(date.getDate() + i);
+      return getDateIndex(date); // Assuming getDateIndex is imported from utils.ts
+    });
+
+    // Initialize the weekly schedule with empty arrays
+    dateIndexes.forEach((dateIndex) => {
+      weeklySchedule[dateIndex] = [];
+    });
+
+    // Populate the weekly schedule with the results
+    result.forEach((schedule) => {
+      const dateIndex = getDateIndex(schedule.date);
+      if (weeklySchedule[dateIndex]) {
+        weeklySchedule[dateIndex].push(schedule);
+      }
+    });
+
+    return weeklySchedule;
   }
 
   async findScheduleById(scheduleId: number): Promise<ISchedule> {

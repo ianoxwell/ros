@@ -1,6 +1,6 @@
 import { CMessage } from '@base/message.class';
 import { PaginatedDto } from '@base/paginated.entity';
-import { ISchedule } from '@models/schedule.dto';
+import { ISchedule, IWeeklySchedule } from '@models/schedule.dto';
 import { Controller, Get, HttpStatus, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -32,7 +32,7 @@ export class ScheduleController {
     @CurrentUser() user: IUserJwtPayload,
     @Query('from') from: string,
     @Query('to') to: string
-  ): Promise<ISchedule[] | CMessage> {
+  ): Promise<IWeeklySchedule | CMessage> {
     if (!user) {
       return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
     }
