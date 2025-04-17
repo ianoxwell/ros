@@ -1,12 +1,15 @@
 import SharedLayout from '@features/SharedLayout';
 import { colorsTuple, createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
+import IngredientModal from '@pages/ingredients/IngredientModal';
 import { IngredientsPage } from '@pages/ingredients/IngredientsPage';
 import NotFoundErrorPage from '@pages/not-found-error';
 import { Orders } from '@pages/Orders';
 import ProtectedRoute from '@pages/ProtectedRoute';
+import RecipeModal from '@pages/recipes/RecipeModal';
 import { RecipesPage } from '@pages/recipes/RecipesPage';
 import AccountWrapper from '@pages/register/AccountWrapper';
 import ForgotPassword from '@pages/register/ForgotPassword';
@@ -17,8 +20,6 @@ import { SchedulesPage } from '@pages/schedules/SchedulesPage';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { CRoutes } from './app/routes.const';
-import IngredientModal from '@pages/ingredients/IngredientModal';
-import RecipeModal from '@pages/recipes/RecipeModal';
 
 const theme = createTheme({
   fontFamily: 'Quicksand, sans-serif',
