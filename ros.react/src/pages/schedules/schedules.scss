@@ -1,0 +1,46 @@
+.schedule {
+  &-item {
+    min-width: 9rem;
+    padding: 0 0.75rem;
+    border-radius: 0.25rem;
+    &.odd {
+        background-color: var(--background-normal);
+    }
+    &--day {
+      width: 100%;
+      border-top: 0.1875rem solid var(--accent-foreground);
+      border-bottom: 0.1875rem solid var(--accent-foreground);
+      border-radius: 0.1875rem;
+      margin: 0.75rem 0;
+      padding: 0.5rem 0;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-transform: capitalize;
+    }
+    &--date {
+      color: var(--muted-text);
+      text-align: center;
+    }
+    &--slot {
+      margin: 0.5rem 0 0.75rem;
+      display: flex;
+      color: var(--accent-foreground);
+      font-weight: 700;
+    //   text-transform: uppercase;
+      gap: 1rem;
+      .nav-fab {
+        border-radius: 50%;
+        background-color: var(--accent-foreground);
+        width: 1.5rem;
+        height: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-on-accent);
+        border: none;
+        padding: 0;
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ export interface IScheduleFilter {
 }
 
 const initialState: IScheduleFilter = {
-  dateFrom: getIncrementedDateIndex(3),
+  dateFrom: getIncrementedDateIndex(2),
   dateTo: getIncrementedDateIndex(8)
 };
 
