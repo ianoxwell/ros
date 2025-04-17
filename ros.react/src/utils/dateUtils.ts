@@ -18,6 +18,15 @@ export function getUtcDateTime(targetDate?: Date): Date {
   return utcDate;
 }
 
+export function getDateFromIndex(index: string): Date {
+  const date = new Date();
+  date.setFullYear(parseInt(index.substring(0, 4)));
+  date.setMonth(parseInt(index.substring(4, 6)) - 1);
+  date.setDate(parseInt(index.substring(6, 8)));
+
+  return date;
+}
+
 export function getDateObject(targetDate?: Date): Date {
   const date = getUtcDateTime(targetDate);
   return new Date(date.getTime());
