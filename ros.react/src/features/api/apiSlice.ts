@@ -6,7 +6,7 @@ import { IMessage } from '@domain/message.dto';
 import { IRecipe, IRecipeShort } from '@domain/recipe.dto';
 import { IAllReferences } from '@domain/reference.dto';
 import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
-import { ISchedule } from '@domain/schedule.dto';
+import { ISchedule, IWeeklySchedule } from '@domain/schedule.dto';
 import { INewUser, IUserLogin, IUserToken, IVerifyUserEmail } from '@domain/user.dto';
 import { logoutUser } from '@features/user/userSlice';
 import { IScheduleFilter } from '@pages/schedules/scheduleFilter.slice';
@@ -46,6 +46,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   // All of our requests will check if token is available and attach (baseQuery) and all responses will be checked for 401 not authorized
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['Schedules'],
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
     loginUser: builder.mutation<IUserToken | IMessage, IUserLogin>({
@@ -79,11 +80,19 @@ export const apiSlice = createApi({
     getIngredient: builder.query<IIngredient, string | undefined>({
       query: (id) => ({ url: `/ingredient/${id}` })
     }),
-    getMyScheduledRecipes: builder.query<ISchedule[], IScheduleFilter>({
-      query: (filter) => `/schedule?from=${filter.dateFrom}&to=${filter.dateTo}`
+    getMyScheduledRecipes: builder.query<IWeeklySchedule, IScheduleFilter>({
+      query: (filter) => `/schedule?from=${filter.dateFrom}&to=${filter.dateTo}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...Object.keys(result).map((key) => ({ type: 'Schedules' as const, id: key })),
+              { type: 'Schedules', id: 'LIST' }
+            ]
+          : [{ type: 'Schedules', id: 'LIST' }]
     }),
     saveSchedule: builder.mutation<ISchedule, ISchedule>({
-      query: (schedule) => ({ url: '/schedule', method: 'POST', body: schedule })
+      query: (schedule) => ({ url: '/schedule', method: 'POST', body: schedule }),
+      invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
     })
   })
 });
