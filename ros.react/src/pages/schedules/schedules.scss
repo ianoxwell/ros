@@ -8,6 +8,7 @@
     }
     &--day {
       width: 100%;
+      color: var(--darker-accent);
       border-top: 0.1875rem solid var(--accent-foreground);
       border-bottom: 0.1875rem solid var(--accent-foreground);
       border-radius: 0.1875rem;
@@ -25,9 +26,9 @@
     &--slot {
       margin: 0.5rem 0 0.75rem;
       display: flex;
-      color: var(--accent-foreground);
+      color: var(--darker-accent);
       font-weight: 700;
-    //   text-transform: uppercase;
+      justify-content: center;
       gap: 1rem;
       .nav-fab {
         border-radius: 50%;
@@ -40,6 +41,12 @@
         color: var(--text-on-accent);
         border: none;
         padding: 0;
+      }
+    }
+    .recipe-item {
+      &--actions {
+        gap: 0.25rem;
+        margin: 0.25rem 0;
       }
     }
   }
