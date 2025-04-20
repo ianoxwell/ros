@@ -75,8 +75,8 @@ export const SchedulesPage = () => {
                   {pickATime.map((slot) => {
                     const slotItems = value.filter((schedule) => schedule.timeSlot === slot.value);
                     return (
-                      <>
-                        <div className="schedule-item--slot" key={randomId()}>
+                      <section key={randomId()}>
+                        <div className="schedule-item--slot">
                           <span>{slot.label}</span>
                           <button type="button" onClick={() => newItem(slot, key)} title="New" className="nav-fab">
                             <Plus />
@@ -90,7 +90,7 @@ export const SchedulesPage = () => {
                             key={item.id || randomId()}
                           />
                         ))}
-                      </>
+                      </section>
                     );
                   })}
                 </article>

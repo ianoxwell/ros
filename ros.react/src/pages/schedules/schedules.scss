@@ -4,7 +4,7 @@
     padding: 0 0.75rem;
     border-radius: 0.25rem;
     &.odd {
-        background-color: var(--background-normal);
+      background-color: var(--background-normal);
     }
     &--day {
       width: 100%;
@@ -48,6 +48,14 @@
         gap: 0.25rem;
         margin: 0.25rem 0;
       }
+    }
+  }
+  &--modal {
+    &__quantity {
+      max-width: 5rem;
+    }
+    &__recipe {
+      flex-grow: 1;
     }
   }
 }
