@@ -33,6 +33,26 @@ export class RecipeController {
     return await this.recipeService.getRecipes(filterBase);
   }
 
+  @Get('suggestion')
+  @ApiOkResponse({
+    description: 'Gets short recipes that include the filter string in the name'
+  })
+  async ingredientSuggestionList(@Query('filter') filter: string): Promise<IPagedResult<IRecipeShort>> {
+    //  @Query('limit') limit: number
+    console.log('filter', filter);
+    const limit = 10;
+
+    return this.recipeService.getSuggestedRecipes(filter, limit);
+  }
+
+  @Get('check-name')
+  @ApiOkResponse({
+    description: 'Checks that the name exists, returns true if the name is available'
+  })
+  async isRecipeNameAvailable(@Param() name: string): Promise<boolean> {
+    return this.recipeService.recipeNameAvailable(name);
+  }
+
   /** Gets a specific recipe by Id */
   @Get(':id')
   @ApiOkResponse({
@@ -67,27 +87,5 @@ export class RecipeController {
     }
 
     return await this.recipeService.createRecipe(recipe);
-  }
-
-  @Get('suggestion')
-  @ApiOkResponse({
-    description: 'Gets short recipes that include the filter string in the name'
-  })
-  async ingredientSuggestionList(@Query('filter') filter: string): Promise<IPagedResult<IRecipeShort>> {
-    //  @Query('limit') limit: number
-    const limit = 10;
-    if (filter.length < 2) {
-      return new PaginatedDto([], new PageMetaDto({ pageOptionsDto: { page: 0, take: limit, skip: 0 }, itemCount: 0 }));
-    }
-
-    return this.recipeService.getSuggestedRecipes(filter, limit);
-  }
-
-  @Get('check-name')
-  @ApiOkResponse({
-    description: 'Checks that the name exists, returns true if the name is available'
-  })
-  async isRecipeNameAvailable(@Param() name: string): Promise<boolean> {
-    return this.recipeService.recipeNameAvailable(name);
   }
 }
