@@ -101,14 +101,33 @@ export class RecipeService {
 
   /** get a short list of recipe suggestions */
   async getSuggestedRecipes(filter: string, limit = 10): Promise<PaginatedDto<IRecipeShort>> {
+    const sanitizeInput = (input: string): string => {
+      return input.replace(/[^a-zA-Z0-9\s]/g, '');
+    };
+
+    filter = sanitizeInput(filter);
     const pageOptionsDto: IFilterBase = {
       keyword: filter,
       page: 1,
       take: limit,
       skip: 0
     };
+
+    // If the filter keyword is actually the id of the recipe accidentally passed then return just that
+    if (filter && !isNaN(Number(filter)) && Number.isInteger(Number(filter))) {
+      const result = await this.repository.find({ where: { id: Number(filter) } });
+      if (result) {
+        const pageMetaDto = new PageMetaDto({ itemCount: 1, pageOptionsDto });
+
+        return new PaginatedDto(
+          result.map((recipe) => this.mapRecipeToShortRecipeDto(recipe)),
+          pageMetaDto
+        );
+      }
+    }
+
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Raw((alias) => `LOWER(${alias}) Like '%${pageOptionsDto.keyword.toLowerCase()}%'`) },
+      where: { name: Raw((alias) => `LOWER(REGEXP_REPLACE(${alias}, '[^a-zA-Z0-9]', '', 'g')) Like '%${pageOptionsDto.keyword.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}%'`) },
       order: { name: EOrder.ASC },
       take: limit,
       skip: 0

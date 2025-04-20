@@ -1,15 +1,13 @@
 import { CMessage } from '@base/message.class';
 import { PaginatedDto } from '@base/paginated.entity';
+import { CurrentUser } from '@controllers/account/current-user.decorator';
 import { ISchedule, IWeeklySchedule } from '@models/schedule.dto';
-import { Controller, Get, HttpStatus, Query, Req, UseGuards } from '@nestjs/common';
+import { IUserJwtPayload } from '@models/user.dto';
+import { Body, Controller, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { ScheduleService } from './schedule.service';
-import { IUserJwtPayload, IUserSummary } from '@models/user.dto';
-import { CurrentUser } from '@controllers/account/current-user.decorator';
 import { convertDateIndexToDate } from '@services/utils';
-import { Body, Post } from '@nestjs/common';
+import { ScheduleService } from './schedule.service';
 
 @ApiTags('Schedule')
 @UseGuards(AuthGuard('jwt'))
