@@ -93,6 +93,11 @@ export const apiSlice = createApi({
             ]
           : [{ type: 'Schedules', id: 'LIST' }]
     }),
+    getScheduleForDate: builder.query<ISchedule[], string>({
+      query: (date) => `schedule/day?date=${date}`,
+      providesTags: (result) =>
+        result ? [...result.map(({ id }) => ({ type: 'Schedules' as const, id }))] : [{ type: 'Schedules', id: 'LIST' }]
+    }),
     saveSchedule: builder.mutation<ISchedule, ISchedule>({
       query: (schedule) => ({ url: '/schedule', method: 'POST', body: schedule }),
       invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
@@ -114,5 +119,6 @@ export const {
   useGetIngredientsMutation,
   useGetIngredientQuery,
   useGetMyScheduledRecipesQuery,
+  useLazyGetScheduleForDateQuery,
   useSaveScheduleMutation
 } = apiSlice;
