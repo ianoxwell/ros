@@ -1,17 +1,17 @@
 import { useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
-import { ETimeSlot, ISchedule, IScheduleRecipe } from '@domain/schedule.dto';
+import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetMyScheduledRecipesQuery } from '@features/api/apiSlice';
-import { ComboboxItem, SimpleGrid, Title } from '@mantine/core';
+import { ActionIcon, ComboboxItem, SimpleGrid, Title } from '@mantine/core';
 import { randomId, useDisclosure } from '@mantine/hooks';
 import { getDateFromIndex } from '@utils/dateUtils';
 import dayjs from 'dayjs';
-import { Plus } from 'lucide-react';
+import { Edit, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { pickATime } from './schedule.const';
-import ScheduleModal from './ScheduleModal';
+import ScheduleModal from './schedule-modal/ScheduleModal';
 import ScheduleRecipe from './ScheduleRecipe';
 import './schedules.scss';
 
@@ -20,25 +20,24 @@ export const SchedulesPage = () => {
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const [opened, { open, close }] = useDisclosure(false);
   const [schedule, setSchedule] = useState<ISchedule | undefined>();
-  const [focusRecipe, setFocusRecipe] = useState<IScheduleRecipe | undefined>();
   // const [value, setValue] = useState<[string, string]>([scheduleFilter.dateFrom, scheduleFilter.dateTo]);
   const { data: weeklySchedule, isLoading } = useGetMyScheduledRecipesQuery(scheduleFilter, { skip: !scheduleFilter });
 
   const newItem = (slot: ComboboxItem, dateIndex: string) => {
-    console.log('open a new modal to create a new recipe', slot, dateIndex);
-    setSchedule({
+    const newSchedule: ISchedule = {
       date: getDateFromIndex(dateIndex),
       timeSlot: slot.value as ETimeSlot,
       scheduleRecipes: [],
       notes: ''
-    });
+    };
+    console.log('open a new modal to create a new recipe', slot, dateIndex, newSchedule);
+    setSchedule(newSchedule);
     open();
   };
 
-  const editItem = (item: ISchedule, recipe: IScheduleRecipe) => {
+  const editItem = (item: ISchedule) => {
     console.log('what we showing the modal', item);
     setSchedule(item);
-    setFocusRecipe(recipe);
     open();
   };
 
@@ -55,7 +54,7 @@ export const SchedulesPage = () => {
         <div className="text-muted">Hello {user.givenNames}</div>
         <Title className="title-bar--title">What meals would you like to eat this week?</Title>
       </div>
-      {schedule && <ScheduleModal onClose={closeModal} isOpen={opened} schedule={schedule} focusRecipe={focusRecipe} />}
+      {schedule && <ScheduleModal onClose={closeModal} isOpen={opened} schedule={schedule} />}
       {/* <DatePickerInput
         type="range"
         label="Pick dates range"
@@ -78,15 +77,24 @@ export const SchedulesPage = () => {
                       <section key={randomId()}>
                         <div className="schedule-item--slot">
                           <span>{slot.label}</span>
-                          <button type="button" onClick={() => newItem(slot, key)} title="New" className="nav-fab">
-                            <Plus />
-                          </button>
+                          {slotItems.length ? (
+                            <ActionIcon
+                              title="Edit item in this slot"
+                              variant="outline"
+                              onClick={() => editItem(slotItems[0])}
+                            >
+                              <Edit size={16} />
+                            </ActionIcon>
+                          ) : (
+                            <button type="button" onClick={() => newItem(slot, key)} title="New" className="nav-fab">
+                              <Plus />
+                            </button>
+                          )}
                         </div>
                         {slotItems.map((item: ISchedule) => (
                           <ScheduleRecipe
                             scheduleRecipes={item.scheduleRecipes}
                             slotItem={item}
-                            editItem={editItem}
                             key={item.id || randomId()}
                           />
                         ))}
@@ -98,8 +106,6 @@ export const SchedulesPage = () => {
             })}
         </SimpleGrid>
       </section>
-
-      {/* TODO Shift to a modal */}
     </section>
   );
 };
