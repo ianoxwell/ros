@@ -33,10 +33,38 @@ export class ScheduleService {
     return new PaginatedDto(fullResult, pageMetaDto);
   }
 
+  async findScheduleOnDate(userId: number, date: Date): Promise<ISchedule[]> {
+    const result: ISchedule[] = await this.repository.query(
+      `SELECT s.id, 
+          s.date + interval '${(date.getTimezoneOffset() / 60) * -1} hours' as date, -- Ensure the date is treated as UTC midnight
+          s."timeSlot", 
+          s.notes, 
+          json_agg(DISTINCT jsonb_build_object(
+            'id', sr.id, 
+            'quantity', sr.quantity, 
+            'recipeId', r.id, 
+            'recipeName', r.name, 
+            'shortSummary', r."shortSummary", 
+            'recipeImages', r."images"
+          )) as "scheduleRecipes"
+       FROM schedule s
+       LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
+       LEFT JOIN recipe r ON r.id = sr."recipeId"
+       WHERE s."userId" = $1 AND s.date = $2
+       GROUP BY s.id`,
+      [userId, date]
+    );
+
+    return result;
+  }
+
   async findByDateRange(userId: number, from: Date, to: Date): Promise<IWeeklySchedule> {
     const result: ISchedule[] = await this.repository.query(
-      `SELECT s.id, s.date, s."timeSlot", s.notes, 
-      json_agg(DISTINCT jsonb_build_object(
+      `SELECT s.id,
+        s.date + interval '${(from.getTimezoneOffset() / 60) * -1} hours' as date, -- Ensure the date is treated as UTC midnight
+        s."timeSlot", 
+        s.notes,  
+        json_agg(DISTINCT jsonb_build_object(
           'id', sr.id, 
           'quantity', sr.quantity, 
           'recipeId', r.id, 

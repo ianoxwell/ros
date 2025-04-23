@@ -42,6 +42,7 @@ export class ScheduleController {
     const fromDate = convertDateIndexToDate(from);
     const toDate = convertDateIndexToDate(to);
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ensure the time is set to the start of the day
 
     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
       return new CMessage('Query parameters "from" and "to" must be valid dates', HttpStatus.BAD_REQUEST);
@@ -56,6 +57,33 @@ export class ScheduleController {
     }
 
     return this.scheduleService.findByDateRange(user.userId, fromDate, toDate);
+  }
+
+  @Get('day')
+  async getScheduleForOneDay(
+    @CurrentUser() user: IUserJwtPayload,
+    @Query('date') date: string,
+  ): Promise<ISchedule[] | CMessage> {
+    if (!user) {
+      return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!date) {
+      return new CMessage('Query parameters "from" and "to" are required', HttpStatus.BAD_REQUEST);
+    }
+
+    const dateItem = convertDateIndexToDate(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ensure the time is set to the start of the day
+    if (isNaN(dateItem.getTime())) {
+      return new CMessage('Query parameters "date" must be valid date', HttpStatus.BAD_REQUEST);
+    }
+
+    if (dateItem.getTime() < today.getTime()) {
+      return new CMessage('"from" date must be greater than today', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.scheduleService.findScheduleOnDate(user.userId, dateItem);
   }
 
   @Post()
