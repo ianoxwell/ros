@@ -5,6 +5,7 @@ import { useLoginUserMutation } from '@features/api/apiSlice';
 import { registerUser, toggleIsMember } from '@features/user/userSlice';
 import { Button, Checkbox, Group, NavLink, TextInput, UnstyledButton } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import { useSelector } from 'react-redux';
 
 const initialState = {
@@ -35,9 +36,9 @@ const Login = () => {
         await loginUser({ email, password }).unwrap();
       } catch (error: unknown) {
         console.log('Looks like a massive mistake happened', error);
-        // if (error.hasOwnProperty('message')) {
-        //   notifications.show({ message: error.message });
-        // }
+        if (typeof error === 'object' && error !== null && 'message' in error) {
+          notifications.show({ message: (error as { message: string }).message, color: 'red' });
+        }
       }
 
       return;
@@ -95,7 +96,7 @@ const Login = () => {
           label="Email"
           type="email"
           placeholder="your@email.com"
-          autoComplete='email'
+          autoComplete="email"
           key={form.key('email')}
           {...form.getInputProps('email')}
         />
@@ -105,7 +106,7 @@ const Login = () => {
           required
           type="password"
           label="Password"
-          autoComplete='current-password'
+          autoComplete="current-password"
           key={form.key('password')}
           {...form.getInputProps('password')}
         />
