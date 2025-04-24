@@ -1,5 +1,6 @@
 import { ISchedule, IScheduleRecipe } from '@domain/schedule.dto';
 import { ActionIcon, Flex } from '@mantine/core';
+import { randomId } from '@mantine/hooks';
 import { Trash } from 'lucide-react';
 
 const ScheduleRecipe = ({ scheduleRecipes, slotItem }: { scheduleRecipes: IScheduleRecipe[]; slotItem: ISchedule }) => {
@@ -10,7 +11,7 @@ const ScheduleRecipe = ({ scheduleRecipes, slotItem }: { scheduleRecipes: ISched
   return (
     <>
       {scheduleRecipes.map((recipe: IScheduleRecipe) => (
-        <Flex gap="sm" justify="space-between" align="center" className="recipe-item">
+        <Flex gap="sm" justify="space-between" align="center" className="recipe-item" key={recipe.id || randomId()}>
           <Flex gap="xs">
             <b>{recipe.quantity}</b>
             <span>{recipe.recipeName}</span>

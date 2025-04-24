@@ -36,7 +36,6 @@ export const SchedulesPage = () => {
   };
 
   const editItem = (item: ISchedule) => {
-    console.log('what we showing the modal', item);
     setSchedule(item);
     open();
   };
@@ -68,7 +67,7 @@ export const SchedulesPage = () => {
             Object.entries(weeklySchedule).map(([key, value], index: number) => {
               const date = dayjs(getDateFromIndex(key));
               return (
-                <article className={`schedule-item ${index % 2 === 0 ? 'odd' : ''}`} key={key}>
+                <article className={`schedule-item ${index % 2 === 0 ? 'odd' : ''}`} key={`${key}-${index}`}>
                   <div className="schedule-item--day">{date.format('dddd')}</div>
                   <div className="schedule-item--date">{date.format('MMMM D, YYYY')}</div>
                   {pickATime.map((slot) => {
