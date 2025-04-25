@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Schedule } from './schedule.entity';
 import { getDateIndex } from '@services/utils';
+import { ScheduleRecipe } from './schedule-recipe.entity';
 
 @Injectable()
 export class ScheduleService {
@@ -125,8 +126,56 @@ export class ScheduleService {
 
     return result[0];
   }
+  async findExistingScheduleToPreventDuplicates(userId: number, schedule: ISchedule): Promise<Schedule | undefined> {
+    const findExistingSchedule: Schedule | undefined = await this.repository.findOne({
+      where: { date: schedule.date, timeSlot: schedule.timeSlot, user: { id: userId } },
+      relations: ['scheduleRecipes', 'scheduleRecipes.recipe']
+    });
+    return findExistingSchedule;
+  }
+
+  async mergeExistingSchedules(schedule: ISchedule, findExistingSchedule: Schedule): Promise<ISchedule> {
+    if (findExistingSchedule.notes !== schedule.notes) {
+      findExistingSchedule.notes = findExistingSchedule.notes.concat(schedule.notes);
+    }
+
+    findExistingSchedule.scheduleRecipes.forEach((rSchedule) => {
+      const sameRecipe = schedule.scheduleRecipes.find((nSchedule) => nSchedule.recipeId === rSchedule.recipe.id);
+      if (sameRecipe) {
+        rSchedule.quantity = sameRecipe.quantity;
+      }
+    });
+    const existingScheduleRecipeIds = findExistingSchedule.scheduleRecipes.map((sRecipe) => sRecipe.recipe.id);
+    const newRecipes = schedule.scheduleRecipes.filter((nSchedule) => !existingScheduleRecipeIds.includes(Number(nSchedule.recipeId)));
+    const sRecipesToAdd: ScheduleRecipe[] = await Promise.all(
+      newRecipes.map(async (sr) => ({
+        id: 0,
+        quantity: sr.quantity,
+        recipe: await this.recipeService.getRecipeEntityById(Number(sr.recipeId.toString())),
+        schedule: findExistingSchedule
+      }))
+    );
+    findExistingSchedule.scheduleRecipes = [...findExistingSchedule.scheduleRecipes, ...sRecipesToAdd];
+    await this.repository.save(findExistingSchedule);
+
+    return this.mapScheduleToIScheduleDto(findExistingSchedule);
+  }
 
   async createSchedule(userId: number, schedule: ISchedule): Promise<ISchedule> {
+    // Check for duplicate recipeIds and combine their quantities
+    const recipeMap = new Map<number, number>();
+    schedule.scheduleRecipes.forEach((sr) => {
+      const recipeId = Number(sr.recipeId);
+      recipeMap.set(recipeId, recipeMap.has(recipeId) ? recipeMap.get(recipeId)! + sr.quantity : sr.quantity);
+    });
+
+    // Update the scheduleRecipes array with combined quantities
+    schedule.scheduleRecipes = Array.from(recipeMap.entries()).map(([recipeId, quantity]) => ({
+      recipeId,
+      quantity
+    }));
+
+    // Create the entity and then save
     const entity: Schedule = this.repository.create({
       date: schedule.date,
       timeSlot: schedule.timeSlot,
@@ -139,19 +188,19 @@ export class ScheduleService {
         }))
       )
     });
-
     const savedEntity = await this.repository.save(entity);
     return this.findScheduleById(savedEntity.id);
   }
 
-  async updateSchedule(updatedSchedule: ISchedule): Promise<ISchedule | CMessage> {
+  /** Note this overwrites any existing schedule - does not merge. */
+  async updateSchedule(userId: number, updatedSchedule: ISchedule): Promise<ISchedule | CMessage> {
     const existingSchedule = await this.repository.findOne({
-      where: { id: updatedSchedule.id },
+      where: { id: updatedSchedule.id, user: { id: userId } },
       relations: ['scheduleRecipes', 'scheduleRecipes.recipe']
     });
 
     if (!existingSchedule) {
-      return new CMessage('Schedule not found', HttpStatus.NOT_FOUND);
+      return new CMessage('Schedule not found for this user', HttpStatus.NOT_FOUND);
     }
 
     const updatedEntity = this.repository.merge(existingSchedule, {

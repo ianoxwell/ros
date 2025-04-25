@@ -96,7 +96,13 @@ export class ScheduleController {
       return new CMessage('Schedule data is required', HttpStatus.BAD_REQUEST);
     }
 
+    // Prevent duplicates for same day, user and time slot
+    const findExistingSchedule = await this.scheduleService.findExistingScheduleToPreventDuplicates(user.userId, schedule);
+    if (findExistingSchedule) {
+      return this.scheduleService.mergeExistingSchedules(schedule, findExistingSchedule);
+    }
+
     // Update existing or create new schedule
-    return schedule.id ? this.scheduleService.updateSchedule(schedule) : this.scheduleService.createSchedule(user.userId, schedule);
+    return schedule.id ? this.scheduleService.updateSchedule(user.userId, schedule) : this.scheduleService.createSchedule(user.userId, schedule);
   }
 }
