@@ -6,7 +6,7 @@ import { IUserJwtPayload } from '@models/user.dto';
 import { Body, Controller, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { convertDateIndexToDate } from '@services/utils';
+import { convertDateIndexToDate, getIncrementalDateFromTarget, getIncrementedDateIndex } from '@services/utils';
 import { ScheduleService } from './schedule.service';
 
 @ApiTags('Schedule')
@@ -29,23 +29,27 @@ export class ScheduleController {
   async getScheduleByDate(
     @CurrentUser() user: IUserJwtPayload,
     @Query('from') from: string,
-    @Query('to') to: string
+    @Query('days') days?: number
   ): Promise<IWeeklySchedule | CMessage> {
     if (!user) {
       return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
     }
 
-    if (!from || !to) {
-      return new CMessage('Query parameters "from" and "to" are required', HttpStatus.BAD_REQUEST);
+    if (!from) {
+      return new CMessage('Query parameters "from" is required', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!days || days < 1) {
+      days = 7;
     }
 
     const fromDate = convertDateIndexToDate(from);
-    const toDate = convertDateIndexToDate(to);
+    const toDate = getIncrementalDateFromTarget(fromDate, days);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Ensure the time is set to the start of the day
 
     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-      return new CMessage('Query parameters "from" and "to" must be valid dates', HttpStatus.BAD_REQUEST);
+      return new CMessage(`Query parameters "from" must be valid dates`, HttpStatus.BAD_REQUEST);
     }
 
     if (fromDate.getTime() < today.getTime()) {
@@ -53,17 +57,14 @@ export class ScheduleController {
     }
 
     if (toDate.getTime() <= fromDate.getTime()) {
-      return new CMessage('"to" date must be greater than "from" date', HttpStatus.BAD_REQUEST);
+      return new CMessage(`"to" date must be greater than "from" date, ${fromDate} - ${toDate}, ${days}`, HttpStatus.BAD_REQUEST);
     }
 
     return this.scheduleService.findByDateRange(user.userId, fromDate, toDate);
   }
 
   @Get('day')
-  async getScheduleForOneDay(
-    @CurrentUser() user: IUserJwtPayload,
-    @Query('date') date: string,
-  ): Promise<ISchedule[] | CMessage> {
+  async getScheduleForOneDay(@CurrentUser() user: IUserJwtPayload, @Query('date') date: string): Promise<ISchedule[] | CMessage> {
     if (!user) {
       return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
     }
@@ -103,6 +104,8 @@ export class ScheduleController {
     }
 
     // Update existing or create new schedule
-    return schedule.id ? this.scheduleService.updateSchedule(user.userId, schedule) : this.scheduleService.createSchedule(user.userId, schedule);
+    return schedule.id
+      ? this.scheduleService.updateSchedule(user.userId, schedule)
+      : this.scheduleService.createSchedule(user.userId, schedule);
   }
 }

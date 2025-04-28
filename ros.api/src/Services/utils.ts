@@ -56,3 +56,9 @@ export function getIncrementedDateIndex(increment: number): string {
   today.setDate(today.getDate() + increment);
   return getDateIndex(today);
 }
+
+export function getIncrementalDateFromTarget(targetDate?: Date, increment = 7): Date {
+  const incDate = getDateObject(targetDate);
+  incDate.setDate(targetDate.getDate() + increment);
+  return incDate;
+}
