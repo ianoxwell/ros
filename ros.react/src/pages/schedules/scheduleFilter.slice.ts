@@ -3,12 +3,10 @@ import { getIncrementedDateIndex } from '@utils/dateUtils';
 
 export interface IScheduleFilter {
   dateFrom: string;
-  dateTo: string;
 }
 
 const initialState: IScheduleFilter = {
-  dateFrom: getIncrementedDateIndex(1),
-  dateTo: getIncrementedDateIndex(8)
+  dateFrom: getIncrementedDateIndex(1)
 };
 
 const scheduleFilterSlice = createSlice({
@@ -16,8 +14,7 @@ const scheduleFilterSlice = createSlice({
   initialState,
   reducers: {
     setScheduleFilter: (state, { payload }: { payload: IScheduleFilter }) => {
-      state = payload;
-      return state;
+      Object.assign(state, payload);
     }
   }
 });

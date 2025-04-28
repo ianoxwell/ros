@@ -1,12 +1,15 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
+import { ETimeSlot } from '@domain/schedule.dto';
 import { IUserToken } from '@domain/user.dto';
 import { logoutUser } from '@features/user/userSlice';
 import { Avatar, Menu, UnstyledButton } from '@mantine/core';
+import { getIncrementedDateIndex } from '@utils/dateUtils';
 import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { setCurrentSchedule } from './globalModal.slice';
 import './GlobalNavigation.component.scss';
 
 const links = [
@@ -27,7 +30,25 @@ export const GlobalNavigation = () => {
 
   function contextAwareNewItem() {
     console.log('contextually add something', location.pathname);
+    switch (location.pathname) {
+      case `/${CRoutes.schedule}`:
+        newScheduleItem();
+        break;
+      default:
+        break;
+    }
   }
+
+  const newScheduleItem = () => {
+    dispatch(
+      setCurrentSchedule({
+        date: getIncrementedDateIndex(1),
+        timeSlot: ETimeSlot.BREAKFAST,
+        scheduleRecipes: [],
+        notes: ''
+      })
+    );
+  };
 
   const logUserOut = () => {
     dispatch(logoutUser('Logging out...'));
@@ -35,10 +56,6 @@ export const GlobalNavigation = () => {
 
   return (
     <>
-      {/* <div className="header-logo">
-        <img src={vegetableBasket} className="header-logo__image" alt="React logo" height={'30px'} width={'30px'} />
-        <h1 className="header-logo__title">Recipe Ordering Simplified</h1>
-      </div> */}
       <div className="user-menu">
         <Menu shadow="md" width={200}>
           <Menu.Target>

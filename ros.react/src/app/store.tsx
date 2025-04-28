@@ -1,12 +1,13 @@
+import globalModalSlice from '@components/global-navigation/globalModal.slice';
 import { apiSlice } from '@features/api/apiSlice';
 import referenceSlice from '@features/references/referenceSlice';
 import userSlice from '@features/user/userSlice';
 import ingredientFilterSlice from '@pages/ingredients/ingredientFilter.slice';
 import recipeFilterSlice from '@pages/recipes/recipeFilter.slice';
+import scheduleFilterSlice from '@pages/schedules/scheduleFilter.slice';
 import type { Action, ThunkAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import { listenerMiddleware } from './listenerMiddleware';
-import scheduleFilterSlice from '@pages/schedules/scheduleFilter.slice';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     recipeFilter: recipeFilterSlice,
     ingredientFilter: ingredientFilterSlice,
     scheduleFilter: scheduleFilterSlice,
+    globalModal: globalModalSlice,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>

@@ -1,3 +1,5 @@
+import { useAppDispatch } from '@app/hooks';
+import { closeAllGlobalModals } from '@components/global-navigation/globalModal.slice';
 import RichEditorInput from '@components/RichEditorInput/EditorInput';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { useLazyGetScheduleForDateQuery, useSaveScheduleMutation } from '@features/api/apiSlice';
@@ -16,14 +18,14 @@ import ScheduleRecipesFields from './ScheduleRecipesFields';
 interface ScheduleModalProps {
   schedule: ISchedule | undefined;
   isOpen: boolean;
-  onClose: () => void;
 }
 
-const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
+const ScheduleModal = ({ schedule, isOpen }: ScheduleModalProps) => {
   const [saveSchedule, { isLoading: scheduleIsSaving }] = useSaveScheduleMutation();
   const [getDaySchedule, { data }] = useLazyGetScheduleForDateQuery();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDayScheduleLoading, setIsDayScheduleLoading] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(!!schedule?.scheduleRecipes.length && !!schedule.scheduleRecipes[0].id);
+  const dispatch = useAppDispatch();
 
   const form = useScheduleForm({
     mode: 'uncontrolled',
@@ -53,6 +55,10 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
     return null;
   }
 
+  const closeModal = () => {
+    dispatch(closeAllGlobalModals());
+  };
+
   // console.log('test', schedule?.scheduleRecipes.length, isEdit, form.getValues());
   /** On form submission, attempts to save the current schedule and then close the modal */
   const submitForm = async (values: ISchedule) => {
@@ -67,7 +73,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
         color: 'green',
         message: `Recipe(s) scheduled for ${values.timeSlot}.`
       });
-      onClose();
+      closeModal();
     } catch (error: unknown) {
       console.log('looks like an error occurred', error);
       if (typeof error === 'object' && error !== null && 'message' in error) {
@@ -81,7 +87,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
       return;
     }
 
-    setIsLoading(true);
+    setIsDayScheduleLoading(true);
     form.setFieldValue('date', value);
     try {
       const payload = await getDaySchedule(getDateIndex(value)).unwrap();
@@ -90,7 +96,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
     } catch (error) {
       console.log('error happened trying to fetch for the date', value, error);
     } finally {
-      setIsLoading(false);
+      setIsDayScheduleLoading(false);
     }
   };
 
@@ -99,7 +105,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
       return;
     }
 
-    setIsLoading(true);
+    setIsDayScheduleLoading(true);
     const enumValue = Object.values(ETimeSlot).find((slot) => slot === value) || value;
     form.setFieldValue('timeSlot', enumValue as ETimeSlot);
     try {
@@ -108,7 +114,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
     } catch (error) {
       console.log('error happened trying to fetch for the date', value, error);
     } finally {
-      setIsLoading(false);
+      setIsDayScheduleLoading(false);
     }
   };
 
@@ -158,7 +164,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
   return (
     <Modal
       opened={isOpen}
-      onClose={onClose}
+      onClose={closeModal}
       transitionProps={{ transition: 'slide-left' }}
       withCloseButton={true}
       closeButtonProps={{ 'aria-label': 'Close' }}
@@ -167,7 +173,7 @@ const ScheduleModal = ({ schedule, isOpen, onClose }: ScheduleModalProps) => {
       title={`${isEdit ? 'Edit' : 'Create a'} schedule`}
       className="schedule--modal"
     >
-      {isLoading ? (
+      {isDayScheduleLoading ? (
         <Loader />
       ) : (
         <ScheduleFormProvider form={form}>

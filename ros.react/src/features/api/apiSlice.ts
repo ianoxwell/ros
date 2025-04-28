@@ -84,7 +84,7 @@ export const apiSlice = createApi({
       query: (id) => ({ url: `/ingredient/${id}` })
     }),
     getMyScheduledRecipes: builder.query<IWeeklySchedule, IScheduleFilter>({
-      query: (filter) => `/schedule?from=${filter.dateFrom}&to=${filter.dateTo}`,
+      query: (filter) => `/schedule?from=${filter.dateFrom}`,
       providesTags: (result) =>
         result
           ? [

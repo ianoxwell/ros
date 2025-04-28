@@ -1,10 +1,5 @@
 export function getUtcDateTime(targetDate?: Date): Date {
-  let date: Date;
-  if (targetDate) {
-    date = new Date(targetDate);
-  } else {
-    date = new Date();
-  }
+  const date: Date = targetDate ? new Date(targetDate) : new Date();
 
   const utcYear = date.getUTCFullYear();
   const utcMonth = date.getUTCMonth();
@@ -13,9 +8,7 @@ export function getUtcDateTime(targetDate?: Date): Date {
   const utcMinute = date.getUTCMinutes();
   const utcSecond = date.getUTCSeconds();
 
-  const utcDate = new Date(utcYear, utcMonth, utcDay, utcHour, utcMinute, utcSecond);
-
-  return utcDate;
+  return new Date(utcYear, utcMonth, utcDay, utcHour, utcMinute, utcSecond);
 }
 
 export function getDateFromIndex(index: string): Date {
@@ -27,7 +20,15 @@ export function getDateFromIndex(index: string): Date {
   return date;
 }
 
-export function getDateObject(targetDate?: Date): Date {
+export function getDateObject(targetDate?: Date | string | undefined): Date {
+  if (!targetDate) {
+    targetDate = getUtcDateTime();
+  }
+
+  if (typeof targetDate === 'string') {
+    targetDate = new Date(targetDate);
+  }
+
   const date = getUtcDateTime(targetDate);
   return new Date(date.getTime());
 }
@@ -38,7 +39,11 @@ export function getIncrementalDateObject(increment: number): Date {
   return getDateObject(today);
 }
 
-export function getDateIndex(date: Date): string {
+export function getDateIndex(date: Date | string): string {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
