@@ -7,7 +7,7 @@ import ScheduleModal from '@pages/schedules/schedule-modal/ScheduleModal';
 import { getDateFromIndex } from '@utils/dateUtils';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { GlobalNavigation } from '../components/global-navigation/GlobalNavigation.component';
+import { GlobalNavigation } from '../components/GlobalNavigation/GlobalNavigation.component';
 import { useGetReferencesQuery } from './api/apiSlice';
 
 const SharedLayout = () => {

@@ -28,10 +28,11 @@ export const GlobalNavigation = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
 
+  /** TODO - add additional modals for new recipe and new ingredient */
   function contextAwareNewItem() {
     console.log('contextually add something', location.pathname);
-    switch (location.pathname) {
-      case `/${CRoutes.schedule}`:
+    switch (location.pathname.replace(/^\//, '')) {
+      case CRoutes.schedule:
         newScheduleItem();
         break;
       default:

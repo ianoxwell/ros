@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
-import { setCurrentSchedule } from '@components/global-navigation/globalModal.slice';
+import { setCurrentSchedule } from '@components/GlobalNavigation/globalModal.slice';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetMyScheduledRecipesQuery } from '@features/api/apiSlice';

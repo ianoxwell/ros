@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@app/hooks';
-import { closeAllGlobalModals } from '@components/global-navigation/globalModal.slice';
+import { closeAllGlobalModals } from '@components/GlobalNavigation/globalModal.slice';
 import RichEditorInput from '@components/RichEditorInput/EditorInput';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { useLazyGetScheduleForDateQuery, useSaveScheduleMutation } from '@features/api/apiSlice';

@@ -1,4 +1,4 @@
-import globalModalSlice from '@components/global-navigation/globalModal.slice';
+import globalModalSlice from '@components/GlobalNavigation/globalModal.slice';
 import { apiSlice } from '@features/api/apiSlice';
 import referenceSlice from '@features/references/referenceSlice';
 import userSlice from '@features/user/userSlice';
