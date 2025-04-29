@@ -3,13 +3,13 @@ import { RootState } from '@app/store';
 import { setCurrentSchedule } from '@components/GlobalNavigation/globalModal.slice';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { IUserToken } from '@domain/user.dto';
-import { useGetMyScheduledRecipesQuery } from '@features/api/apiSlice';
-import { ActionIcon, ComboboxItem, SimpleGrid, Space, Title } from '@mantine/core';
+import { useGetMyScheduledRecipesQuery, useGetRandomWeekRecipesMutation } from '@features/api/apiSlice';
+import { ActionIcon, Button, ComboboxItem, Flex, SimpleGrid, Space, Title } from '@mantine/core';
 import { DatePickerInput, DateValue } from '@mantine/dates';
 import { randomId } from '@mantine/hooks';
 import { getDateFromIndex, getDateIndex } from '@utils/dateUtils';
 import dayjs from 'dayjs';
-import { Edit, Plus } from 'lucide-react';
+import { Calendar, Edit, Plus } from 'lucide-react';
 import { pickATime } from './schedule.const';
 import { setScheduleFilter } from './scheduleFilter.slice';
 import ScheduleRecipe from './ScheduleRecipe';
@@ -19,6 +19,7 @@ export const SchedulesPage = () => {
   const scheduleFilter = useAppSelector((store: RootState) => store.scheduleFilter);
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const { data: weeklySchedule, isLoading } = useGetMyScheduledRecipesQuery(scheduleFilter, { skip: !scheduleFilter });
+  const [createRandomWeek, { isLoading: isRandomLoading }] = useGetRandomWeekRecipesMutation();
   const dispatch = useAppDispatch();
 
   const newItem = (slot: ComboboxItem, dateIndex: string) => {
@@ -45,14 +46,28 @@ export const SchedulesPage = () => {
         <div className="text-muted">Hello {user.givenNames}</div>
         <Title className="title-bar--title">What meals would you like to eat this week?</Title>
       </div>
-      <DatePickerInput
-        label="When does your week start?"
-        placeholder="When does your week start?"
-        value={getDateFromIndex(scheduleFilter.dateFrom)}
-        minDate={new Date()}
-        clearable={false}
-        onChange={setDateFromValue}
-      />
+      <Flex
+        gap="md"
+        align={{ base: 'flex-start', sm: 'flex-end' }}
+        justify="space-between"
+        direction={{ base: 'column', sm: 'row' }}
+      >
+        <DatePickerInput
+          label="When does your week start?"
+          placeholder="When does your week start?"
+          leftSection={<Calendar size={18} />}
+          leftSectionPointerEvents="none"
+          value={getDateFromIndex(scheduleFilter.dateFrom)}
+          minDate={new Date()}
+          clearable={false}
+          onChange={setDateFromValue}
+          className="schedule--date-picker"
+        />
+        <Button type="button" onClick={() => createRandomWeek(scheduleFilter.dateFrom)} loading={isRandomLoading}>
+          Create Random Meal Plan
+        </Button>
+      </Flex>
+
       <Space h="lg" />
       <section className="schedule-grid">
         <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 5, xl: 7 }} spacing="0" verticalSpacing="md">

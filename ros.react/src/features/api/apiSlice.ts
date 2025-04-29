@@ -101,6 +101,14 @@ export const apiSlice = createApi({
     saveSchedule: builder.mutation<ISchedule, ISchedule>({
       query: (schedule) => ({ url: '/schedule', method: 'POST', body: schedule }),
       invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
+    }),
+    deleteSchedule: builder.mutation<string, number>({
+      query: (id) => ({ url: `/schedule?id=${id}`, method: 'DELETE' }),
+      invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
+    }),
+    getRandomWeekRecipes: builder.mutation<IMessage, string>({
+      query: (date) => `schedule/createRandom?from=${date}`,
+      invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
     })
   })
 });
@@ -120,5 +128,7 @@ export const {
   useGetIngredientQuery,
   useGetMyScheduledRecipesQuery,
   useLazyGetScheduleForDateQuery,
-  useSaveScheduleMutation
+  useSaveScheduleMutation,
+  useDeleteScheduleMutation,
+  useGetRandomWeekRecipesMutation
 } = apiSlice;

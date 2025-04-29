@@ -1,4 +1,8 @@
 .schedule {
+  &--date-picker {
+    width: 50%;
+    min-width: 12rem;
+  }
   &-item {
     min-width: 9rem;
     padding: 0 0.75rem;
