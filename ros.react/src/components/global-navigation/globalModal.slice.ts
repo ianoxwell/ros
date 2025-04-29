@@ -3,8 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export type TModalChoice = 'recipe' | 'schedule' | 'ingredient' | undefined;
 type OmitDate<T> = Omit<T, 'date'>;
-
+/** 
+ * Note that redux will not allow serialization of js date object. 
+ * Kind of poor and unexpected, but have to transform to a dateIndex and back to use the redux store.
+ * Redux won't even let it be part of the payload send to setCurrentSchedule...
+ */
 interface IModSchedule extends OmitDate<ISchedule> {
+  /** getDateIndex from utils - stored as '20251015' */
   date: string;
 }
 
@@ -25,7 +30,6 @@ const globalModalSlice = createSlice({
     setCurrentSchedule: (state, { payload }: { payload: IModSchedule | undefined }) => {
       state.schedule = payload;
       state.modalOpen = payload ? 'schedule' : undefined;
-      console.log('the set schedule', state.schedule);
       return state;
     },
     closeAllGlobalModals: (state) => {
