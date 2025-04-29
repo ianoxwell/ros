@@ -151,6 +151,16 @@ export class RecipeService {
     return await this.repository.findOne({ where: { id } });
   }
 
+  /** Gets an existing random recipe entity */
+  async getRandomRecipe(): Promise<Recipe | null> {
+    const randomRecipe = await this.repository
+      .createQueryBuilder('recipe')
+      .orderBy('RANDOM()')
+      .getOne();
+
+    return randomRecipe || null;
+  }
+
   /** Gets a single recipe */
   async getRecipeById(id: number): Promise<IRecipe | CMessage> {
     console.time('get recipe start');

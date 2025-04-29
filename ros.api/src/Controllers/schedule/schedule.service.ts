@@ -2,18 +2,19 @@ import { CPageOptionsDto } from '@base/filter.const';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
 import { RecipeService } from '@controllers/recipe/recipe.service';
-import { ISchedule, IWeeklySchedule } from '@models/schedule.dto';
+import { ETimeSlot, ISchedule, IWeeklySchedule } from '@models/schedule.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { Schedule } from './schedule.entity';
-import { getDateIndex } from '@services/utils';
+import { convertDateIndexToDate, getDateIndex, getRandomNumber } from '@services/utils';
 import { ScheduleRecipe } from './schedule-recipe.entity';
 
 @Injectable()
 export class ScheduleService {
   constructor(
     @InjectRepository(Schedule) private readonly repository: Repository<Schedule>,
+    @InjectRepository(ScheduleRecipe) private readonly scheduleRecipeRepository: Repository<ScheduleRecipe>,
     private recipeService: RecipeService
   ) {}
 
@@ -203,36 +204,93 @@ export class ScheduleService {
       return new CMessage('Schedule not found for this user', HttpStatus.NOT_FOUND);
     }
 
+    // Create a unique array of recipeIds from updatedSchedule
+    const recipeIdsToKeep = Array.from(new Set(updatedSchedule.scheduleRecipes.map((sr) => sr.recipeId)));
+
+    const scheduleRecipes = await Promise.all(
+      updatedSchedule.scheduleRecipes.map(async (sr) => {
+        return {
+          id: sr.id,
+          quantity: sr.quantity,
+          recipeId: sr.recipeId,
+          recipe: await this.recipeService.getRecipeEntityById(Number(sr.recipeId))
+        };
+      })
+    );
+    // Merge the updated schedule with the existing one
     const updatedEntity = this.repository.merge(existingSchedule, {
       date: updatedSchedule.date,
       timeSlot: updatedSchedule.timeSlot,
       notes: updatedSchedule.notes,
-      scheduleRecipes: updatedSchedule.scheduleRecipes.map((sr) => ({
-        id: sr.id,
-        quantity: sr.quantity,
-        recipeId: sr.recipeId
-      }))
+      scheduleRecipes
     });
+    updatedEntity.scheduleRecipes = updatedEntity.scheduleRecipes.filter((sr) => recipeIdsToKeep.includes(sr.recipe.id));
 
     const savedEntity = await this.repository.save(updatedEntity);
     return this.mapScheduleToIScheduleDto(savedEntity);
   }
 
+  async createRandomWeek(userId: number, startingWeek: IWeeklySchedule): Promise<CMessage> {
+    const activeTimeSlots = [ETimeSlot.BREAKFAST, ETimeSlot.LUNCH, ETimeSlot.DINNER];
+    await Promise.all(
+      Object.entries(startingWeek).map(async ([dateIndex, schedules]) => {
+        await Promise.all(
+          activeTimeSlots.map(async (slot) => {
+            const existingSchedule = schedules.find((s) => s.timeSlot === slot);
+            if (existingSchedule || getRandomNumber(0, 100) > 80) {
+              return Promise.resolve();
+            }
+
+            const randomRecipe = await this.recipeService.getRandomRecipe();
+            const entity: Schedule = this.repository.create({
+              date: convertDateIndexToDate(dateIndex),
+              timeSlot: slot,
+              notes: '',
+              user: { id: userId },
+              scheduleRecipes: [
+                {
+                  recipe: randomRecipe,
+                  quantity: getRandomNumber(1, 10)
+                }
+              ]
+            });
+            return await this.repository.save(entity);
+          })
+        );
+      })
+    );
+    return new CMessage('Random week created successfully', HttpStatus.OK);
+  }
+
+  /** Ensure that the schedule exists for the current user and then delete */
+  async deleteSchedule(userId: number, id: number): Promise<CMessage> {
+    const existingSchedule = await this.repository.findOne({
+      where: { id, user: { id: userId } }
+    });
+
+    if (!existingSchedule) {
+      return new CMessage('Schedule not found for this user', HttpStatus.NOT_FOUND);
+    }
+
+    const result = await this.repository.delete(id);
+    return result
+      ? new CMessage('Schedule has been removed', HttpStatus.OK)
+      : new CMessage('Something might have gone wrong', HttpStatus.AMBIGUOUS);
+  }
+
   private mapScheduleToIScheduleDto(s: Partial<Schedule>): ISchedule {
-    console.log('s', s);
     return {
       id: s.id,
       date: s.date,
       timeSlot: s.timeSlot,
-      scheduleRecipes: [],
-      //   s.scheduleRecipes.map((sr) => ({
-      // id: sr.id,
-      // quantity: sr.quantity,
-      // recipeId: sr.recipeId,
-      // name: sr.name,
-      // shortSummary: sr.shortSummary,
-      // images: sr.images
-      //   })),
+      scheduleRecipes: s.scheduleRecipes.map((sr) => ({
+        id: sr.id,
+        quantity: sr.quantity,
+        recipeId: sr.recipe.id,
+        name: sr.recipe.name,
+        shortSummary: sr.recipe.shortSummary,
+        images: sr.recipe.images
+      })),
       notes: s.notes
     };
   }

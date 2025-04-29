@@ -3,10 +3,10 @@ import { PaginatedDto } from '@base/paginated.entity';
 import { CurrentUser } from '@controllers/account/current-user.decorator';
 import { ISchedule, IWeeklySchedule } from '@models/schedule.dto';
 import { IUserJwtPayload } from '@models/user.dto';
-import { Body, Controller, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { convertDateIndexToDate, getIncrementalDateFromTarget, getIncrementedDateIndex } from '@services/utils';
+import { convertDateIndexToDate, getIncrementalDateFromTarget, getIncrementedDateIndex, isMessage } from '@services/utils';
 import { ScheduleService } from './schedule.service';
 
 @ApiTags('Schedule')
@@ -23,6 +23,44 @@ export class ScheduleController {
     }
 
     return this.scheduleService.findAllForUser(user.userId);
+  }
+
+  @Get('day')
+  async getScheduleForOneDay(@CurrentUser() user: IUserJwtPayload, @Query('date') date: string): Promise<ISchedule[] | CMessage> {
+    if (!user) {
+      return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!date) {
+      return new CMessage('Query parameters "from" and "to" are required', HttpStatus.BAD_REQUEST);
+    }
+
+    const dateItem = convertDateIndexToDate(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ensure the time is set to the start of the day
+    if (isNaN(dateItem.getTime())) {
+      return new CMessage('Query parameters "date" must be valid date', HttpStatus.BAD_REQUEST);
+    }
+
+    if (dateItem.getTime() < today.getTime()) {
+      return new CMessage('"from" date must be greater than today', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.scheduleService.findScheduleOnDate(user.userId, dateItem);
+  }
+
+  @Get('createRandom')
+  async createRandomRecipesForWeek(
+    @CurrentUser() user: IUserJwtPayload,
+    @Query('from') from: string,
+    @Query('days') days?: number
+  ): Promise<CMessage> {
+    const startingWeek = await this.getScheduleByDate(user, from, days);
+    if (isMessage(startingWeek)) {
+      return startingWeek;
+    }
+
+    return this.scheduleService.createRandomWeek(user.userId, startingWeek);
   }
 
   @Get()
@@ -63,30 +101,6 @@ export class ScheduleController {
     return this.scheduleService.findByDateRange(user.userId, fromDate, toDate);
   }
 
-  @Get('day')
-  async getScheduleForOneDay(@CurrentUser() user: IUserJwtPayload, @Query('date') date: string): Promise<ISchedule[] | CMessage> {
-    if (!user) {
-      return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
-    }
-
-    if (!date) {
-      return new CMessage('Query parameters "from" and "to" are required', HttpStatus.BAD_REQUEST);
-    }
-
-    const dateItem = convertDateIndexToDate(date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ensure the time is set to the start of the day
-    if (isNaN(dateItem.getTime())) {
-      return new CMessage('Query parameters "date" must be valid date', HttpStatus.BAD_REQUEST);
-    }
-
-    if (dateItem.getTime() < today.getTime()) {
-      return new CMessage('"from" date must be greater than today', HttpStatus.BAD_REQUEST);
-    }
-
-    return this.scheduleService.findScheduleOnDate(user.userId, dateItem);
-  }
-
   @Post()
   async createOrUpdateSchedule(@CurrentUser() user: IUserJwtPayload, @Body() schedule: ISchedule): Promise<ISchedule | CMessage> {
     if (!user) {
@@ -97,15 +111,31 @@ export class ScheduleController {
       return new CMessage('Schedule data is required', HttpStatus.BAD_REQUEST);
     }
 
+    // Update existing
+    if (schedule.id) {
+      return this.scheduleService.updateSchedule(user.userId, schedule);
+    }
+
     // Prevent duplicates for same day, user and time slot
     const findExistingSchedule = await this.scheduleService.findExistingScheduleToPreventDuplicates(user.userId, schedule);
     if (findExistingSchedule) {
       return this.scheduleService.mergeExistingSchedules(schedule, findExistingSchedule);
     }
 
-    // Update existing or create new schedule
-    return schedule.id
-      ? this.scheduleService.updateSchedule(user.userId, schedule)
-      : this.scheduleService.createSchedule(user.userId, schedule);
+    // create new schedule
+    this.scheduleService.createSchedule(user.userId, schedule);
+  }
+
+  @Delete()
+  async deleteSchedule(@CurrentUser() user: IUserJwtPayload, @Query('id') id: number): Promise<CMessage> {
+    if (!user) {
+      return new CMessage('User ID is missing or invalid', HttpStatus.BAD_REQUEST);
+    }
+
+    if (isNaN(Number(id))) {
+      return new CMessage('Must be a valid id to delete', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.scheduleService.deleteSchedule(user.userId, id);
   }
 }
