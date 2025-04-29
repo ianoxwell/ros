@@ -25,7 +25,7 @@ const NutritionText = ({ data, reverse }: { data: IMinerals | IVitamins | undefi
         percentRda: parseFloat(((value / nutrient.rda) * 100).toFixed(1)), // Percentage of RDA
         name: nutrient.name,
         measure: nutrient.measure,
-        shortName: nutrient.shortName
+        shortName: nutrient.shortName || ''
       };
     })
     .filter((nutrient) => nutrient !== null) // Remove nulls

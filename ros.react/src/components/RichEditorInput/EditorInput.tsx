@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /** Information mainly derived from https://github.com/orgs/mantinedev/discussions/3685 */
 import { Input } from '@mantine/core';
 import { RichTextEditor, Link as RTELink } from '@mantine/tiptap';
@@ -16,7 +15,7 @@ interface CustomInputProps {
   error?: string;
 }
 
-const RichEditorInput = ({ value, defaultValue, label, onChange, onFocus, onBlur, error }: CustomInputProps) => {
+const RichEditorInput = ({ defaultValue, label, onChange }: CustomInputProps) => {
   const editor = useEditor({
     extensions: [StarterKit, RTELink],
     content: defaultValue,
