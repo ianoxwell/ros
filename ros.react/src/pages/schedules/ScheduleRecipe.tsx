@@ -1,16 +1,19 @@
+import { CRoutes } from '@app/routes.const';
 import { ISchedule, IScheduleRecipe } from '@domain/schedule.dto';
 import { useDeleteScheduleMutation, useSaveScheduleMutation } from '@features/api/apiSlice';
-import { ActionIcon, Flex, Text } from '@mantine/core';
+import { ActionIcon, Avatar, Flex, Group, HoverCard, Stack, Text } from '@mantine/core';
 import { randomId } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
-import { Trash } from 'lucide-react';
+import parse from 'html-react-parser';
+import { Trash2 } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 const ScheduleRecipe = ({ scheduleRecipes, slotItem }: { scheduleRecipes: IScheduleRecipe[]; slotItem: ISchedule }) => {
   const [saveSchedule] = useSaveScheduleMutation();
   const [deleteSchedule] = useDeleteScheduleMutation();
-  
+
   const confirmRemoveRecipeFromSlot = (schedule: ISchedule, recipe: IScheduleRecipe) => {
     modals.openConfirmModal({
       title: 'Please confirm removing recipe',
@@ -58,17 +61,46 @@ const ScheduleRecipe = ({ scheduleRecipes, slotItem }: { scheduleRecipes: ISched
     <>
       {scheduleRecipes.map((recipe: IScheduleRecipe) => (
         <Flex gap="sm" justify="space-between" align="center" className="recipe-item" key={recipe.id || randomId()}>
-          <Flex gap="xs">
-            <b>{recipe.quantity}</b>
-            <span>{recipe.recipeName}</span>
-          </Flex>
+          <HoverCard width={320} shadow="md" withArrow openDelay={200} closeDelay={400}>
+            <HoverCard.Target>
+              <Flex gap="xs">
+                <b>{recipe.quantity}</b>
+                <span>{recipe.recipeName}</span>
+              </Flex>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Group wrap="nowrap">
+                {recipe.recipeImage && (
+                  <Avatar src={recipe.recipeImage} radius="xl" size="lg" aria-label={recipe.recipeName} />
+                )}
+                <Stack gap="xs">
+                  <NavLink to={`../${CRoutes.recipe}/${recipe.recipeId}`} aria-label={recipe.recipeName}>
+                    <Text size="sm" fw={700}>
+                      {recipe.recipeName}
+                    </Text>
+                  </NavLink>
+                  <Text c="dimmed" size="xs">
+                    {recipe.servings} Servings
+                  </Text>
+                </Stack>
+              </Group>
+              {recipe.shortSummary && (
+                <Text size="sm" mt="md">
+                  {parse(recipe.shortSummary)}
+                </Text>
+              )}
+            </HoverCard.Dropdown>
+          </HoverCard>
+
           <Flex className="recipe-item--actions">
             <ActionIcon
-              color="var(--burnt-orange)"
+              color="var(--muted-text)"
+              variant="transparent"
               title="Remove item from this slot"
+              className="recipe-item--actions__delete"
               onClick={() => confirmRemoveRecipeFromSlot(slotItem, recipe)}
             >
-              <Trash size={16} />
+              <Trash2 size={16} />
             </ActionIcon>
           </Flex>
         </Flex>
