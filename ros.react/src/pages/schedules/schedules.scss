@@ -1,15 +1,12 @@
 .schedule {
+  margin-bottom: 3rem;
   &--date-picker {
     width: 50%;
     min-width: 12rem;
   }
   &-item {
     min-width: 9rem;
-    padding: 0 0.75rem;
-    border-radius: 0.25rem;
-    &.odd {
-      background-color: var(--background-normal);
-    }
+    padding: 0 0.75rem 1rem;
     &--day {
       width: 100%;
       color: var(--darker-accent);
@@ -28,12 +25,12 @@
       text-align: center;
     }
     &--slot {
-      margin: 0.5rem 0 0.75rem;
+      margin: 1.25rem 0 0;
       display: flex;
-      color: var(--darker-accent);
+      color: var(--accent-foreground);
       font-weight: 700;
-      justify-content: center;
-      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
       .nav-fab {
         border-radius: 50%;
         background-color: var(--accent-foreground);
@@ -51,7 +48,16 @@
       &--actions {
         gap: 0.25rem;
         margin: 0.25rem 0;
+        &__delete {
+          &:hover {
+            color: var(--burnt-orange);
+          }
+        }
       }
+    }
+    .add-more--button {
+      width: fit-content;
+      margin: 0.25rem auto 0.75rem;
     }
   }
   &--modal {
