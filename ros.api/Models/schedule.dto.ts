@@ -27,5 +27,6 @@ export interface IScheduleRecipe {
 
   recipeName?: string;
   shortSummary?: string;
-  images?: string[];
+  recipeImage?: string;
+  servings?: number;
 }

@@ -47,7 +47,8 @@ export class ScheduleService {
             'recipeId', r.id, 
             'recipeName', r.name, 
             'shortSummary', r."shortSummary", 
-            'recipeImages', r."images"
+            'servings', r.servings,
+            'recipeImage', r."images"
           )) as "scheduleRecipes"
        FROM schedule s
        LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
@@ -71,8 +72,9 @@ export class ScheduleService {
           'quantity', sr.quantity, 
           'recipeId', r.id, 
           'recipeName', r.name, 
-          'shortSummary', r."shortSummary", 
-          'recipeImages', r."images"
+          'shortSummary', r."shortSummary",
+          'servings', r.servings,
+          'recipeImage', r."images"
        )) as "scheduleRecipes"
        FROM schedule s
        LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
