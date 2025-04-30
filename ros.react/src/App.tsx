@@ -9,7 +9,7 @@ import '@mantine/tiptap/styles.css';
 import IngredientModal from '@pages/ingredients/IngredientModal';
 import { IngredientsPage } from '@pages/ingredients/IngredientsPage';
 import NotFoundErrorPage from '@pages/not-found-error';
-import { Orders } from '@pages/Orders';
+import { Orders } from '@pages/orders/OrdersPage';
 import ProtectedRoute from '@pages/ProtectedRoute';
 import RecipeModal from '@pages/recipes/RecipeModal';
 import { RecipesPage } from '@pages/recipes/RecipesPage';
