@@ -3,7 +3,7 @@ import { RootState } from '@app/store';
 import Loader from '@components/Loader/Loader.component';
 import { useMatches } from '@mantine/core';
 import { setRecipeTakeSize } from '@pages/recipes/recipeFilter.slice';
-import ScheduleModal from '@pages/schedules/schedule-modal/ScheduleModal';
+import ScheduleModal from '@pages/schedules/ModalSchedule/ScheduleModal';
 import { getDateFromIndex } from '@utils/dateUtils';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';

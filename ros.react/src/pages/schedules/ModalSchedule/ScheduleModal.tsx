@@ -3,7 +3,7 @@ import { closeAllGlobalModals } from '@components/GlobalNavigation/globalModal.s
 import RichEditorInput from '@components/RichEditorInput/EditorInput';
 import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { useLazyGetScheduleForDateQuery, useSaveScheduleMutation } from '@features/api/apiSlice';
-import { Button, Flex, Modal, Select, Space } from '@mantine/core';
+import { Button, Flex, Group, Modal, Select, Space } from '@mantine/core';
 import { DatePickerInput, DateValue } from '@mantine/dates';
 import { isInRange, isNotEmpty } from '@mantine/form';
 import { randomId } from '@mantine/hooks';
@@ -216,9 +216,14 @@ const ScheduleModal = ({ schedule, isOpen }: ScheduleModalProps) => {
               >
                 <span>Additional recipe</span>
               </Button>
-              <Button type="submit" loading={scheduleIsSaving} leftSection={<CloudUploadIcon />}>
-                {isEdit ? 'Save' : 'Create'}
-              </Button>
+              <Group gap="xs">
+                <Button type="button" loading={scheduleIsSaving} variant="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+                <Button type="submit" loading={scheduleIsSaving} leftSection={<CloudUploadIcon />}>
+                  {isEdit ? 'Save' : 'Create'}
+                </Button>
+              </Group>
             </Flex>
           </form>
         </ScheduleFormProvider>
