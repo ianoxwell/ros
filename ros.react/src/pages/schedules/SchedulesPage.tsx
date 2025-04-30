@@ -1,18 +1,14 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
-import { setCurrentSchedule } from '@components/GlobalNavigation/globalModal.slice';
-import { ETimeSlot, ISchedule } from '@domain/schedule.dto';
 import { IUserToken } from '@domain/user.dto';
 import { useGetMyScheduledRecipesQuery, useGetRandomWeekRecipesMutation } from '@features/api/apiSlice';
-import { ActionIcon, Button, ComboboxItem, Flex, SimpleGrid, Space, Title } from '@mantine/core';
+import { Button, Flex, SimpleGrid, Space, Text, Title } from '@mantine/core';
 import { DatePickerInput, DateValue } from '@mantine/dates';
-import { randomId } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
 import { getDateFromIndex, getDateIndex } from '@utils/dateUtils';
-import dayjs from 'dayjs';
-import { Calendar, Edit, Plus } from 'lucide-react';
-import { pickATime } from './schedule.const';
+import { Calendar } from 'lucide-react';
+import ScheduleCard from './ScheduleCard';
 import { setScheduleFilter } from './scheduleFilter.slice';
-import ScheduleRecipe from './ScheduleRecipe';
 import './schedules.scss';
 
 export const SchedulesPage = () => {
@@ -22,10 +18,25 @@ export const SchedulesPage = () => {
   const [createRandomWeek, { isLoading: isRandomLoading }] = useGetRandomWeekRecipesMutation();
   const dispatch = useAppDispatch();
 
-  const newItem = (slot: ComboboxItem, dateIndex: string) => {
-    dispatch(
-      setCurrentSchedule({ date: dateIndex, timeSlot: slot.value as ETimeSlot, scheduleRecipes: [], notes: '' })
-    );
+  const confirmCreateRandomMealPlan = () => {
+    modals.openConfirmModal({
+      title: 'Create a random meal plan',
+      children: (
+        <Text size="sm">
+          The longer term plan is to use some AI in the background to fuzzy search for breakfast, lunch and dinner{' '}
+          appropriate meals with appropriate tags and to give guidance as preference type - e.g. keto, vegetarian,{' '}
+          <p>
+            number servings etc. At this point of time this is purely randomly assigning one meal per slot with an 80%
+            chance of filling an empty spot.
+          </p>
+          <p>Press confirm to populate the current week.</p>
+        </Text>
+      ),
+      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      closeButtonProps: { 'aria-label': 'Close' },
+      onCancel: () => console.log('Cancel'),
+      onConfirm: () => createRandomWeek(scheduleFilter.dateFrom)
+    });
   };
 
   const setDateFromValue = (value: DateValue) => {
@@ -34,17 +45,13 @@ export const SchedulesPage = () => {
     }
   };
 
-  const editItem = (item: ISchedule) => {
-    dispatch(setCurrentSchedule({ ...item, date: getDateIndex(item.date) }));
-  };
-
   return isLoading ? (
     <div>Loading...</div>
   ) : (
-    <section>
+    <section className="schedule">
       <div className="title-bar">
         <div className="text-muted">Hello {user.givenNames}</div>
-        <Title className="title-bar--title">What meals would you like to eat this week?</Title>
+        <Title className="title-bar--title">What meals would you like to plan this week?</Title>
       </div>
       <Flex
         gap="md"
@@ -63,53 +70,17 @@ export const SchedulesPage = () => {
           onChange={setDateFromValue}
           className="schedule--date-picker"
         />
-        <Button type="button" onClick={() => createRandomWeek(scheduleFilter.dateFrom)} loading={isRandomLoading}>
+        <Button type="button" onClick={confirmCreateRandomMealPlan} loading={isRandomLoading}>
           Create Random Meal Plan
         </Button>
       </Flex>
 
       <Space h="lg" />
       <section className="schedule-grid">
-        <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 5, xl: 7 }} spacing="0" verticalSpacing="md">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: 7 }} spacing="md" verticalSpacing="md">
           {weeklySchedule &&
             Object.entries(weeklySchedule).map(([key, value], index: number) => {
-              const date = dayjs(getDateFromIndex(key));
-              return (
-                <article className={`schedule-item ${index % 2 === 0 ? 'odd' : ''}`} key={`${key}-${index}`}>
-                  <div className="schedule-item--day">{date.format('dddd')}</div>
-                  <div className="schedule-item--date">{date.format('MMMM D, YYYY')}</div>
-                  {pickATime.map((slot) => {
-                    const slotItems = value.filter((schedule) => schedule.timeSlot === slot.value);
-                    return (
-                      <section key={randomId()}>
-                        <div className="schedule-item--slot">
-                          <span>{slot.label}</span>
-                          {slotItems.length ? (
-                            <ActionIcon
-                              title={`Edit ${slot.label} items`}
-                              variant="outline"
-                              onClick={() => editItem(slotItems[0])}
-                            >
-                              <Edit size={16} />
-                            </ActionIcon>
-                          ) : (
-                            <button type="button" onClick={() => newItem(slot, key)} title="New" className="nav-fab">
-                              <Plus />
-                            </button>
-                          )}
-                        </div>
-                        {slotItems.map((item: ISchedule) => (
-                          <ScheduleRecipe
-                            scheduleRecipes={item.scheduleRecipes}
-                            slotItem={item}
-                            key={item.id || randomId()}
-                          />
-                        ))}
-                      </section>
-                    );
-                  })}
-                </article>
-              );
+              return <ScheduleCard key={`${key}-${index}`} schedules={value} dateStr={key} />;
             })}
         </SimpleGrid>
       </section>
