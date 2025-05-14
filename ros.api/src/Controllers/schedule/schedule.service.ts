@@ -5,16 +5,15 @@ import { RecipeService } from '@controllers/recipe/recipe.service';
 import { ETimeSlot, ISchedule, IWeeklySchedule } from '@models/schedule.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
-import { Schedule } from './schedule.entity';
 import { convertDateIndexToDate, getDateIndex, getRandomNumber } from '@services/utils';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { ScheduleRecipe } from './schedule-recipe.entity';
+import { Schedule } from './schedule.entity';
 
 @Injectable()
 export class ScheduleService {
   constructor(
     @InjectRepository(Schedule) private readonly repository: Repository<Schedule>,
-    @InjectRepository(ScheduleRecipe) private readonly scheduleRecipeRepository: Repository<ScheduleRecipe>,
     private recipeService: RecipeService
   ) {}
 
@@ -36,32 +35,10 @@ export class ScheduleService {
   }
 
   async findScheduleOnDate(userId: number, date: Date): Promise<ISchedule[]> {
-    const result: ISchedule[] = await this.repository.query(
-      `SELECT s.id, 
-          s.date + interval '${(date.getTimezoneOffset() / 60) * -1} hours' as date, -- Ensure the date is treated as UTC midnight
-          s."timeSlot", 
-          s.notes, 
-          json_agg(DISTINCT jsonb_build_object(
-            'id', sr.id, 
-            'quantity', sr.quantity, 
-            'recipeId', r.id, 
-            'recipeName', r.name, 
-            'shortSummary', r."shortSummary", 
-            'servings', r.servings,
-            'recipeImage', r."images"
-          )) as "scheduleRecipes"
-       FROM schedule s
-       LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
-       LEFT JOIN recipe r ON r.id = sr."recipeId"
-       WHERE s."userId" = $1 AND s.date = $2
-       GROUP BY s.id`,
-      [userId, date]
-    );
-
-    return result;
+    return this.getScheduleDateOrBetween(userId, date);
   }
 
-  async findByDateRange(userId: number, from: Date, to: Date): Promise<IWeeklySchedule> {
+  async getScheduleDateOrBetween(userId: number, from: Date, to?: Date): Promise<ISchedule[]> {
     const result: ISchedule[] = await this.repository.query(
       `SELECT s.id,
         s.date + interval '${(from.getTimezoneOffset() / 60) * -1} hours' as date, -- Ensure the date is treated as UTC midnight
@@ -79,10 +56,16 @@ export class ScheduleService {
        FROM schedule s
        LEFT JOIN schedule_recipe sr ON sr."scheduleId" = s.id
        LEFT JOIN recipe r ON r.id = sr."recipeId"
-       WHERE s."userId" = $1 AND s.date BETWEEN $2 AND $3
+       WHERE s."userId" = $1 AND s.date ${!!to ? 'BETWEEN $2 AND $3' : '= $2'}
        GROUP BY s.id`,
       [userId, from, to]
     );
+
+    return result;
+  }
+
+  async findByDateRange(userId: number, from: Date, to: Date): Promise<IWeeklySchedule> {
+    const result = await this.getScheduleDateOrBetween(userId, from, to);
     const weeklySchedule: IWeeklySchedule = {};
 
     // Generate date indexes for the range using Array.from
