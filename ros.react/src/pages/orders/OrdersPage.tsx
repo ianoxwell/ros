@@ -1,15 +1,19 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { RootState } from '@app/store';
 import { IUserToken } from '@domain/user.dto';
+import { useGetWeeklyOrdersQuery } from '@features/api/apiSlice';
 import { Space, Title } from '@mantine/core';
 import { DatePickerInput, DateValue } from '@mantine/dates';
 import { setScheduleFilter } from '@pages/schedules/scheduleFilter.slice';
 import { getDateFromIndex, getDateIndex } from '@utils/dateUtils';
 import { Calendar } from 'lucide-react';
+import img from '../../assets/images/underConstructionRecipe.png';
 
 export const Orders = () => {
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
   const scheduleFilter = useAppSelector((store: RootState) => store.scheduleFilter);
+  const { data: weeklyOrders, isLoading } = useGetWeeklyOrdersQuery(scheduleFilter.dateFrom, { skip: !scheduleFilter });
+
   const dispatch = useAppDispatch();
 
   const setDateFromValue = (value: DateValue) => {
@@ -17,7 +21,9 @@ export const Orders = () => {
       dispatch(setScheduleFilter({ dateFrom: getDateIndex(value) }));
     }
   };
-  return (
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : (
     <section className="orders">
       <div className="title-bar">
         <div className="text-muted">Hello {user.givenNames}</div>
@@ -35,7 +41,9 @@ export const Orders = () => {
         className="schedule--date-picker"
       />
       <Space h="xl" />
-      <section>Under construction</section>
+      <section>
+        <img src={img} width="100%" style={{ maxWidth: '40rem' }} alt="Under construction" />
+      </section>
     </section>
   );
 };

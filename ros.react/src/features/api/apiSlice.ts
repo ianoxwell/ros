@@ -3,6 +3,7 @@ import { IPagedResult } from '@domain/base.dto';
 import { IFilter, IRecipeFilter } from '@domain/filter.dto';
 import { IIngredient, IIngredientShort } from '@domain/ingredient.dto';
 import { IMessage } from '@domain/message.dto';
+import { IOrder } from '@domain/order.dto';
 import { IRecipe, IRecipeShort } from '@domain/recipe.dto';
 import { IAllReferences } from '@domain/reference.dto';
 import { IResetPasswordRequest } from '@domain/reset-password-request.dto';
@@ -109,6 +110,10 @@ export const apiSlice = createApi({
     getRandomWeekRecipes: builder.mutation<IMessage, string>({
       query: (date) => `schedule/createRandom?from=${date}`,
       invalidatesTags: [{ type: 'Schedules', id: 'LIST' }]
+    }),
+    getWeeklyOrders: builder.query<IOrder, string>({
+      query: (date) => `orders?from=${date}`,
+      providesTags: [{ type: 'Schedules', id: 'LIST' }]
     })
   })
 });
@@ -130,5 +135,6 @@ export const {
   useLazyGetScheduleForDateQuery,
   useSaveScheduleMutation,
   useDeleteScheduleMutation,
-  useGetRandomWeekRecipesMutation
+  useGetRandomWeekRecipesMutation,
+  useGetWeeklyOrdersQuery
 } = apiSlice;
