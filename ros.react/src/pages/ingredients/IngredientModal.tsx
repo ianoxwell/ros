@@ -165,7 +165,7 @@ const IngredientModal = () => {
                 {ingredient.recipes.map((recipe) => (
                   <HoverCard width={320} shadow="md" key={recipe.id}>
                     <HoverCard.Target>
-                      <NavLink to={`/${recipe.id}`} aria-label={recipe.name}>
+                      <NavLink to={`/${CRoutes.recipe}/${recipe.id}`} aria-label={recipe.name}>
                         <Flex direction="column">
                           <Image src={recipe.images} alt={recipe.name} h="180" radius="md" />
                           <div className="recipe-title">{recipe.name}</div>
