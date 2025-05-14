@@ -49,4 +49,7 @@ export class Measurement extends RosBaseEntity implements IMeasurement {
 
   @ManyToMany(() => Ingredient, (ingredient) => ingredient.possibleUnits)
   ingredientPossibleUnits?: Ingredient[];
+
+  @OneToMany(() => Ingredient, (ingredient) => ingredient.preferredShoppingUnit)
+  ingredientsWithPreferredUnit?: Ingredient;
 }

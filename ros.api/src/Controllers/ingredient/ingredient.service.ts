@@ -12,7 +12,8 @@ import {
   INutrients,
   INutritionProperties,
   IReferenceShort,
-  IVitamins
+  IVitamins,
+  TPurchasedBy
 } from '@models/ingredient.dto';
 import { IMeasurement } from '@models/measurement.dto';
 import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
@@ -315,6 +316,7 @@ export class IngredientService {
       createdAt: i.createdAt,
       updatedAt: i.updatedAt,
       possibleUnits: i.possibleUnits,
+      purchasedBy: i.purchasedBy ? EPurchasedBy[i.purchasedBy] as TPurchasedBy : EPurchasedBy.weight,
       allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
       recipes: i.recipes
     };

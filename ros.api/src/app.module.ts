@@ -5,6 +5,7 @@ import { Ingredient } from '@controllers/ingredient/ingredient.entity';
 import { IngredientModule } from '@controllers/ingredient/ingredient.module';
 import { Measurement } from '@controllers/measurement/measurement.entity';
 import { MeasurementModule } from '@controllers/measurement/measurement.module';
+import { OrdersModule } from '@controllers/orders/orders.module';
 import { CuisineType } from '@controllers/recipe/cuisine-type/cuisine-type.entity';
 import { DishType } from '@controllers/recipe/dish-type/dish-type.entity';
 import { Equipment } from '@controllers/recipe/equipment/equipment.entity';
@@ -55,7 +56,7 @@ import { MailModule } from '@services/mail/mail.module';
       poolSize: 5,
       maxQueryExecutionTime: 5000,
       migrations: [],
-      synchronize: false,
+      synchronize: false
     }),
     ThrottlerModule.forRoot({
       throttlers: [
@@ -75,7 +76,8 @@ import { MailModule } from '@services/mail/mail.module';
     MailModule,
     AuthModule,
     SpoonModule,
-    ScheduleModule
+    ScheduleModule,
+    OrdersModule
   ],
   controllers: [],
   providers: []

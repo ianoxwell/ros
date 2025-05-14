@@ -1,4 +1,4 @@
-import { IIngredientShort } from '@models/ingredient.dto';
+import { EPurchasedBy, IIngredientShort } from '@models/ingredient.dto';
 import { Ingredient } from './ingredient.entity';
 
 export class CIngredientShort implements IIngredientShort {
@@ -8,6 +8,7 @@ export class CIngredientShort implements IIngredientShort {
   originalName: string;
   image?: string;
   aisle?: string;
+  purchasedBy?: string;  
   constructor(i?: Ingredient) {
     if (i) {
       this.id = i.id;
@@ -15,6 +16,7 @@ export class CIngredientShort implements IIngredientShort {
       this.originalName = i.originalName;
       this.image = i.image;
       this.aisle = i.aisle;
+      this.purchasedBy = i.purchasedBy ? EPurchasedBy[i.purchasedBy] : undefined;
     }
   }
 }
