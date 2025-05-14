@@ -1,5 +1,6 @@
 import { CMessage } from '@base/message.class';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Conversion } from '@controllers/ingredient/conversion/conversion.entity';
+import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Ingredient } from '../ingredient/ingredient.entity';
@@ -14,7 +15,10 @@ import { SpoonService } from './spoon.service';
 @ApiBearerAuth('JWT-auth')
 @Controller('spoon')
 export class SpoonController {
-  constructor(private spoonService: SpoonService, private measureService: MeasurementService) {}
+  constructor(
+    private spoonService: SpoonService,
+    private measureService: MeasurementService
+  ) {}
 
   // TODO Make these ALL admin only!!!
 
@@ -43,11 +47,20 @@ export class SpoonController {
     @Query('sourceUnit') sourceUnit: string,
     @Query('sourceAmount') sourceAmount: number,
     @Query('targetUnit') targetUnit: string
-  ): Promise<ISpoonConversion> {
+  ): Promise<ISpoonConversion | CMessage> {
     const findSourceUnit = await this.measureService.findOne(sourceUnit);
     if (findSourceUnit !== null) {
       return await this.spoonService.getSpoonConversion(foodName, findSourceUnit, sourceAmount, targetUnit);
     }
+
+    return new CMessage(`Unable to find measure for ${sourceUnit}`, HttpStatus.BAD_REQUEST);
+  }
+
+  @Get('populate-conversions')
+  @ApiQuery({ name: 'id', required: true, example: '19', type: String })
+  async getRequiredConversions(@Query('id') id: string): Promise<Conversion[] | CMessage> {
+    const measures = await this.measureService.findAllAsEntity();
+    return await this.spoonService.populateConversions(id, measures);
   }
 
   @Get('suggestion/recipe')

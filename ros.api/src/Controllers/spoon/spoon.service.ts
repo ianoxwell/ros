@@ -1,10 +1,16 @@
 // import { HttpService } from '@nestjs/axios';
-import { EPurchasedBy } from '@models/ingredient.dto';
 import { CMessage } from '@base/message.class';
+import {
+  IEquipmentStepDto,
+  IRecipeSteppedInstructionDto
+} from '@controllers/recipe/recipe-stepped-instructions/recipe-stepped-instructions.model';
+import { EPurchasedBy } from '@models/ingredient.dto';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { ConfigService } from '@nestjs/config';
+import { FileService } from '@services/file.service';
+import { isMessage } from '@services/utils';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, map } from 'rxjs';
 import { Conversion } from '../ingredient/conversion/conversion.entity';
@@ -34,11 +40,6 @@ import {
   Step
 } from './models/spoon-random-recipe.dto';
 import { ISpoonSuggestions } from './models/spoon-suggestions.dto';
-import { FileService } from '@services/file.service';
-import {
-  IEquipmentStepDto,
-  IRecipeSteppedInstructionDto
-} from '@controllers/recipe/recipe-stepped-instructions/recipe-stepped-instructions.model';
 
 @Injectable()
 export class SpoonService {
@@ -127,6 +128,43 @@ export class SpoonService {
     spoonConversion.sourceUnitM = sourceUnit;
 
     return spoonConversion;
+  }
+
+  async populateConversions(id: string, measures: Measurement[]): Promise<Conversion[] | CMessage> {
+    const ingredient = await this.ingredientService.getIngredientEntity(id);
+    const pUnits = await this.ingredientService.getRecipeIngredientsByIngredientId(parseInt(id), measures);
+
+    if (isMessage(pUnits)) {
+      return pUnits;
+    }
+
+    const grams: Measurement = await this.measurementService.findGrams();
+
+    const spoonConverts = await Promise.all(
+      pUnits.awaitingConversions
+        .filter((unit: Measurement) => unit.title !== grams.title)
+        .map(async (c: Measurement, index: number) => {
+          const spoonConvert = await this.waitForMe<ISpoonConversion>(
+            this.getSpoonConversion(pUnits.name, c, 1, 'grams'),
+            this.delayApi * index
+          );
+
+          const newConvert = new Conversion();
+          newConvert.sourceAmount = spoonConvert.sourceAmount;
+          newConvert.sourceUnit = spoonConvert.sourceUnitM;
+          newConvert.targetAmount = spoonConvert.targetAmount;
+          newConvert.targetUnit = grams; // grams from measurement.data
+          newConvert.answer = spoonConvert.answer;
+          newConvert.type = spoonConvert.type;
+          newConvert.ingredientId = parseInt(id); // Set the ingredientId
+
+          return this.conversionService.createConversion(newConvert);
+        })
+    );
+    ingredient.possibleUnits = pUnits.awaitingConversions;
+    await this.ingredientService.updateIngredientFromEntity(ingredient);
+
+    return spoonConverts;
   }
 
   /** Gets a random spoon recipe that means tag condition. */

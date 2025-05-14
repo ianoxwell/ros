@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CMeasurementData } from './measurement.data';
 import { IMeasurement } from '../../../Models/measurement.dto';
 import { Measurement } from './measurement.entity';
@@ -36,7 +36,13 @@ export class MeasurementService {
   }
 
   async findOne(shortName: string): Promise<Measurement> {
-    return await this.repository.findOne({ where: { shortName } });
+    return await this.repository.findOne({
+      where: [
+      { shortName: ILike(shortName) },
+      { title: ILike(shortName) },
+      { altShortName: ILike(shortName) }
+      ]
+    });
   }
 
   /** Fires when npm run seed is run. */

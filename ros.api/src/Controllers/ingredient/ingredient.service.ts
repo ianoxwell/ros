@@ -3,9 +3,6 @@ import { CPageOptionsDto } from '@base/filter.const';
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { EOrder } from '@models/base.dto';
-import { Injectable } from '@nestjs/common';
-import { HttpStatus } from '@nestjs/common/enums';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   EPurchasedBy,
   ICaloricBreakdown,
@@ -19,6 +16,9 @@ import {
 } from '@models/ingredient.dto';
 import { IMeasurement } from '@models/measurement.dto';
 import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
+import { Injectable } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common/enums';
+import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, In, Like, Raw, Repository, UpdateResult } from 'typeorm';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
@@ -68,6 +68,13 @@ export class IngredientService {
     ingredient.conversions = conversions;
 
     return ingredient;
+  }
+
+  async getIngredientEntity(id: string | number): Promise<Ingredient> {
+    id = typeof id === 'number' ? id : parseInt(id);
+    return this.repository.findOne({
+      where: { id, isActive: true }
+    });
   }
 
   async getIngredientById(id: string | number): Promise<IIngredient> {
@@ -123,6 +130,48 @@ export class IngredientService {
     return new PaginatedDto(fullResult, pageMetaDto);
   }
 
+  async getRecipeIngredientsByIngredientId(
+    id: string | number,
+    measures: Measurement[]
+  ): Promise<CMessage | { name: string; awaitingConversions: Measurement[] }> {
+    id = typeof id === 'number' ? id : parseInt(id);
+    const ingredient = await this.repository.query(
+      `SELECT i.name,
+      json_agg(DISTINCT ipum.*) FILTER (WHERE ipum."measurementId" IS NOT NULL) AS "possibleUnits", 
+      json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL) AS "conversions", 
+      json_agg(DISTINCT ri.*) FILTER (WHERE ri.id IS NOT NULL) AS "ingredientList"
+      FROM ingredient i
+      LEFT JOIN ingredient_possible_units_measurement ipum ON ipum."ingredientId" = i.id
+      LEFT JOIN recipe_ingredient ri ON ri."ingredientId" = i.id
+      LEFT JOIN conversion c ON c."ingredientId" = i.id
+      WHERE i.id = $1 AND i."isActive" = true
+      GROUP BY i.id`,
+      [id]
+    );
+
+    if (!Array.isArray(ingredient) || !ingredient.length) {
+      return new CMessage('Unable to find ingredient', HttpStatus.NOT_FOUND);
+    }
+
+    const awaitingConversions = [];
+    ingredient[0].ingredientList.forEach((item) => {
+      if (ingredient[0]?.conversions?.find((c) => c.sourceUnitId === item.measureId)) {
+        return;
+      }
+
+      if (awaitingConversions.find((m) => m.id === item.measureId)) {
+        return;
+      }
+
+      const measure = measures.find((m) => m.id === item.measureId);
+      if (measure) {
+        awaitingConversions.push(measure);
+      }
+    });
+
+    return { name: ingredient[0]?.name, awaitingConversions };
+  }
+
   /** Given an array of ingredient id's return the ingredient */
   async getIngredientFromIdList(ingredientIds: number[]): Promise<Ingredient[]> {
     return await this.repository.find({ where: { id: In(ingredientIds) }, loadRelationIds: true });
@@ -154,6 +203,11 @@ export class IngredientService {
   async updateIngredient(id: number, ingredient: IIngredient): Promise<UpdateResult> {
     const ing: Ingredient = this.mapIIngredientDtoIngredient(ingredient);
     return await this.repository.update(id, ing);
+  }
+
+  async updateIngredientFromEntity(ingredient: Partial<Ingredient>): Promise<Ingredient> {
+    const updatedRecipe = await this.repository.preload(ingredient);
+    return await this.repository.save(updatedRecipe);
   }
 
   /** checks if the name exists and then attempts to create */
