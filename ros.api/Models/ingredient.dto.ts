@@ -26,6 +26,7 @@ export interface IIngredientRecipeVeryShort {
 export interface IIngredient extends IIngredientShort {
   externalId?: number; // spoonacular id number
   possibleUnits: IMeasurement[];
+  preferredShoppingUnit?: IMeasurement;
 
   purchasedBy?: EPurchasedBy | TPurchasedBy;
 

@@ -93,7 +93,7 @@ export class IngredientService {
       FROM ingredient i
       LEFT JOIN ingredient_possible_units_measurement ipum ON ipum."ingredientId" = i.id
       LEFT JOIN measurement m ON m.id = ipum."measurementId"
-      left join measurement m2 on m.id = i."preferredShoppingUnitId" 
+      left join measurement m2 on m2.id = i."preferredShoppingUnitId" 
       LEFT JOIN conversion c ON c."ingredientId" = i.id
       WHERE i."isActive" = true 
       AND (i."preferredShoppingUnitId" IS NULL OR m.id IS NULL OR c.id IS NULL)
@@ -111,6 +111,15 @@ export class IngredientService {
       json_agg(DISTINCT m.*) FILTER (WHERE m.id IS NOT NULL) AS "possibleUnits", 
       json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL) AS "conversions", 
       json_agg(DISTINCT r.*) FILTER (WHERE r.id IS NOT NULL) AS "allergies",
+      jsonb_build_object(
+      'id', m2.id,
+      'title', m2.title,
+      'measurementType', CAST(m2."measurementType"::text AS INT),
+      'shortName', m2."shortName",
+      'convertsToId', m2."convertsToIdId",
+      'quantity', m2."quantity",
+      'countryCode', CAST(m2."countryCode"::text AS INT)
+      ) AS "preferredShoppingUnit",
       json_agg(DISTINCT jsonb_build_object(
       'id', rii."recipeId",
       'name', rec.name,
@@ -121,13 +130,14 @@ export class IngredientService {
       FROM ingredient i
       LEFT JOIN ingredient_possible_units_measurement ipum ON ipum."ingredientId" = i.id
       LEFT JOIN measurement m ON m.id = ipum."measurementId"
+      LEFT JOIN measurement m2 ON m2.id = i."preferredShoppingUnitId" 
       LEFT JOIN conversion c ON c."ingredientId" = i.id
       LEFT JOIN ingredient_allergies_reference iar ON iar."ingredientId" = i.id
       LEFT JOIN reference r ON r.id = iar."referenceId"
       LEFT JOIN recipe_ingredients_ingredient rii ON rii."ingredientId" = i.id
       LEFT JOIN recipe rec ON rec.id = rii."recipeId"
       WHERE i.id = $1 AND i."isActive" = true
-      GROUP BY i.id`,
+      GROUP BY i.id, m2.id`,
       [id]
     );
 
@@ -319,11 +329,11 @@ export class IngredientService {
         ingredientId: c.ingredientId,
         sourceAmount: c.sourceAmount,
         sourceUnitId: c.sourceUnitId,
-        sourceUnit: measures.find((m) => m.id === c.sourceUnitId),
+        sourceUnit: measures?.find((m) => m.id === c.sourceUnitId),
 
         targetAmount: c.targetAmount,
         targetUnitId: c.targetUnitId,
-        targetUnit: measures.find((m) => m.id === c.targetUnitId),
+        targetUnit: measures?.find((m) => m.id === c.targetUnitId),
         answer: c.answer
       }));
     }
@@ -342,6 +352,7 @@ export class IngredientService {
       createdAt: i.createdAt,
       updatedAt: i.updatedAt,
       possibleUnits: i.possibleUnits,
+      preferredShoppingUnit: i.preferredShoppingUnit,
       purchasedBy: i.purchasedBy ? (EPurchasedBy[i.purchasedBy] as TPurchasedBy) : EPurchasedBy.weight,
       allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
       recipes: i.recipes

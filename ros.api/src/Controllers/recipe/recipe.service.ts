@@ -2,16 +2,17 @@ import { CPageOptionsDto } from '@base/filter.const';
 import { IFilterBase } from '@base/filter.entity';
 import { CMessage } from '@base/message.class';
 import { PageMetaDto, PaginatedDto } from '@base/paginated.entity';
+import { MeasurementService } from '@controllers/measurement/measurement.service';
 import { EOrder } from '@models/base.dto';
-import { IRecipeFilter } from '@models/filter.dto';
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { IEquipmentSteppedInstruction } from '@models/equipment-stepped-instruction.dto';
 import { ISimpleEquipment } from '@models/equipment.dto';
+import { IRecipeFilter } from '@models/filter.dto';
 import { IIngredientShort } from '@models/ingredient.dto';
 import { IRecipeIngredient } from '@models/recipe-ingredient.dto';
 import { IRecipeSteppedInstruction } from '@models/recipe-stepped-instructions.dto';
 import { IRecipe, IRecipeShort, THealthBooleanLabels } from '@models/recipe.dto';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, In, Raw, Repository } from 'typeorm';
 import { CIngredientShort } from '../ingredient/ingredient-short.dto';
 import { Ingredient } from '../ingredient/ingredient.entity';
@@ -50,8 +51,8 @@ export class RecipeService {
     @InjectRepository(DishType) private readonly dishTypeRepository: Repository<DishType>,
     @InjectRepository(CuisineType) private readonly cuisineTypeRepository: Repository<CuisineType>,
     @InjectRepository(RecipeIngredient) private readonly recipeIngredientRepository: Repository<RecipeIngredient>,
-    @InjectRepository(Measurement) private readonly measurementRepository: Repository<Measurement>,
-    private ingredientService: IngredientService
+    private ingredientService: IngredientService,
+    private measurementService: MeasurementService
   ) {}
 
   /** Quick and dirty find and count all items, return in paginated response with a limit of 20 */
@@ -127,7 +128,12 @@ export class RecipeService {
     }
 
     const [result, itemCount] = await this.repository.findAndCount({
-      where: { name: Raw((alias) => `LOWER(REGEXP_REPLACE(${alias}, '[^a-zA-Z0-9]', '', 'g')) Like '%${pageOptionsDto.keyword.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}%'`) },
+      where: {
+        name: Raw(
+          (alias) =>
+            `LOWER(REGEXP_REPLACE(${alias}, '[^a-zA-Z0-9]', '', 'g')) Like '%${pageOptionsDto.keyword.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}%'`
+        )
+      },
       order: { name: EOrder.ASC },
       take: limit,
       skip: 0
@@ -153,10 +159,7 @@ export class RecipeService {
 
   /** Gets an existing random recipe entity */
   async getRandomRecipe(): Promise<Recipe | null> {
-    const randomRecipe = await this.repository
-      .createQueryBuilder('recipe')
-      .orderBy('RANDOM()')
-      .getOne();
+    const randomRecipe = await this.repository.createQueryBuilder('recipe').orderBy('RANDOM()').getOne();
 
     return randomRecipe || null;
   }
@@ -384,7 +387,7 @@ export class RecipeService {
 
   private async mapRecipeDtoToRecipeEntity(r: IRecipe): Promise<Recipe> {
     const ingredientIds = r.ingredients.map((i) => i.id).filter((id) => !!id);
-    const measures = await this.measurementRepository.find();
+    const measures = await this.measurementService.findAllAsEntity();
     const cuisines = await this.cuisineTypeRepository.find();
     const dishTypes = await this.dishTypeRepository.find();
     const equipments = await this.equipmentRepository.find();
@@ -463,19 +466,22 @@ export class RecipeService {
   }
 
   private async mapRecipeToRecipeDto(recipe: Recipe): Promise<IRecipe> {
-    const measures = await this.measurementRepository.find();
+    const measures = await this.measurementService.findAllAsEntity();
 
     const ingredients: IIngredientShort[] = recipe.ingredients.map((i: Ingredient) =>
       this.ingredientService.mapIngredientToIIngredientShort(i, measures)
     );
+
     const ingredientList: IRecipeIngredient[] = recipe.ingredientList.map((il: RecipeIngredient) =>
       this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto(il, recipe.id, measures, recipe.ingredients)
     );
+
     const steppedInstructions: IRecipeSteppedInstruction[] = recipe.analyzedInstructions
       .map((si: IRecipeSteppedInstructionDto) =>
         this.mapRecipeSteppedInstructionToISteppedInstruction(si, recipe.ingredients, recipe.equipment)
       )
       .sort((a, b) => a.stepNumber - b.stepNumber);
+
 
     const mappedRecipe: IRecipe = {
       ...this.mapRecipeToShortRecipeDto(recipe),
@@ -503,7 +509,7 @@ export class RecipeService {
         const ing = recipeIngredients.find((ingred) => ingred.id === i);
         return new CIngredientShort(ing);
       }),
-      equipment: si.equipment.length
+      equipment: !!si.equipment.length
         ? si.equipment
             .map((eSi: IEquipmentStepDto) => this.mapEquipmentSteppedInstructionToIEquip(eSi, recipeEquipment))
             .filter((eSi) => !!eSi)
@@ -515,7 +521,7 @@ export class RecipeService {
     eSi: IEquipmentStepDto,
     recipeEquipment: Equipment[]
   ): IEquipmentSteppedInstruction | null {
-    const equip = recipeEquipment.find((item) => item.id === eSi.equipmentId);
+    const equip = recipeEquipment?.find((item) => item.id === eSi.equipmentId);
     if (!equip) {
       return null;
     }

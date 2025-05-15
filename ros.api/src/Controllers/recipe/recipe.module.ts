@@ -1,5 +1,6 @@
 import { IngredientModule } from '@controllers/ingredient/ingredient.module';
 import { Measurement } from '@controllers/measurement/measurement.entity';
+import { MeasurementService } from '@controllers/measurement/measurement.service';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,7 +21,7 @@ import { RecipeService } from './recipe.service';
     IngredientModule
   ],
   controllers: [RecipeController],
-  providers: [RecipeService, HealthLabelService],
+  providers: [RecipeService, HealthLabelService, MeasurementService],
   exports: [RecipeService, HealthLabelService]
 })
 export class RecipeModule {}

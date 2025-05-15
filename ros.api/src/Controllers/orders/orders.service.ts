@@ -64,9 +64,10 @@ export class OrdersService {
         return;
       }
 
-      rr.ingredients = rr.ingredients.map((i: Ingredient) => ({
+      rr.ingredients = rr.ingredients.map((i) => ({
         ...i,
         purchasedBy: parseInt(i.purchasedBy.toString()),
+        preferredShoppingUnit: i.preferredShoppingUnitId ? measures.find((m) => m.id === i.preferredShoppingUnitId) : null,
         conversions: rr.ingredientConversions
           .filter((ic: Conversion) => ic.ingredientId === i.id)
           .map((ic) => ({ ...ic, sourceUnitId: parseInt(ic.sourceUnitId) }))
@@ -93,9 +94,9 @@ export class OrdersService {
       dateIndexStart: getDateIndex(fromDate),
       recipes: uniqueRecipes,
       ingredients: uniqueRecipeIngredients
-        .map((i) => convertIngredientGramsToPreferred(i, uniqueIngredients, measures))
-        .map((i) => this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto({ ...i, recipeId: 0 }, 0, measures, uniqueIngredients))
-        .sort((a, b) => a.ingredientId - b.ingredientId)
+      .map((i) => convertIngredientGramsToPreferred(i, uniqueIngredients, measures))
+      .map((i) => this.ingredientService.mapRecipeIngredientToIRecipeIngredientDto({ ...i, recipeId: 0 }, 0, measures, uniqueIngredients))
+      .sort((a, b) => a.ingredient.name.localeCompare(b.ingredient.name))
     };
   }
 }
@@ -119,12 +120,15 @@ function convertIngredientGramsToPreferred(
 
   // most likely initially undefined
   let convertMeasure = recipeIngredient.measure;
+  if (ingredient.preferredShoppingUnit) {
+    convertMeasure = measures.find((m) => m.id === ingredient.preferredShoppingUnit.id);
+  }
 
   const filterMeasures = measures.filter(
     (m) => m.measurementType === ingredient.purchasedBy && ingredient.conversions?.find((c) => c.sourceUnitId === m.id)
   );
 
-  if (!!filterMeasures.length) {
+  if (!!filterMeasures.length && !convertMeasure) {
     // This is a best guess at this point and will probably do
     convertMeasure = filterMeasures[0];
   }
@@ -137,15 +141,12 @@ function convertIngredientGramsToPreferred(
   const conversionChosen = ingredient.conversions?.find((c) => c.sourceUnitId === convertMeasure.id);
   recipeIngredient.amount = recipeIngredient.amount / (conversionChosen?.targetAmount || 1);
   recipeIngredient.measure = convertMeasure;
+  recipeIngredient.measureId = convertMeasure.id;
 
   return recipeIngredient;
 }
 
-function convertIngredientAmounts(
-  ingredientList: RecipeIngredient[],
-  ingredients: IIngredientShort[],
-  quantity: number,
-) {
+function convertIngredientAmounts(ingredientList: RecipeIngredient[], ingredients: IIngredientShort[], quantity: number) {
   return ingredientList.map((item: RecipeIngredient) => {
     const ingredient = ingredients.find((ing) => ing.id === item.ingredientId);
     if (!ingredient) {
