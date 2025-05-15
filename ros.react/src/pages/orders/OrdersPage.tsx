@@ -6,6 +6,9 @@ import { Space, Title } from '@mantine/core';
 import { DatePickerInput, DateValue } from '@mantine/dates';
 import { setScheduleFilter } from '@pages/schedules/scheduleFilter.slice';
 import { getDateFromIndex, getDateIndex } from '@utils/dateUtils';
+import { fractionNumber } from '@utils/numberUtils';
+import { sentenceCase } from '@utils/stringUtils';
+import parse from 'html-react-parser';
 import { Calendar } from 'lucide-react';
 import img from '../../assets/images/underConstructionRecipe.png';
 
@@ -42,6 +45,12 @@ export const Orders = () => {
       />
       <Space h="xl" />
       <section>
+        {weeklyOrders?.ingredients &&
+          weeklyOrders.ingredients.map((iL) => (
+            <div key={iL.id}>
+              {parse(fractionNumber(iL.amount))} <b>{iL.unit}</b> {sentenceCase(iL.ingredient?.name)}
+            </div>
+          ))}
         <img src={img} width="100%" style={{ maxWidth: '40rem' }} alt="Under construction" />
       </section>
     </section>
