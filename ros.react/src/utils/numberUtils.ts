@@ -3,7 +3,8 @@ export const fractionNumber = (value: number | string | undefined): string => {
     return '0';
   }
 
-  const num = typeof value === 'number' ? value : Number(value);
+  // to fixed 2 decimal places first to ensure that 0.24567 becomes 1/4 cup
+  const num = typeof value === 'number' ? Number(value.toFixed(2)) : Number(Number(value).toFixed(2));
   const whole = Math.floor(num);
   const decimal = num - whole;
 
