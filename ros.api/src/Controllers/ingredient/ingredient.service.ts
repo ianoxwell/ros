@@ -78,6 +78,32 @@ export class IngredientService {
     });
   }
 
+  async getIngredientByExternalId(externalId: number): Promise<Ingredient> {
+    return this.repository.findOne({
+      where: { externalId, isActive: true },
+      relations: { conversions: true, possibleUnits: true, preferredShoppingUnit: true }
+    });
+  }
+  async findLimitAsEntityMissingFields(limit: number): Promise<Ingredient[]> {
+    return await this.repository.query(
+      `SELECT i.*, 
+      json_agg(DISTINCT m.*) FILTER (WHERE m.id IS NOT NULL) AS "possibleUnits", 
+      json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL) AS "conversions",
+      json_agg(distinct m2.*) FILTER (WHERE m2.id IS NOT NULL) AS "preferredShoppingUnit"
+      FROM ingredient i
+      LEFT JOIN ingredient_possible_units_measurement ipum ON ipum."ingredientId" = i.id
+      LEFT JOIN measurement m ON m.id = ipum."measurementId"
+      left join measurement m2 on m.id = i."preferredShoppingUnitId" 
+      LEFT JOIN conversion c ON c."ingredientId" = i.id
+      WHERE i."isActive" = true 
+      AND (i."preferredShoppingUnitId" IS NULL OR m.id IS NULL OR c.id IS NULL)
+      GROUP BY i.id
+      ORDER BY i.name
+      LIMIT $1`,
+      [limit]
+    );
+  }
+
   async getIngredientById(id: string | number): Promise<IIngredient> {
     id = typeof id === 'number' ? id : parseInt(id);
     const ingredient: IIngredientEntityExtended = await this.repository.query(
@@ -316,7 +342,7 @@ export class IngredientService {
       createdAt: i.createdAt,
       updatedAt: i.updatedAt,
       possibleUnits: i.possibleUnits,
-      purchasedBy: i.purchasedBy ? EPurchasedBy[i.purchasedBy] as TPurchasedBy : EPurchasedBy.weight,
+      purchasedBy: i.purchasedBy ? (EPurchasedBy[i.purchasedBy] as TPurchasedBy) : EPurchasedBy.weight,
       allergies: i.allergies?.map((item: Reference) => ({ id: item.id, title: item.title, symbol: item.symbol })) || [],
       recipes: i.recipes
     };

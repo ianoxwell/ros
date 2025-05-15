@@ -103,16 +103,11 @@ export class SpoonService {
 
   /** Get the specific information about an ingredient that you have the id for. */
   async getSpoonIngredientById(id: string, amount?: number, unit?: string): Promise<Ingredient> {
-    amount = amount || 100;
-    unit = unit || 'grams';
     const spoonCheck = await this.ingredientService.spoonIngredientIdExists(parseInt(id));
 
     if (typeof spoonCheck === 'boolean') {
-      const url = `${this.spoonApi}/food/ingredients/${id}/information?amount=${amount}&unit=${unit}&apiKey=${this.spoonKey}`;
-      const spoonIngredient = await this.getAxiosHttp<ISpoonIngredient>(url);
-
+      const spoonIngredient = await this.fetchSpoonIngredientById(id, amount, unit);
       const spoonNameCheck = await this.ingredientService.spoonIngredientNameExists(spoonIngredient);
-      await this.fileService.saveJsonFile(`ingredient - ${spoonIngredient.name}`, spoonIngredient);
 
       return typeof spoonNameCheck === 'boolean' ? await this.createIngredientFromSpoon(spoonIngredient) : spoonNameCheck;
     }
@@ -120,10 +115,18 @@ export class SpoonService {
     return spoonCheck as Ingredient;
   }
 
+  async fetchSpoonIngredientById(id: string, amount?: number, unit?: string, folder?: string): Promise<ISpoonIngredient> {
+    amount = amount || 100;
+    unit = unit || 'grams';
+    const url = `${this.spoonApi}/food/ingredients/${id}/information?amount=${amount}&unit=${unit}&apiKey=${this.spoonKey}`;
+    const spoonIngredient = await this.getAxiosHttp<ISpoonIngredient>(url);
+    await this.fileService.saveJsonFile(`ingredient - ${spoonIngredient.name}`, spoonIngredient, folder);
+    return spoonIngredient;
+  }
+
   /** Get conversion of food from source unit to generally grams. */
   async getSpoonConversion(foodName: string, sourceUnit: Measurement, sourceAmount: number, targetUnit: string): Promise<ISpoonConversion> {
     const url = `${this.spoonApi}/recipes/convert?ingredientName=${foodName}&sourceUnit=${sourceUnit.shortName}&sourceAmount=${sourceAmount}&targetUnit=${targetUnit}&apiKey=${this.spoonKey}`;
-
     const spoonConversion = await this.getAxiosHttp<ISpoonConversion>(url);
     spoonConversion.sourceUnitM = sourceUnit;
 
@@ -149,15 +152,7 @@ export class SpoonService {
             this.delayApi * index
           );
 
-          const newConvert = new Conversion();
-          newConvert.sourceAmount = spoonConvert.sourceAmount;
-          newConvert.sourceUnit = spoonConvert.sourceUnitM;
-          newConvert.targetAmount = spoonConvert.targetAmount;
-          newConvert.targetUnit = grams; // grams from measurement.data
-          newConvert.answer = spoonConvert.answer;
-          newConvert.type = spoonConvert.type;
-          newConvert.ingredientId = parseInt(id); // Set the ingredientId
-
+          const newConvert = this.createConversionFromSpoon(spoonConvert, grams, id);
           return this.conversionService.createConversion(newConvert);
         })
     );
@@ -165,6 +160,114 @@ export class SpoonService {
     await this.ingredientService.updateIngredientFromEntity(ingredient);
 
     return spoonConverts;
+  }
+
+  createConversionFromSpoon(spoonConvert: ISpoonConversion, grams: Measurement, id: string | number): Conversion {
+    const newConvert = new Conversion();
+    newConvert.sourceAmount = spoonConvert.sourceAmount;
+    newConvert.sourceUnit = spoonConvert.sourceUnitM;
+    newConvert.targetAmount = spoonConvert.targetAmount;
+    newConvert.targetUnit = grams; // grams from measurement.data
+    newConvert.answer = spoonConvert.answer;
+    newConvert.type = spoonConvert.type;
+    newConvert.ingredientId = parseInt(id.toString()); // Set the ingredientId
+
+    return newConvert;
+  }
+
+  /**
+   * First checks the recipesJson folder for any ingredients to update from.
+   * Failing that it will check the database for any ingredients that are missing fields and update them.
+   */
+  async populateIngredients(limit: number): Promise<Ingredient[] | CMessage> {
+    const jsonFolder = './recipesJson/';
+    const ingredientFiles = await this.fileService.getFilesInFolder(jsonFolder, 'ingredient - ');
+    const measures = await this.measurementService.findAllAsEntity();
+
+    if (!ingredientFiles.length) {
+      return await this.populateExistingIngredients(limit, measures);
+    }
+
+    const selectedFiles = ingredientFiles.slice(0, limit);
+    const ingredients = await Promise.all(
+      selectedFiles.map(async (file) => {
+        const fileContent = await this.fileService.readJsonFile<ISpoonIngredient>(`${jsonFolder}${file}`);
+        if (!fileContent) {
+          console.error('Error reading file:', file);
+          return new CMessage('Error reading file', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        const localIngredient = await this.ingredientService.getIngredientByExternalId(fileContent.id);
+        if (!localIngredient) {
+          console.log('Ingredient not found in local database, creating new one', fileContent.name);
+          try {
+            const newIngredient = await this.createIngredientFromSpoon(fileContent);
+            await this.fileService.moveFile(`${jsonFolder}${file}`, `${jsonFolder}ingredients/${file}`);
+            return newIngredient;
+          } catch (error) {
+            console.error('Error creating ingredient from spoon:', error);
+            return new CMessage('Error creating ingredient from spoon', HttpStatus.INTERNAL_SERVER_ERROR);
+          }
+        }
+
+        if (!localIngredient.possibleUnits?.length || !localIngredient.preferredShoppingUnit) {
+          localIngredient.possibleUnits = await this.mapPossibleUnitsMeasurements(fileContent.possibleUnits);
+          localIngredient.preferredShoppingUnit = await this.calcShoppingUnit(fileContent, measures);
+          await this.fileService.moveFile(`${jsonFolder}${file}`, `${jsonFolder}ingredients/${file}`);
+          return await this.ingredientService.updateIngredientFromEntity(localIngredient);
+        }
+
+        await this.fileService.moveFile(`${jsonFolder}${file}`, `${jsonFolder}ingredients/${file}`);
+        return localIngredient;
+      })
+    );
+
+    return ingredients.filter((ingredient) => !isMessage<Ingredient>(ingredient)) as Ingredient[];
+  }
+
+  async populateExistingIngredients(limit: number, measures: Measurement[]): Promise<Ingredient[]> {
+    const grams = await this.measurementService.findGrams();
+
+    const findLocalIngredients = await this.ingredientService.findLimitAsEntityMissingFields(limit);
+    const testList = findLocalIngredients.map((i: Ingredient) => i.name);
+    console.log('findLocalIngredients', testList);
+    const ingredients = await Promise.all(
+      findLocalIngredients.map(async (ingredient) => {
+        const spoonIngredient = await this.fetchSpoonIngredientById(
+          ingredient.externalId.toString(),
+          100,
+          'grams',
+          './recipesJson/newIngredients/'
+        );
+        if (!ingredient.preferredShoppingUnit) {
+          ingredient.preferredShoppingUnit = await this.calcShoppingUnit(spoonIngredient, measures);
+        }
+
+        if (!ingredient.possibleUnits?.length) {
+          ingredient.possibleUnits = await this.mapPossibleUnitsMeasurements(spoonIngredient.possibleUnits);
+        }
+
+        if (!ingredient.conversions?.length && !!ingredient.possibleUnits?.length) {
+          const conversions = await this.fetchConversions(ingredient.possibleUnits, ingredient.id, ingredient.name);
+          ingredient.conversions = conversions;
+        }
+
+        // check if we have the conversion for the shopping unit
+        const findShoppingUnit = ingredient.conversions?.find((m: Conversion) => {
+          return m.sourceUnitId === ingredient.preferredShoppingUnit.id;
+        });
+        if (!findShoppingUnit) {
+          const spoonConvert = await this.getSpoonConversion(ingredient.name, ingredient.preferredShoppingUnit, 1, 'grams');
+          const newConvert = this.createConversionFromSpoon(spoonConvert, grams, ingredient.id);
+          const createdConversion = await this.conversionService.createConversion(newConvert);
+          ingredient.conversions.push(createdConversion);
+        }
+
+        return this.ingredientService.updateIngredientFromEntity(ingredient);
+      })
+    );
+
+    return ingredients;
   }
 
   /** Gets a random spoon recipe that means tag condition. */
@@ -299,10 +402,10 @@ export class SpoonService {
 
     const findMeasure = measures.find(
       (measure: Measurement) =>
-        measure.shortName === spoonMeasure.unitShort.toLowerCase() ||
-        measure.altShortName === spoonMeasure.unitShort.toLowerCase() ||
-        measure.title.toLowerCase() === spoonMeasure.unitLong.toLowerCase() ||
-        spoonMeasure.unitLong.toLowerCase().includes(measure.title.toLowerCase())
+        measure.shortName === spoonMeasure.unitShort?.toLowerCase() ||
+        measure.altShortName === spoonMeasure.unitShort?.toLowerCase() ||
+        measure.title.toLowerCase() === spoonMeasure.unitLong?.toLowerCase() ||
+        spoonMeasure.unitLong?.toLowerCase().includes(measure.title?.toLowerCase())
     );
 
     // TODO this is not the best response - maybe a looser search method?
@@ -314,17 +417,14 @@ export class SpoonService {
     return findMeasure;
   }
 
-  /** Following the mapping of the spoonDto to ingredient the conversions are worked out and the whole ingredient is saved.  */
-  private async createIngredientFromSpoon(spoon: ISpoonIngredient): Promise<Ingredient> {
-    const newIngredient = await this.mapSpoonDtoIngredient(spoon);
+  async fetchConversions(possibleUnits: Measurement[], id: number, spoonName: string): Promise<Conversion[]> {
     const grams: Measurement = await this.measurementService.findGrams();
-
     const conversions: Conversion[] = await Promise.all(
-      newIngredient.possibleUnits
+      possibleUnits
         .filter((unit: Measurement) => unit.title !== grams.title)
         .map(async (sourceUnit: Measurement, index: number) => {
           const spoonConvert = await this.waitForMe<ISpoonConversion>(
-            this.getSpoonConversion(spoon.name, sourceUnit, 1, 'grams'),
+            this.getSpoonConversion(spoonName, sourceUnit, 1, 'grams'),
             this.delayApi * index
           );
 
@@ -335,11 +435,19 @@ export class SpoonService {
           newConvert.targetUnit = grams; // grams from measurement.data
           newConvert.answer = spoonConvert.answer;
           newConvert.type = spoonConvert.type;
-          newConvert.ingredientId = newIngredient.id; // Set the ingredientId
+          newConvert.ingredientId = id; // Set the ingredientId
 
           return newConvert;
         })
     );
+    return conversions;
+  }
+
+  /** Following the mapping of the spoonDto to ingredient the conversions are worked out and the whole ingredient is saved.  */
+  private async createIngredientFromSpoon(spoon: ISpoonIngredient): Promise<Ingredient> {
+    const newIngredient: Ingredient = await this.mapSpoonDtoIngredient(spoon);
+
+    const conversions = await this.fetchConversions(newIngredient.possibleUnits, newIngredient.id, newIngredient.name);
     newIngredient.conversions = conversions;
 
     try {
@@ -352,9 +460,11 @@ export class SpoonService {
 
   /** This brings together all the ingredients relationships together (except conversions) - lots going on here. */
   private async mapSpoonDtoIngredient(spoon: ISpoonIngredient): Promise<Ingredient> {
+    const measures = await this.measurementService.findAllAsEntity();
     const purchasedBy = this.calcPurchasedBy(spoon);
     const nutrients = this.spoonNutrientsToEntity(spoon.nutrition.nutrients);
     const nutritionProperties = this.spoonNutrientPropertiesToEntity(spoon.nutrition.properties);
+    const preferredShoppingUnit = await this.calcShoppingUnit(spoon, measures);
     const possibleUnits = await this.mapPossibleUnitsMeasurements(spoon.possibleUnits);
     const ing: Ingredient = {
       name: spoon.name,
@@ -369,6 +479,7 @@ export class SpoonService {
       estimatedCost: spoon.estimatedCost.value,
       estimatedCostUnit: spoon.estimatedCost.unit,
       purchasedBy,
+      preferredShoppingUnit,
       aisle: spoon.aisle,
       ...nutrients,
       percentProtein: spoon.nutrition.caloricBreakdown.percentProtein,
@@ -379,6 +490,40 @@ export class SpoonService {
     };
 
     return ing;
+  }
+
+  private findMeasure(value: string, measures: Measurement[]): Measurement | undefined {
+    if (!value) {
+      return undefined;
+    }
+
+    value = value.toLowerCase();
+    return measures.find(
+      (measure: Measurement) =>
+        measure.shortName?.toLowerCase() === value ||
+        measure.altShortName?.toLowerCase() === value ||
+        measure.title?.toLowerCase() === value
+    );
+  }
+
+  private async calcShoppingUnit(spoon: ISpoonIngredient, measures: Measurement[]): Promise<Measurement> {
+    const findShoppingUnit = spoon.shoppingListUnits?.find((unit: string) => {
+      return this.findMeasure(unit, measures);
+    });
+    if (findShoppingUnit) {
+      return this.findMeasure(findShoppingUnit, measures);
+    }
+
+    // Usually the shopping unit is the first one in the list, but not always.
+    const findPossibleUnits = spoon.possibleUnits?.find((unit: string) => {
+      return this.findMeasure(unit, measures);
+    });
+    if (findPossibleUnits) {
+      return this.findMeasure(findPossibleUnits, measures);
+    }
+
+    // If no shopping unit or possible units found, default to grams
+    return await this.measurementService.findGrams();
   }
 
   /** Each ingredient should have a primary purchase, e.g. celery is purchased by bunch and milk is purchased litres, by default items are purchased by weight - for example a kilo of flour. */
@@ -443,7 +588,7 @@ export class SpoonService {
       const result = measures.find(
         (m: Measurement) => unit === m.title.toLowerCase() || unit === m.shortName.toLowerCase() || unit === m.altShortName?.toLowerCase()
       );
-      if (!!result) {
+      if (!!result && !matchedMeasures.find((m: Measurement) => m.id === result.id)) {
         matchedMeasures.push(result);
       }
     });

@@ -14,7 +14,7 @@ export class Conversion extends RosBaseEntity implements IConversion {
   @Column({ name: 'ingredientId' })
   ingredientId: number;
 
-  @Column('decimal', { precision: 5, scale: 2 })
+  @Column('decimal', { precision: 9, scale: 2 })
   sourceAmount: number;
 
   @ManyToOne(() => Measurement)
@@ -23,7 +23,7 @@ export class Conversion extends RosBaseEntity implements IConversion {
   @Column({ name: 'sourceUnitId' })
   sourceUnitId: number;
 
-  @Column('decimal', { precision: 5, scale: 2 })
+  @Column('decimal', { precision: 9, scale: 2 })
   targetAmount: number;
 
   @ManyToOne(() => Measurement)
@@ -36,7 +36,7 @@ export class Conversion extends RosBaseEntity implements IConversion {
     description: `English conversion sentence`,
     example: '1 cup olive oil translates to 216 g.'
   })
-  @Column({ length: 200, nullable: true })
+  @Column({ length: 400, nullable: true })
   answer: string;
 
   @ApiProperty({

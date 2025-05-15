@@ -63,6 +63,12 @@ export class SpoonController {
     return await this.spoonService.populateConversions(id, measures);
   }
 
+  @Get('populate-ingredients')
+  @ApiQuery({ name: 'limit', required: true, example: '20', type: String })
+  async getRequiredIngredients(@Query('limit') limit: number): Promise<Ingredient[] | CMessage> {
+    return await this.spoonService.populateIngredients(limit);
+  }
+
   @Get('suggestion/recipe')
   @ApiQuery({ name: 'diet', required: true, type: String, description: 'Ketogenic, Pescetarian, Vegetarian, Lacto-Vegetarian' })
   async getSpoonRecipeSuggestions(@Query('diet') diet: string): Promise<any> {

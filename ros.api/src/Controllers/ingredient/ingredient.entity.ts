@@ -1,6 +1,6 @@
 import { RosBaseEntity } from '@base/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, Unique } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { EPurchasedBy, IIngredientRecipeVeryShort } from '../../../Models/ingredient.dto';
 import { Measurement } from '../measurement/measurement.entity';
 import { RecipeIngredient } from '../recipe/recipe-ingredient/recipe-ingredient.entity';
@@ -48,6 +48,12 @@ export class Ingredient extends RosBaseEntity {
     default: EPurchasedBy.weight
   })
   purchasedBy: EPurchasedBy;
+  @ApiProperty({
+    description: `Preferred Shopping Unit - user-defined preferred unit for this ingredient`,
+    example: 'gram'
+  })
+  @ManyToOne(() => Measurement, (measurement) => measurement.ingredientsWithPreferredUnit, { nullable: true })
+  preferredShoppingUnit?: Measurement;
 
   @Column({ type: 'money', nullable: true })
   estimatedCost?: number;
