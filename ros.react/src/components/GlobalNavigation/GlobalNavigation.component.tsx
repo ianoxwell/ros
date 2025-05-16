@@ -32,10 +32,11 @@ export const GlobalNavigation = () => {
   function contextAwareNewItem() {
     console.log('contextually add something', location.pathname);
     switch (location.pathname.replace(/^\//, '')) {
-      case CRoutes.schedule:
+      case CRoutes.schedule: case CRoutes.orders:
         newScheduleItem();
         break;
       default:
+        newScheduleItem();
         break;
     }
   }

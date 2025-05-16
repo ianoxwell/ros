@@ -28,6 +28,11 @@
       margin: 0.5rem 0 1rem;
       height: calc(var(--mantine-h2-font-size) * 2 * var(--mantine-h2-line-height));
     }
+    &--buttons {
+      Button {
+        width: 50%;
+      }
+    }
   }
 }
 

@@ -1,6 +1,9 @@
+import { useAppDispatch } from '@app/hooks';
 import { CImageUrl } from '@app/routes.const';
+import { setCurrentSchedule } from '@components/GlobalNavigation/globalModal.slice';
 import { Plural } from '@components/plural/Plural';
 import { IRecipeIngredient } from '@domain/recipe-ingredient.dto';
+import { ETimeSlot } from '@domain/schedule.dto';
 import { calculateRdaPercent, CMacroNutrientRda, CVitaminsMinerals } from '@domain/vitamin-mineral-const';
 import { useGetRecipeQuery } from '@features/api/apiSlice';
 import {
@@ -23,17 +26,21 @@ import {
   Text,
   Title
 } from '@mantine/core';
+import { getIncrementedDateIndex } from '@utils/dateUtils';
 import { fixWholeNumber, fractionNumber } from '@utils/numberUtils';
 import { parseRecipeInstructions, sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
-import { ChevronLeft, Heart, Timer, UserRound } from 'lucide-react';
+import { ChevronLeft, Heart, Plus, Timer, UserRound } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const RecipeModal = () => {
   const base = import.meta.env.VITE_BASE_URL;
+  const iconSize = 16;
+  const iconPlusSize = 28;
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const { data, isLoading } = useGetRecipeQuery(id, { skip: !id });
+  const { data: recipe, isLoading } = useGetRecipeQuery(id, { skip: !id });
+  const dispatch = useAppDispatch();
   const heartRecipe = () => {
     // TODO favourite/update the recipe
     console.log('should probably write something for this in the api');
@@ -41,6 +48,28 @@ const RecipeModal = () => {
 
   const closeModal = () => {
     navigate(base);
+  };
+
+  const newScheduleItem = () => {
+    if (!recipe) return;
+
+    dispatch(
+      setCurrentSchedule({
+        date: getIncrementedDateIndex(1),
+        timeSlot: ETimeSlot.BREAKFAST,
+        scheduleRecipes: [
+          {
+            recipeId: recipe.id || '',
+            quantity: 1,
+            recipeName: recipe.name,
+            shortSummary: recipe.shortSummary,
+            recipeImage: recipe.images[0],
+            servings: recipe.servings
+          }
+        ],
+        notes: ''
+      })
+    );
   };
 
   if (!id) return null;
@@ -54,13 +83,13 @@ const RecipeModal = () => {
       radius={0}
       withCloseButton={false}
       padding={0}
-      aria-label={data?.name || 'Recipe'}
+      aria-label={recipe?.name || 'Recipe'}
     >
-      {isLoading || !data ? (
+      {isLoading || !recipe ? (
         <p>Loading...</p>
       ) : (
         <div className="recipe-modal">
-          <Image src={data.images[0]} height={420} alt={data.name} />
+          <Image src={recipe.images[0]} height={420} alt={recipe.name} />
           <div className="flex-float-header">
             <ActionIcon
               type="button"
@@ -71,7 +100,7 @@ const RecipeModal = () => {
               color="dark.6"
               radius="xl"
             >
-              <ChevronLeft size={28} />
+              <ChevronLeft size={iconPlusSize} />
             </ActionIcon>
           </div>
           <div className="recipe-modal--contents">
@@ -87,25 +116,25 @@ const RecipeModal = () => {
                 radius="xl"
                 className="favorite-recipe--icon"
               >
-                <Heart size={28} />
+                <Heart size={iconPlusSize} />
               </ActionIcon>
             </Flex>
-            <Title order={2}>{data.name}</Title>
+            <Title order={2}>{recipe.name}</Title>
             <Space h="xs" />
-            {!!data?.dishType?.length && (
+            {!!recipe?.dishType?.length && (
               <>
                 <Group gap="xs">
-                  {data?.dishType.map((dish, index) => (
+                  {recipe?.dishType.map((dish, index) => (
                     <Chip key={index}>{sentenceCase(dish)}</Chip>
                   ))}
                 </Group>
                 <Space h="md" />
               </>
             )}
-            {!!data?.cuisineType?.length && (
+            {!!recipe?.cuisineType?.length && (
               <>
                 <Group gap="xs">
-                  {data?.cuisineType.map((cuisine, index) => (
+                  {recipe?.cuisineType.map((cuisine, index) => (
                     <Chip key={index}>{sentenceCase(cuisine)}</Chip>
                   ))}
                 </Group>
@@ -114,16 +143,16 @@ const RecipeModal = () => {
             )}
             <Flex direction="row" gap="md">
               <Group gap="xs">
-                <Timer size={16} />
+                <Timer size={iconSize} />
                 <span>
-                  {data.readyInMinutes}
-                  <Plural text="min" num={data.readyInMinutes} />
+                  {recipe.readyInMinutes}
+                  <Plural text="min" num={recipe.readyInMinutes} />
                 </span>
               </Group>
               <Group gap="xs">
-                <UserRound size={16} />
+                <UserRound size={iconSize} />
                 <span>
-                  {data.servings} <Plural text="serving" num={data.servings} />
+                  {recipe.servings} <Plural text="serving" num={recipe.servings} />
                 </span>
               </Group>
               {/* Add in the health score */}
@@ -131,27 +160,27 @@ const RecipeModal = () => {
             </Flex>
             <Space h="md" />
             <Spoiler maxHeight={56} showLabel="Show more" hideLabel="Hide">
-              {parse(data.summary)}
+              {parse(recipe.summary)}
             </Spoiler>
             <Space h="xl" />
-            {!!data?.diets?.length && (
+            {!!recipe?.diets?.length && (
               <>
                 <Title order={3}>Diets</Title>
                 <Space h="xs" />
                 <Group gap="xs">
-                  {data.diets.map((diet, index) => (
+                  {recipe.diets.map((diet, index) => (
                     <Chip key={index}>{sentenceCase(diet)}</Chip>
                   ))}
                 </Group>
                 <Space h="xl" />
               </>
             )}
-            {data && (
+            {recipe && (
               <>
                 <Title order={3}>Ingredients</Title>
                 <Space h="xs" />
                 <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md" verticalSpacing="md">
-                  {data.ingredientList.map((ri: IRecipeIngredient) => (
+                  {recipe.ingredientList.map((ri: IRecipeIngredient) => (
                     <Flex key={ri.id} align="center" direction="row" gap="xs">
                       <Image height={40} src={`${CImageUrl}${ri.ingredient.image}`} alt={ri.ingredient.name} />
 
@@ -165,29 +194,29 @@ const RecipeModal = () => {
                 <Space h="xl" />
               </>
             )}
-            {!!data?.equipment?.length && (
+            {!!recipe?.equipment?.length && (
               <>
                 {' '}
                 <Title order={3}>Equipment</Title>
                 <Space h="xs" />
                 <Group gap="xs">
-                  {data?.equipment.map((item, index) => (
+                  {recipe?.equipment.map((item, index) => (
                     <Chip key={index}>{sentenceCase(item.name)}</Chip>
                   ))}
                 </Group>
                 <Space h="xl" />
               </>
             )}
-            {data?.instructions && (
+            {recipe?.instructions && (
               <>
                 <Title order={3}>Instructions</Title>
                 <Space h="xs" />
-                {data &&
+                {recipe &&
                   (() => {
-                    if (!!data.steppedInstructions?.length && data.steppedInstructions[0].stepNumber === 1) {
+                    if (!!recipe.steppedInstructions?.length && recipe.steppedInstructions[0].stepNumber === 1) {
                       return (
                         <Stack>
-                          {data.steppedInstructions.map((item, index) => (
+                          {recipe.steppedInstructions.map((item, index) => (
                             <Flex direction="row" align="center" gap="xs" key={index}>
                               <Avatar className="step-badge" size="md" radius="xl">
                                 {item.stepNumber}
@@ -201,7 +230,7 @@ const RecipeModal = () => {
 
                     return (
                       <Stack>
-                        {parseRecipeInstructions(data.instructions).map((instruction, index) => (
+                        {parseRecipeInstructions(recipe.instructions).map((instruction, index) => (
                           <Flex direction="row" align="center" gap="xs" key={index}>
                             <Badge circle>{index + 1}</Badge>
                             <div>{parse(instruction || '')}</div>
@@ -214,14 +243,14 @@ const RecipeModal = () => {
             )}
             <Space h="xl" />
 
-            {!!data.nutrition && (
+            {!!recipe.nutrition && (
               <Center>
                 <section className="nutrition-facts">
                   <Title order={2}>Nutrition facts</Title>
                   <Text size="sm">Amount per serving</Text>
                   <Flex justify="space-between">
                     <Title order={3}>Calories</Title>
-                    <Title order={3}>{fixWholeNumber(data.nutrition.nutrients.calories, 0)}</Title>
+                    <Title order={3}>{fixWholeNumber(recipe.nutrition.nutrients.calories, 0)}</Title>
                   </Flex>
                   <Divider size="md" />
 
@@ -232,12 +261,12 @@ const RecipeModal = () => {
 
                   <Flex justify="space-between">
                     <span>
-                      <b>Total fat</b> {fixWholeNumber(data.nutrition.nutrients.fat, 1)} g
+                      <b>Total fat</b> {fixWholeNumber(recipe.nutrition.nutrients.fat, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CMacroNutrientRda.fat.rda,
-                        data.nutrition.nutrients.fat / data.servings || 0
+                        recipe.nutrition.nutrients.fat / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -246,28 +275,25 @@ const RecipeModal = () => {
 
                   <Flex justify="flex-start">
                     <Box w={24} />
+                    <span>Saturated fat {fixWholeNumber(recipe.nutrition.nutrients.saturatedFat, 1)} g</span>
+                  </Flex>
+                  <Divider size="xs" />
+
+                  <Flex justify="space-between">
                     <span>
-                      Saturated fat {fixWholeNumber(data.nutrition.nutrients.saturatedFat, 1)} g
+                      <b>Cholesterol</b> {fixWholeNumber(recipe.nutrition.nutrients.cholesterol, 1)} mg
                     </span>
                   </Flex>
                   <Divider size="xs" />
 
                   <Flex justify="space-between">
                     <span>
-                      <b>Cholesterol</b> {fixWholeNumber(data.nutrition.nutrients.cholesterol, 1)} mg
-                    </span>
-                  </Flex>
-                  <Divider size="xs" />
-
-                  <Flex justify="space-between">
-                    <span>
-                      <b>Total carbohydrate</b>{' '}
-                      {fixWholeNumber(data.nutrition.nutrients.carbohydrates, 1)} g
+                      <b>Total carbohydrate</b> {fixWholeNumber(recipe.nutrition.nutrients.carbohydrates, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CMacroNutrientRda.carbohydrates.rda,
-                        data.nutrition.nutrients.carbohydrates / data.servings || 0
+                        recipe.nutrition.nutrients.carbohydrates / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -276,22 +302,22 @@ const RecipeModal = () => {
 
                   <Flex justify="flex-start">
                     <Box w={24} />
-                    <span>Dietary fiber {fixWholeNumber(data.nutrition.nutrients.fiber, 1)} g</span>
+                    <span>Dietary fiber {fixWholeNumber(recipe.nutrition.nutrients.fiber, 1)} g</span>
                   </Flex>
                   <Divider size="xs" />
                   <Flex justify="flex-start">
                     <Box w={24} />
-                    <span>Total sugars {fixWholeNumber(data.nutrition.nutrients.sugar, 1)} g</span>
+                    <span>Total sugars {fixWholeNumber(recipe.nutrition.nutrients.sugar, 1)} g</span>
                   </Flex>
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      <b>Protein</b> {fixWholeNumber(data.nutrition.nutrients.protein, 1)} g
+                      <b>Protein</b> {fixWholeNumber(recipe.nutrition.nutrients.protein, 1)} g
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CMacroNutrientRda.protein.rda,
-                        data.nutrition.nutrients.protein / data.servings || 0
+                        recipe.nutrition.nutrients.protein / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -299,13 +325,13 @@ const RecipeModal = () => {
                   <Divider size="lg" />
                   <Flex justify="space-between">
                     <span>
-                      Vitamin D {fixWholeNumber(data.nutrition.vitamins.vitaminD, 1)}{' '}
+                      Vitamin D {fixWholeNumber(recipe.nutrition.vitamins.vitaminD, 1)}{' '}
                       {CVitaminsMinerals.vitaminD.measure}
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CVitaminsMinerals.vitaminD.rda,
-                        data.nutrition.vitamins.vitaminD / data.servings || 0
+                        recipe.nutrition.vitamins.vitaminD / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -313,13 +339,12 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Calcium {fixWholeNumber(data.nutrition.minerals.calcium, 1)}{' '}
-                      {CVitaminsMinerals.calcium.measure}
+                      Calcium {fixWholeNumber(recipe.nutrition.minerals.calcium, 1)} {CVitaminsMinerals.calcium.measure}
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CVitaminsMinerals.calcium.rda,
-                        data.nutrition.minerals.calcium / data.servings || 0
+                        recipe.nutrition.minerals.calcium / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -327,13 +352,12 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Iron {fixWholeNumber(data.nutrition.minerals.iron, 1)}{' '}
-                      {CVitaminsMinerals.iron.measure}
+                      Iron {fixWholeNumber(recipe.nutrition.minerals.iron, 1)} {CVitaminsMinerals.iron.measure}
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CVitaminsMinerals.iron.rda,
-                        data.nutrition.minerals.iron / data.servings || 0
+                        recipe.nutrition.minerals.iron / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -341,13 +365,13 @@ const RecipeModal = () => {
                   <Divider size="xs" />
                   <Flex justify="space-between">
                     <span>
-                      Potassium {fixWholeNumber(data.nutrition.minerals.potassium, 1)}{' '}
+                      Potassium {fixWholeNumber(recipe.nutrition.minerals.potassium, 1)}{' '}
                       {CVitaminsMinerals.potassium.measure}
                     </span>
                     <span>
                       {calculateRdaPercent(
                         CVitaminsMinerals.potassium.rda,
-                        data.nutrition.minerals.potassium / data.servings || 0
+                        recipe.nutrition.minerals.potassium / recipe.servings || 0
                       )}
                       %
                     </span>
@@ -364,9 +388,14 @@ const RecipeModal = () => {
 
             {/* Close button */}
             <Group justify="flex-end" mt="lg">
-              <Button variant="outline" onClick={closeModal} type="button">
-                Close
-              </Button>
+              <Flex gap="xs">
+                <Button onClick={newScheduleItem} type="button" leftSection={<Plus size={iconSize} />}>
+                  Schedule
+                </Button>
+                <Button variant="outline" onClick={closeModal} type="button">
+                  Close
+                </Button>
+              </Flex>
             </Group>
             <Space h="xl" />
           </div>

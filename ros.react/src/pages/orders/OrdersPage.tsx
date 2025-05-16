@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { CRoutes } from '@app/routes.const';
 import { RootState } from '@app/store';
 import { IUserToken } from '@domain/user.dto';
 import { useGetWeeklyOrdersQuery } from '@features/api/apiSlice';
@@ -10,7 +11,8 @@ import { fractionNumber } from '@utils/numberUtils';
 import { sentenceCase } from '@utils/stringUtils';
 import parse from 'html-react-parser';
 import { Calendar } from 'lucide-react';
-import img from '../../assets/images/underConstructionRecipe.png';
+import { NavLink } from 'react-router-dom';
+import './orders.scss';
 
 export const Orders = () => {
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
@@ -45,14 +47,31 @@ export const Orders = () => {
       />
       <Space h="xl" />
       <section>
-        {weeklyOrders?.ingredients &&
-          weeklyOrders.ingredients.map((iL) => (
-            <div key={iL.id}>
-              {parse(fractionNumber(iL.amount))} <b>{iL.unit}</b> {sentenceCase(iL.ingredient?.name)}
+        <h2>Weekly shopping list</h2>
+        {weeklyOrders?.ingredients && (
+          <ul className="square-box">
+            {weeklyOrders.ingredients.map((iL) => (
+              <li key={iL.id}>
+                {parse(fractionNumber(iL.amount))} <b>{iL.unit}</b> {sentenceCase(iL.ingredient?.name)}
+              </li>
+            ))}{' '}
+          </ul>
+        )}
+      </section>
+      <Space h="xl" />
+      <section>
+        <h2>Recipes for this week</h2>
+        {weeklyOrders?.recipes &&
+          weeklyOrders.recipes.map((rL) => (
+            <div key={rL.id}>
+              {parse(fractionNumber(rL.quantity))}{' '}
+              <NavLink to={`/${CRoutes.recipe}/${rL.recipeId}`} aria-label={rL.recipeName}>
+                {sentenceCase(rL.recipeName)}
+              </NavLink>
             </div>
           ))}
-        <img src={img} width="100%" style={{ maxWidth: '40rem' }} alt="Under construction" />
       </section>
+      <Space h="xl" />
     </section>
   );
 };
