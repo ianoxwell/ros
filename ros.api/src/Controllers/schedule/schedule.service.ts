@@ -39,6 +39,8 @@ export class ScheduleService {
   }
 
   async getScheduleDateOrBetween(userId: number, from: Date, to?: Date): Promise<ISchedule[]> {
+    // all parameters are required
+    to = to || from;
     const result: ISchedule[] = await this.repository.query(
       `SELECT s.id,
         s.date + interval '${(from.getTimezoneOffset() / 60) * -1} hours' as date, -- Ensure the date is treated as UTC midnight
