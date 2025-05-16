@@ -9,7 +9,8 @@ export const CRoutes = {
   recipe: 'recipe',
   orders: 'orders',
   schedule: 'schedule',
-  ingredients: 'ingredients'
+  ingredients: 'ingredients',
+  settings: 'settings',
 };
 
 

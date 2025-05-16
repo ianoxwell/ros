@@ -19,6 +19,7 @@ import Login from '@pages/register/Login';
 import ResetPassword from '@pages/register/ResetPassword';
 import VerifyEmail from '@pages/register/VerifyEmail';
 import { SchedulesPage } from '@pages/schedules/SchedulesPage';
+import SettingsPage from '@pages/settings/SettingsPage';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { CRoutes } from './app/routes.const';
@@ -77,6 +78,7 @@ function App() {
                   </>
                 }
               />
+              <Route path={CRoutes.settings} element={<SettingsPage />} />
             </Route>
             <Route path={base} element={<AccountWrapper />}>
               <Route path={CRoutes.login} element={<Login />} />

@@ -8,7 +8,7 @@ import { Avatar, Menu, UnstyledButton } from '@mantine/core';
 import { getIncrementedDateIndex } from '@utils/dateUtils';
 import { Calendar, LogOut, NotebookPen, Plus, Settings, ShoppingBasket } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { setCurrentSchedule } from './globalModal.slice';
 import './GlobalNavigation.component.scss';
 
@@ -26,20 +26,22 @@ export const GlobalNavigation = () => {
   const iconPlusSize = 28;
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { user } = useAppSelector((store: RootState) => store.user.user) as IUserToken;
 
   /** TODO - add additional modals for new recipe and new ingredient */
-  function contextAwareNewItem() {
+  const contextAwareNewItem = () => {
     console.log('contextually add something', location.pathname);
     switch (location.pathname.replace(/^\//, '')) {
-      case CRoutes.schedule: case CRoutes.orders:
+      case CRoutes.schedule:
+      case CRoutes.orders:
         newScheduleItem();
         break;
       default:
         newScheduleItem();
         break;
     }
-  }
+  };
 
   const newScheduleItem = () => {
     dispatch(
@@ -50,6 +52,10 @@ export const GlobalNavigation = () => {
         notes: ''
       })
     );
+  };
+
+  const navigateSettings = () => {
+    navigate(`${import.meta.env.VITE_BASE_URL}${CRoutes.settings}`);
   };
 
   const logUserOut = () => {
@@ -82,7 +88,9 @@ export const GlobalNavigation = () => {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>Application</Menu.Label>
-            <Menu.Item leftSection={<Settings size={14} />}>Settings</Menu.Item>
+            <Menu.Item leftSection={<Settings size={14} />} component="button" type="button" onClick={navigateSettings}>
+              Settings
+            </Menu.Item>
             <Menu.Item leftSection={<LogOut size={14} />} component="button" type="button" onClick={logUserOut}>
               Logout
             </Menu.Item>
